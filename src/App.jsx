@@ -19,9 +19,9 @@ import Home from './components/Home/Home';
 const Layout = () => {
   return (
     <div className='layout-app'>
-      <Header/>
-      <Outlet/>
-      <Footer/>
+      <Header />
+      <Outlet />
+      <Footer />
     </div>
   )
 };

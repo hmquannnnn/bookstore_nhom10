@@ -1,0 +1,70 @@
+.container {
+    /* padding: 4rem 4rem; */
+    font-family: 'Montserrat', sans-serif;
+    
+}
+
+.row {
+    /* justify-content: space-between; */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    width: 70%;
+    margin: auto;
+    margin-bottom: 2rem;
+}
+
+.col-lg-3 {
+    /* background-color: red; */
+    margin: 1rem;
+    width: 22%; 
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.col-lg-3 .logo {
+    display: flex;
+    flex-direction: row;
+}
+
+.col-lg-3 .payment {
+    display: flex;
+    flex-direction: column;
+}
+
+.col-lg-3 a {
+    display: flex;
+    flex-direction: row;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 15px;
+    margin: 0.5rem 0;
+    cursor: pointer;
+    color: black;
+}
+
+.col-lg-3 h4 {
+    
+    text-transform: uppercase;
+    font-size: 20px;
+    line-height: 17px;
+    margin-bottom: 0.9rem;
+    font-weight: 700;
+}
+
+.col-lg-3 .slogan {
+    font-style: italic;
+    font-weight: 200;
+}
+
+.col-lg-3 .logo img {
+    max-width: 100%;
+    width: auto;
+    height: unset;
+}
+
+.col-lg-3 i {
+    padding-right: 6px;
+}

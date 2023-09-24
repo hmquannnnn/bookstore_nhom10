@@ -1,7 +1,11 @@
 const Home = () => {
     return (
-        <>homePage</>
+        <>
+            homePage
+        </>
     )
 }
 
 export default Home;
+
+
