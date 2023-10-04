@@ -1,5 +1,5 @@
 import "./footer.css"
-import React from "react";
+// import React from "react";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
@@ -40,8 +40,6 @@ const Footer = () => {
                         <h4>Phương thức thanh toán</h4>
                         <div className="payment">
                             <img src="https://bizweb.dktcdn.net/100/363/455/themes/918830/assets/payment_method.png?1695376539935"></img>
-                            <h4>Chứng nhận bởi</h4>
-                            <img src="https://bizweb.dktcdn.net/100/363/455/themes/918830/assets/bocongthuong.png?1695376539935"></img>
                         </div>
                     </div>
                     {/* <div className="col-lg-3">
