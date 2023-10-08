@@ -9,17 +9,7 @@ edition = "2021"
 actix-multipart = "0.6.1"
 actix-web = {version ="4.4.0"}
 dotenv = "0.15.0"
-random = "0.14.0"
 runtime-tokio = "0.0.0"
 serde = "1.0.188"
-sqlx = {version = "0.7.2", features = [
-"mysql",
-"macros",
-"runtime-tokio",
-"uuid"
-]}
+sqlx = { version = "0.7.2", features = ["mysql", "macros", "macros", "runtime-tokio", "uuid", "json"] }
 tokio = "1.32.0"
-uuid = {version = "1.4.1", features = ["getrandom", "rand", "rng", "v4"]}
-
-
-

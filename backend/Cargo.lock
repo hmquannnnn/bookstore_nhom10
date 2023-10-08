@@ -9,12 +9,10 @@ dependencies = [
  "actix-multipart",
  "actix-web",
  "dotenv",
- "random",
  "runtime-tokio",
  "serde",
  "sqlx",
  "tokio",
- "uuid",
 ]
 
 [[package]]
@@ -1310,12 +1308,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "random"
-version = "0.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "61c7093a82705b48f10d4b165c6482dbe9f58cd63a870d85537e857b2badbd88"
-
-[[package]]
 name = "redox_syscall"
 version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2031,10 +2023,6 @@ name = "uuid"
 version = "1.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "79daa5ed5740825c40b389c5e50312b9c86df53fccd33f281df655642b43869d"
-dependencies = [
- "getrandom",
- "rand",
-]
 
 [[package]]
 name = "vcpkg"

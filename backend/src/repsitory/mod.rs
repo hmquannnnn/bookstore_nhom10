@@ -15,10 +15,11 @@ pub async fn select_image(id: i32, pool: &MySqlPool) -> sqlx::Result<Vec<u8>> {
     Ok(image)
 }
 
-pub async fn insert_image(image: Vec<u8>, pool: &MySqlPool) -> sqlx::Result<i32> {
-    let id = 111;
+pub async fn insert_image(image: Vec<u8>, pool: &MySqlPool) -> sqlx::Result<String> {
+    let image_slice = &image.as_slice()[0..90];
+    let id = sqlx::types::uuid::Builder::from_slice(image_slice).unwrap().into_uuid().to_string();
     sqlx::query("insert into images(id, data) values (?, ?)")
-        .bind(id)
+        .bind(&id)
         .bind(image)
         .execute(pool)
         .await?;
