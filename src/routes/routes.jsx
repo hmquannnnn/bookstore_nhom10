@@ -1,10 +1,17 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
-import Home from "../components/Home/Home";
-import Contact from "../pages/contact/contact";
+
 import Login from "../pages/login/login";
 import Footer from "../components/Footer/footer";
 import Header from "../components/Header/header";
 import Register from "../pages/register/register";
+import NotFound from "../pages/notFound/notFound";
+import AboutUs from "../pages/aboutUs/aboutUs";
+import Cart from "../pages/cart/cart";
+import Admin from "../pages/admin/admin";
+import BooksManagement from "../pages/admin/managedPages/booksManagement/booksManagement";
+import UsersManagement from "../pages/admin/managedPages/usersManagement/userManagement";
+import OrdersManagemennt from "../pages/admin/managedPages/ordersManagement/ordersManagement";
+import Home from "../pages/Home/Home";
 
 const Layout = () => {
     return (
@@ -21,26 +28,45 @@ const Routes = () => {
         {
             path: "/",
             element: <Layout />,
-            errorElement: <div>Error 404 not found</div>,
+            errorElement: <NotFound />,
 
             children: [
                 { index: true, element: <Home /> },
                 {
-                    path: "contact",
-                    element: <Contact />,
+                    path: "gioi-thieu",
+                    element: <AboutUs />
                 },
-
+                {
+                    path: "gio-hang",
+                    element: <Cart />
+                }
             ],
         },
-
         {
-            path: "/dang-nhap",
+            path: "dang-nhap",
             element: <Login />,
         },
-
         {
-            path: "/dang-ky",
+            path: "dang-ky",
             element: <Register />,
+        },
+        {
+            path: "admin",
+            element: <Admin />,
+            children: [
+                {
+                    path: "books-management",
+                    element: <BooksManagement />
+                },
+                {
+                    path: "admin/users-management",
+                    element: <UsersManagement />
+                },
+                {
+                    path: "orders-management",
+                    element: <OrdersManagemennt />
+                }
+            ]
         }
     ]);
     return (
@@ -50,4 +76,4 @@ const Routes = () => {
     )
 }
 
-export default Routes
+export default Routes;

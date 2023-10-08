@@ -1,6 +1,6 @@
 // import { AiOutlineShoppingCart } from "react-icons/ai";
 import "./header.scss"
-import { useState } from "react";
+// import { useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai"
 import { Badge, Button, Dropdown } from "antd"
 
@@ -24,7 +24,7 @@ const items = [
 ];
 
 const Header = () => {
-    const [openDrawer, setOpenDrawer] = useState(false); 
+    // const [openDrawer, setOpenDrawer] = useState(false); 
     
     return (
         <>
@@ -33,13 +33,14 @@ const Header = () => {
                     <div className="page-header__top">
                         <div 
                             className="page-header__toggle" 
-                            onClick={() => { setOpenDrawer(true) }}>
+                            // onClick={() => { setOpenDrawer(true) }}
+                            >
                             &#9776;
                         </div>
 
                         <div className="page-header__logo">
                             <span className="logo">
-                                <p className="brand-name">nhom11</p>
+                                <p className="brand-name">UETHUVIENSACH</p>
                             </span>
                             <input
                                 className="input-seacrh"
@@ -56,7 +57,7 @@ const Header = () => {
                                     count={100}
                                     overflowCount={99}
                                     size={"small"}>
-                                    <AiOutlineShoppingCart className="cart-icon" />
+                                    <AiOutlineShoppingCart className="cart-icon" href="/gio-hang" />
                                 </Badge>
                             </a>
                             <Dropdown
