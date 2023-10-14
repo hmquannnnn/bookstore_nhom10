@@ -30,7 +30,7 @@ pub async fn post_image(payload: Bytes, app_state: web::Data<AppState>) -> HttpR
     let action = repository::image::insert_image(image, &app_state.into_inner().pool)
         .await;
     match action {
-        Ok(_) => HttpResponse::Ok().finish(),
+        Ok(id) => HttpResponse::Ok().body(id),
         Err(_) => HttpResponse::NotModified().finish()
     }
 }

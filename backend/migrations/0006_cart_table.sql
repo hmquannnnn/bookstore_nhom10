@@ -1,6 +1,6 @@
 create table cart(
     user_email varchar(256) not null,
-    book_id varchar(32) not null,
+    book_id varchar(64) not null,
     quantity_ordered int not null,
 
 

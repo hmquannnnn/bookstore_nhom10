@@ -1,6 +1,6 @@
 create table ratting(
-    user_email varchar(32) not null,
-    book_id varchar(32) not null,
+    user_email varchar(64) not null,
+    book_id varchar(64) not null,
     ratting float not null,
     description text,
     

@@ -1,5 +1,5 @@
 create table book_genre(
-    book_id varchar(32) not null,
+    book_id varchar(64) not null,
     genre_name varchar(256) not null,
     
     foreign key(book_id) references book(id),

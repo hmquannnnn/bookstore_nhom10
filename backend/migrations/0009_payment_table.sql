@@ -1,5 +1,5 @@
 create table payment(
-    id varchar(32) primary key,
+    id varchar(64) primary key,
     order_id int not null,
     user_email varchar(256) not null,
     amount float not null,

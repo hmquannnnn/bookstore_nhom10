@@ -1,5 +1,5 @@
 create table book(
-    id varchar(32) primary key,
+    id varchar(64) primary key,
     author_id int not null,
     title varchar(256) not null,
     price float not null,

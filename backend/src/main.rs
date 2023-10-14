@@ -2,7 +2,7 @@ mod api;
 mod repository;
 mod util; 
 
-use api::{index, image::{get_image, post_image, delete_image}, book::{get_book, list_book}};
+use api::{index, image::{get_image, post_image, delete_image}, book::{get_book, list_book}, user::get_user};
 use sqlx::{MySqlPool, mysql::MySqlPoolOptions};
 use actix_web::{
     HttpServer, App, web 
@@ -44,6 +44,7 @@ async fn main() -> std::io::Result<()> {
             .service(delete_image)
             .service(get_book)
             .service(list_book)
+            .service(get_user)
     })
     .bind(("localhost", 8000))?
     .run()
