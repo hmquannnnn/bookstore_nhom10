@@ -3,7 +3,7 @@ create table payment(
     order_id int not null,
     user_email varchar(256) not null,
     amount float not null,
-    payment_date date not null,
+    payment_date varchar(256) not null,
     
 
     foreign key(user_email) references user(email),

@@ -37,7 +37,7 @@ pub async fn post_image(payload: Bytes, app_state: web::Data<AppState>) -> HttpR
     }
 }
 
-#[delete("image")]
+#[delete("/image")]
 pub async fn delete_image(query: web::Query<ImageInfo>, app_state: web::Data<AppState>) -> HttpResponse {
     let id = query.into_inner().id;
     let pool = &app_state.into_inner().pool;

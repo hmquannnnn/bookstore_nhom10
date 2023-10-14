@@ -4,7 +4,7 @@ use actix_web::{
 
 
 pub mod image;
-
+pub mod book;
 
 #[get("/")]
 pub async fn index() -> impl Responder {
