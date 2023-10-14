@@ -5,6 +5,7 @@ use actix_web::{
 
 pub mod image;
 pub mod book;
+pub mod user;
 
 #[get("/")]
 pub async fn index() -> impl Responder {
