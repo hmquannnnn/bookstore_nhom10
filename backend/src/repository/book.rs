@@ -40,12 +40,12 @@ pub async fn list_books(start: i32, length: i32, pool: &MySqlPool) -> sqlx::Resu
     Ok(book)
 }
 
-pub async fn delete_book(id: String, pool: &MySqlPool) -> sqlx::Result<()> {
-    sqlx::query!("delete from book where id = ?", id)
-        .execute(pool)
-        .await?;
-    Ok(())
-}
+// pub async fn delete_book(id: String, pool: &MySqlPool) -> sqlx::Result<()> {
+//     sqlx::query!("delete from book where id = ?", id)
+//         .execute(pool)
+//         .await?;
+//     Ok(())
+// }
 
 
 // (id, title, author_id, price, publish_year, back_date_url, front_page_url)

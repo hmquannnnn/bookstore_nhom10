@@ -1,6 +1,6 @@
-use actix_web::{web::{Json, Query}, get, Responder, patch};
+use actix_web::{web::{Json, Query}, get, Responder};
 
-use crate::{util::types::AppState, repository::book::{Book, self}};
+use crate::{util::types::AppState, repository::book};
 
 // #[get("/image")]
 // pub async fn get_image(query: web::Query<ImageInfo>, app_state: web::Data<AppState>) -> HttpResponse {
@@ -24,10 +24,16 @@ pub async fn get_book(query: Query<String>, app_state: actix_web::web::Data<AppS
     }
 }
 
+#[derive(serde::Deserialize)]
+struct BookListInfo {
+    start: i32,
+    length: i32,
+}
+
 #[get("/book/list")]
-pub async fn list_book(query: Query<(i32, i32)>, app_state: actix_web::web::Data<AppState>) -> actix_web::Result<impl Responder> {
-    let start = query.0.0;
-    let length = query.0.1;
+pub async fn list_book(query: Query<BookListInfo>, app_state: actix_web::web::Data<AppState>) -> actix_web::Result<impl Responder> {
+    let start = query.0.start;
+    let length = query.0.length;
     let pool = &app_state.pool;
 
     let book = book::list_books(start, length, pool)
