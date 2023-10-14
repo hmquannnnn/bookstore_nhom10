@@ -11,5 +11,6 @@ actix-web = {version ="4.4.0"}
 dotenv = "0.15.0"
 runtime-tokio = "0.0.0"
 serde = "1.0.188"
-sqlx = { version = "0.7.2", features = ["mysql", "macros", "macros", "runtime-tokio", "uuid", "json"] }
+sqlx = { version = "0.7.2", features = ["mysql", "macros", "macros", "runtime-tokio", "uuid", "json", "time"] }
 tokio = "1.32.0"
+watch = "0.2.3"

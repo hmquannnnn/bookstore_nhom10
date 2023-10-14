@@ -1,8 +1,12 @@
 create table orderDetail(
-    order_id int not null references orders(id),
-    book_id varchar(32) references book(id),
+    order_id int not null,
+    book_id varchar(32) not null,
     price_each float not null,
-    quantity_ordered int not null
+    quantity_ordered int not null,
+
+
+    foreign key(order_id) references orders(id),
+    foreign key(book_id) references book(id)
 );
 
 

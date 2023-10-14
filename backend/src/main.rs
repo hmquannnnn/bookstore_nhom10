@@ -1,8 +1,8 @@
 mod api;
-mod repsitory;
+mod repository;
 mod util; 
 
-use api::{index, get_image, post_image};
+use api::{index, image::{get_image, post_image}};
 use sqlx::{MySqlPool, mysql::MySqlPoolOptions};
 use actix_web::{
     HttpServer, App, web 
