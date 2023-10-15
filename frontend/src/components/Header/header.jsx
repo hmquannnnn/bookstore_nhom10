@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-
-
-const Header = () => {
-    return (
-        <>
-            header
-=======
 // import { AiOutlineShoppingCart } from "react-icons/ai";
 import "./header.scss"
 // import { useState } from "react";
@@ -77,7 +69,6 @@ const Header = () => {
                     
                 </div>
             </div>
->>>>>>> master
         </>
     )
 }

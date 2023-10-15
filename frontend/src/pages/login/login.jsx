@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-import { useState } from "react";
-
-const Login = () => {
-    return (
-        <>
-            login page
-=======
 // import { useState } from "react";
 
 import { Button, Divider, Form, Input } from "antd";
@@ -79,7 +71,6 @@ const Login = () => {
                     </div>
                 </main>
             </div>
->>>>>>> master
         </>
     )
 
@@ -90,11 +81,6 @@ const Login = () => {
     //         <input value={email} onChange={(e) => setEMail(e.target.value)} />
     //         <input value={password} onChange={(e) => setPassword(e.target.value)} />
     //     </>
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> master
     // )
 }
 
