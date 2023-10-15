@@ -9,21 +9,21 @@ struct UserLoginInfo {
     password: String
 }
 
-#[get("/user")]
+#[get("/user/login")]
 pub async fn get_user(query: Query<UserLoginInfo>, app_state: actix_web::web::Data<AppState>) -> actix_web::Result<impl Responder> {
     let email = query.0.email;
     let password = query.0.password;
     let pool = &app_state.pool;
 
-    let book = user::select_user(email, password, pool)
+    let user = user::select_user(email, password, pool)
         .await;
 
-    match book {
-        Ok(book) => {
-            return Ok(Json(book));
+    match user {
+        Ok(user) => {
+            return Ok(Json(user));
         },
-        Err(_) => {
-            return Err(actix_web::error::ErrorBadRequest("can't find book"));
+        Err(error) => {
+            return Err(actix_web::error::ErrorBadRequest(error));
         }
     }
 }

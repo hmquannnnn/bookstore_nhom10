@@ -6,7 +6,7 @@ use crate::{repository, util::types::AppState};
 
 #[derive(serde::Deserialize)]
 struct ImageInfo {
-    id: i32,
+    id: String,
 }
 
 #[get("/image")]
