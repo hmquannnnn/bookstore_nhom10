@@ -2,11 +2,16 @@
 
 import { Button, Divider, Form, Input } from "antd";
 import FormItem from "antd/es/form/FormItem";
+import { appFetch } from "../../util/api";
 
 
 const Login = () => {
-    const onFinish = async () => {
+    const onFinish = async (value) => {
+        (await appFetch("")).json().then(data => {
+            console.log(data)
+        });
 
+        console.log(value);
     }
     return (
         <>
@@ -22,9 +27,10 @@ const Login = () => {
                                 onFinish={onFinish}
                                 autoComplete="off"
                             >
-                                
+
                                 <FormItem
                                     labelCol={{ span: 24 }}
+                                    type="email"
                                     label="Email"
                                     name="email"
                                     rules={[
@@ -44,6 +50,7 @@ const Login = () => {
                                 <FormItem
                                     labelCol={{ span: 24 }}
                                     label="Mật khẩu"
+                                    type="password"
                                     name="password"
                                     rules={[
                                         {
