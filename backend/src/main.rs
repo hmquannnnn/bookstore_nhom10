@@ -2,6 +2,7 @@ mod api;
 mod repository;
 mod util; 
 
+use actix_cors::Cors;
 use api::{index, image::{get_image, post_image, delete_image}, book::{get_book, list_book}, user::get_user};
 use sqlx::{MySqlPool, mysql::MySqlPoolOptions};
 use actix_web::{
@@ -36,7 +37,10 @@ async fn main() -> std::io::Result<()> {
 
     // init server
     HttpServer::new(move || {
+        let cors = Cors::default()
+            .allowed_origin("http://localhost:3000");
         App::new()
+            .wrap(cors)
             .app_data(web::Data::new(app_state.clone()))
             .service(index)
             .service(get_image)
