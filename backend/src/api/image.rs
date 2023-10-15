@@ -1,5 +1,5 @@
 use actix_web::{
-    get, post, web::{self, Bytes}, HttpResponse, delete
+    get, post, web::{self, Bytes, Json}, HttpResponse, delete, Responder
 };
 
 use crate::{repository, util::types::AppState};
@@ -25,13 +25,13 @@ pub async fn get_image(query: web::Query<ImageInfo>, app_state: web::Data<AppSta
 }
 
 #[post("/image")]
-pub async fn post_image(payload: Bytes, app_state: web::Data<AppState>) -> HttpResponse {
+pub async fn post_image(payload: Bytes, app_state: web::Data<AppState>) -> impl Responder {
     let image = payload.to_vec();
     let action = repository::image::insert_image(image, &app_state.into_inner().pool)
         .await;
     match action {
-        Ok(id) => HttpResponse::Ok().body(id),
-        Err(_) => HttpResponse::NotModified().finish()
+        Ok(id) => Json(id),
+        Err(_) => Json("can't post image".to_string())
     }
 }
 

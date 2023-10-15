@@ -1,5 +1,5 @@
 use actix_web::{
-    get, Responder
+    get, Responder, web::Json
 };
 
 
@@ -9,5 +9,5 @@ pub mod user;
 
 #[get("/")]
 pub async fn index() -> impl Responder {
-    "Server is running"
+    Json("Server is running")
 }

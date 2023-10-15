@@ -9,7 +9,7 @@ struct UserLoginInfo {
     password: String
 }
 
-#[get("/user/login")]
+#[get("/user")]
 pub async fn get_user(query: Query<UserLoginInfo>, app_state: actix_web::web::Data<AppState>) -> actix_web::Result<impl Responder> {
     let email = query.0.email;
     let password = query.0.password;
