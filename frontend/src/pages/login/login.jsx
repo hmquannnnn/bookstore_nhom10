@@ -2,7 +2,7 @@
 
 import { Button, Divider, Form, Input } from "antd";
 import FormItem from "antd/es/form/FormItem";
-import { appFetch, intoQuerry } from "../../util/api";
+import { fetchUser } from "../../util/api";
 import { useState } from "react";
 
 
@@ -10,11 +10,8 @@ const Login = () => {
     const [data, setData] = useState("");
 
     const onFinish = async (value) => {
-        const query = intoQuerry(value);
-        (await appFetch(`/user${query}`)).json().then(data => {
-            setData(data);
-            console.log(data, value);
-        });
+        const user = await fetchUser(value);
+        console.log(user);
     }
     return (
         <>

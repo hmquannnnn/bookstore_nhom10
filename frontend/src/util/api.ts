@@ -1,13 +1,13 @@
-export async function appFetch(input: string, init: RequestInit | undefined) {
+import { intoQuerry } from "./helper";
+
+export async function appFetch(input: string, init?: RequestInit | undefined) {
     return await fetch(`http://localhost:8000${input}`, init);
 }
 
-
-export function intoQuerry(value: Object) {
-    let stringBuilder: Array<string> = [];
-    for (let key in value) {
-        const element = !value[key] ? "" : value[key];
-        stringBuilder.push(`${key}=${element}`);
-    }
-    return `?${stringBuilder.join("&")}`;
+export async function fetchUser(value: { email: string, password: string }) {
+    const query = intoQuerry(value);
+    const user = await (await appFetch(`/user${query}`)).json().then(data => {
+        return data;
+    });
+    return user;
 }
