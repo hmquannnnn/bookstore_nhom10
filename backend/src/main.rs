@@ -1,13 +1,16 @@
 mod api;
 mod repository;
-mod util; 
+mod util;
 
 use actix_cors::Cors;
-use api::{index, image::{get_image, post_image, delete_image}, book::{get_book, list_book}, user::get_user};
-use sqlx::{MySqlPool, mysql::MySqlPoolOptions};
-use actix_web::{
-    HttpServer, App, web 
+use actix_web::{web, App, HttpServer, http::{self}};
+use api::{
+    book::{get_book, list_book},
+    image::{delete_image, get_image, post_image},
+    index,
+    user::get_user,
 };
+use sqlx::{mysql::MySqlPoolOptions, MySqlPool};
 use util::types::AppState;
 
 #[actix_web::main]
@@ -16,7 +19,7 @@ async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
     let url = match std::env::var("DATABASE_URL") {
         Ok(val) => val,
-        Err(_) => panic!("can't read enviroment valriable")
+        Err(_) => panic!("can't read enviroment valriable"),
     };
     let url = url.as_str();
 
@@ -28,17 +31,17 @@ async fn main() -> std::io::Result<()> {
         .unwrap();
 
     // migate database
-    sqlx::migrate!("./migrations")
-        .run(&pool)
-        .await
-        .unwrap();
+    sqlx::migrate!("./migrations").run(&pool).await.unwrap();
 
     let app_state = AppState { pool };
 
     // init server
     HttpServer::new(move || {
         let cors = Cors::default()
-            .allowed_origin("http://localhost:3000");
+        .allow_any_origin()
+        .allow_any_method()
+        .allowed_header(http::header::CONTENT_TYPE);
+            
         App::new()
             .wrap(cors)
             .app_data(web::Data::new(app_state.clone()))
@@ -54,4 +57,3 @@ async fn main() -> std::io::Result<()> {
     .run()
     .await
 }
-
