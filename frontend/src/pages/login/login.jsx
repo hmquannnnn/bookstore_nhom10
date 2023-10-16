@@ -2,7 +2,7 @@
 
 import { Button, Divider, Form, Input } from "antd";
 import FormItem from "antd/es/form/FormItem";
-import { appFetch } from "../../util/api";
+import { appFetch, intoQuerry } from "../../util/api";
 import { useState } from "react";
 
 
@@ -10,7 +10,8 @@ const Login = () => {
     const [data, setData] = useState("");
 
     const onFinish = async (value) => {
-        (await appFetch(`/user?email=${value.email}&password=${value.password}`)).json().then(data => {
+        const query = intoQuerry(value);
+        (await appFetch(`/user${query}`)).json().then(data => {
             setData(data);
             console.log(data, value);
         });
@@ -29,7 +30,6 @@ const Login = () => {
                                 onFinish={onFinish}
                                 autoComplete="off"
                             >
-
                                 <FormItem
                                     labelCol={{ span: 24 }}
                                     type="email"

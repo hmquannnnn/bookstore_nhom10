@@ -2,22 +2,7 @@ use std::error::Error;
 
 use sqlx::MySqlPool;
 
-
-#[derive(Debug)]
-pub enum UserError {
-    WrongPassword,
-}
-
-impl std::fmt::Display for UserError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::WrongPassword => write!(f, "wrong password")
-        }
-    }
-}
-
-impl std::error::Error for UserError {}
-
+use crate::util::types::LoginError;
 
 
 #[derive(sqlx::FromRow, serde::Serialize)]
@@ -36,7 +21,7 @@ pub async fn select_user(email: String, password: String, pool: &MySqlPool) -> R
         .fetch_one(pool)
         .await?;
     if user.password != password {
-        return Err(Box::new(UserError::WrongPassword));
+        return Err(Box::new(LoginError::WrongPassword));
     }
     Ok(user)
 }

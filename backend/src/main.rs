@@ -3,7 +3,10 @@ mod repository;
 mod util;
 
 use actix_cors::Cors;
-use actix_web::{web, App, HttpServer, http::{self}};
+use actix_web::{
+    http::{self},
+    web, App, HttpServer,
+};
 use api::{
     book::{get_book, list_book},
     image::{delete_image, get_image, post_image},
@@ -38,10 +41,10 @@ async fn main() -> std::io::Result<()> {
     // init server
     HttpServer::new(move || {
         let cors = Cors::default()
-        .allow_any_origin()
-        .allow_any_method()
-        .allowed_header(http::header::CONTENT_TYPE);
-            
+            .allow_any_origin()
+            .allow_any_method()
+            .allowed_header(http::header::CONTENT_TYPE);
+
         App::new()
             .wrap(cors)
             .app_data(web::Data::new(app_state.clone()))
