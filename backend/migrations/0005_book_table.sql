@@ -7,6 +7,7 @@ create table book(
     number_of_purchases int,
     book_in_stocks int not null,
     ratting float,
+    desciption text,
 
     front_page_url varchar(256),
     back_page_url varchar(256),

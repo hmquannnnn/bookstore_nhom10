@@ -1,4 +1,5 @@
 create table genre(
-    name varchar(256) primary key
+    id int primary key,
+    name varchar(256) unique
 );
 
