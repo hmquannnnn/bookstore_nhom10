@@ -3,15 +3,17 @@
 import { Button, Divider, Form, Input } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import { appFetch } from "../../util/api";
+import { useState } from "react";
 
 
 const Login = () => {
-    const onFinish = async (value) => {
-        (await appFetch("")).json().then(data => {
-            console.log(data)
-        });
+    const [data, setData] = useState("");
 
-        console.log(value);
+    const onFinish = async (value) => {
+        (await appFetch(`/user?email=${value.email}&password=${value.password}`)).json().then(data => {
+            setData(data);
+            console.log(data, value);
+        });
     }
     return (
         <>
