@@ -1,0 +1,4 @@
+create table author(
+    id int primary key auto_increment,
+    name varchar(256) not null
+)

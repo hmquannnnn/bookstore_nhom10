@@ -2,16 +2,11 @@
 
 import { Button, Divider, Form, Input } from "antd";
 import FormItem from "antd/es/form/FormItem";
-import { useState } from "react";
-import { fetchUser } from "../../../utils/api"; 
 
 
 const Login = () => {
-    const [data, setData] = useState("");
+    const onFinish = async () => {
 
-    const onFinish = async (value) => {
-        const user = await fetchUser(value);
-        console.log(user);
     }
     return (
         <>
@@ -86,6 +81,7 @@ const Login = () => {
     //         <input value={email} onChange={(e) => setEMail(e.target.value)} />
     //         <input value={password} onChange={(e) => setPassword(e.target.value)} />
     //     </>
+
     // )
 }
 

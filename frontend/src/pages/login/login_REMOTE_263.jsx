@@ -2,8 +2,8 @@
 
 import { Button, Divider, Form, Input } from "antd";
 import FormItem from "antd/es/form/FormItem";
+// import { fetchUser } from "../../util/api";
 import { useState } from "react";
-import { fetchUser } from "../../../utils/api"; 
 
 
 const Login = () => {
@@ -27,9 +27,9 @@ const Login = () => {
                                 onFinish={onFinish}
                                 autoComplete="off"
                             >
-                                
                                 <FormItem
                                     labelCol={{ span: 24 }}
+                                    type="email"
                                     label="Email"
                                     name="email"
                                     rules={[
@@ -49,6 +49,7 @@ const Login = () => {
                                 <FormItem
                                     labelCol={{ span: 24 }}
                                     label="Mật khẩu"
+                                    type="password"
                                     name="password"
                                     rules={[
                                         {
