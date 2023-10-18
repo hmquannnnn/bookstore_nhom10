@@ -1,3 +1,23 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 .homepage {
-    background-color: #efefef;
+  background-color: #efefef;
+  .main {
+    display: block;
+    margin: auto;
+    width: 1440px;
+
+    .side-bar {
+      .price {
+        .fast-price-filter {
+            .item {
+                background-color: red;
+            }
+        }
+      }
+    }
+  }
 }

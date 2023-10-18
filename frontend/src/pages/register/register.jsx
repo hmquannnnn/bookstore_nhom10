@@ -124,7 +124,9 @@ const Register = () => {
                                     <Input.Password />
                                 </Form.Item>
                                 <Checkbox>Tôi đã đọc và đồng ý với&#160;
-                                    <a href="/dieu-khoan-dich-vu">điều khoản dịch vụ</a>
+                                    <a href="/chinh-sach-su-dung">chính sách sử dụng</a>
+                                    &#160;và&#160;
+                                    <a href="/chinh-sach-bao-mat">chính sách bảo mật</a>
                                 </Checkbox>
                                 <Button className="submit-btn" type="primary" htmlType="submit">Đăng ký</Button>
                                 <Divider />

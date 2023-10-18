@@ -12,6 +12,7 @@ import BooksManagement from "../pages/admin/managedPages/booksManagement/booksMa
 import UsersManagement from "../pages/admin/managedPages/usersManagement/userManagement";
 import OrdersManagemennt from "../pages/admin/managedPages/ordersManagement/ordersManagement";
 import Home from "../pages/Home/Home";
+import Test from "../pages/test/test";
 
 const Layout = () => {
     return (
@@ -59,7 +60,7 @@ const Routes = () => {
                     element: <BooksManagement />
                 },
                 {
-                    path: "admin/users-management",
+                    path: "users-management",
                     element: <UsersManagement />
                 },
                 {
@@ -67,6 +68,10 @@ const Routes = () => {
                     element: <OrdersManagemennt />
                 }
             ]
+        },
+        {
+            path: "test",
+            element: <Test/>
         }
     ]);
     return (

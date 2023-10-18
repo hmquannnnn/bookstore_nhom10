@@ -33,6 +33,7 @@ const Footer = () => {
                     </div>
                     <div className="col-lg-3">
                         <h4>Chính sách</h4>
+                        <a href="/chinh-sach-su-dung">Chính sách sử dụng</a>
                         <a href="/chinh-sach-bao-mat">Chính sách bảo mật</a>
                         <a href="/chinh-sach-doi/tra-hang">Chính sách đổi/trả hàng</a>
                     </div>
