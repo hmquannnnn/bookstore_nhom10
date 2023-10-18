@@ -7,4 +7,4 @@ create table shipment(
 
     foreign key(order_id) references orders(id),
     foreign key(user_email) references user(email) 
-)
+);
