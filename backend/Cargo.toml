@@ -6,10 +6,13 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+actix-cors = "0.6.4"
 actix-multipart = "0.6.1"
 actix-web = {version ="4.4.0"}
 dotenv = "0.15.0"
 runtime-tokio = "0.0.0"
 serde = "1.0.188"
-sqlx = { version = "0.7.2", features = ["mysql", "macros", "macros", "runtime-tokio", "uuid", "json"] }
+sqlx = { version = "0.7.2", features = ["mysql", "macros", "macros", "runtime-tokio", "uuid", "json", "time"] }
 tokio = "1.32.0"
+uuid = { version = "1.4.1", features = ["v4"] }
+watch = "0.2.3"

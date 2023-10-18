@@ -1,4 +1,4 @@
 create table images (
-	id varchar(32) primary key not null,
+	id varchar(64) primary key,
     data blob not null
 );
