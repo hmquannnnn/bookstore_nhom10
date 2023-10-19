@@ -1,17 +1,32 @@
 // import { useState } from "react";
 
-import { Button, Divider, Form, Input } from "antd";
+import { Button, Divider, Form, Input, message, notification } from "antd";
 import FormItem from "antd/es/form/FormItem";
-import { useState } from "react";
-import { fetchUser } from "../../../utils/api"; 
+// import { useState } from "react";
+// import { fetchUser } from "../../../utils/api"; 
+import { useNavigate } from "react-router-dom";
+import { callLogin } from "../../services/api";
+
 
 
 const Login = () => {
-    const [data, setData] = useState("");
+    // const [data, setData] = useState("");
+    const navigate = useNavigate();
 
-    const onFinish = async (value) => {
-        const user = await fetchUser(value);
-        console.log(user);
+    const onFinish = async (values) => {
+        /*const user = await fetchUser(value);
+        console.log(user);*/
+        const { email, password } = values;
+        const res = await callLogin(email, password);
+
+        if(res?.data) {
+            message.success('Đăng nhập thành công!');
+            navigate('/')
+        } else {
+            notification.error({
+                message: "Sai email hoặc mật khẩu",
+            })
+        }
     }
     return (
         <>
