@@ -25,7 +25,7 @@ pub async fn get_book(query: Query<String>, app_state: actix_web::web::Data<AppS
 }
 
 #[derive(serde::Deserialize)]
-struct BookListInfo {
+pub struct BookListInfo {
     pub start: i32,
     pub length: i32,
 }

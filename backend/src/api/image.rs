@@ -5,7 +5,7 @@ use actix_web::{
 use crate::{repository, util::types::AppState};
 
 #[derive(serde::Deserialize)]
-struct ImageInfo {
+pub struct ImageInfo {
     pub id: String,
 }
 
