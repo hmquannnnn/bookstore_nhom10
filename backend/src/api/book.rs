@@ -26,8 +26,8 @@ pub async fn get_book(query: Query<String>, app_state: actix_web::web::Data<AppS
 
 #[derive(serde::Deserialize)]
 struct BookListInfo {
-    start: i32,
-    length: i32,
+    pub start: i32,
+    pub length: i32,
 }
 
 #[get("/book/list")]
