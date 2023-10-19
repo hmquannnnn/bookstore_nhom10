@@ -4,9 +4,9 @@ use crate::{repository::user, util::types::AppState};
 
 
 #[derive(serde::Deserialize)]
-struct UserLoginInfo {
-    email: String,
-    password: String
+pub struct UserLoginInfo {
+    pub email: String,
+    pub password: String
 }
 
 #[get("/user")]
