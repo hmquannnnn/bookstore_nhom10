@@ -12,7 +12,7 @@ import BooksManagement from "../pages/admin/managedPages/booksManagement/booksMa
 import UsersManagement from "../pages/admin/managedPages/usersManagement/userManagement";
 import OrdersManagemennt from "../pages/admin/managedPages/ordersManagement/ordersManagement";
 import Home from "../pages/home/Home";
-import Test from "../pages/test/test";
+// import Test from "../pages/test/test";
 import AdminHeader from "../components/admin/AdminHeader";
 
 const Layout = () => {
@@ -66,23 +66,23 @@ const Routes = () => {
             element: <AdminLayout />,
             children: [
                 {
-                    path: "books-management",
+                    path: "books",
                     element: <BooksManagement />
                 },
                 {
-                    path: "users-management",
+                    path: "users",
                     element: <UsersManagement />
                 },
                 {
-                    path: "orders-management",
+                    path: "orders",
                     element: <OrdersManagemennt />
                 }
             ]
         },
-        {
-            path: "test",
-            element: <Test />
-        }
+        // {
+        //     path: "test",
+        //     element: <Test />
+        // }
     ]);
     return (
         <>

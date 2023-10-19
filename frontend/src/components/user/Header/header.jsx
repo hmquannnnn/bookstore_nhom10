@@ -35,7 +35,10 @@ const Header = () => {
 
                         <div className="page-header__logo">
                             <span className="logo">
-                                <p className="brand-name">UETHUVIENSACH</p>
+                                <a href="/" >
+                                    <p className="brand-name">UETHUVIENSACH</p>
+                                </a>
+                                
                             </span>
                             <input
                                 className="input-seacrh"

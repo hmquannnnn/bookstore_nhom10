@@ -1,6 +1,6 @@
 // import { useState } from "react";
 
-import { Button, Divider, Form, Input, message, notification } from "antd";
+import { Alert, Button, Divider, Form, Input, message, notification } from "antd";
 import FormItem from "antd/es/form/FormItem";
 // import { useState } from "react";
 // import { fetchUser } from "../../../utils/api"; 
@@ -16,12 +16,19 @@ const Login = () => {
     const onFinish = async (values) => {
         /*const user = await fetchUser(value);
         console.log(user);*/
-        const { email, password } = values;
-        const res = await callLogin(email, password);
+        // const { email, password } = values;
+        // const res = await callLogin(email, password);
 
-        if(res?.data) {
+        if (1) {
             message.success('Đăng nhập thành công!');
+
             navigate('/')
+                // <Alert
+                //     message="Success Tips"
+                //     description="Detailed description and advice about successful copywriting."
+                //     type="success"
+                //     showIcon
+                // />
         } else {
             notification.error({
                 message: "Sai email hoặc mật khẩu",
@@ -42,7 +49,7 @@ const Login = () => {
                                 onFinish={onFinish}
                                 autoComplete="off"
                             >
-                                
+
                                 <FormItem
                                     labelCol={{ span: 24 }}
                                     label="Email"
