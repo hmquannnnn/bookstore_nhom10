@@ -1,12 +1,22 @@
 // import { useState } from "react";
 
-import { Button, Checkbox, Divider, Form, Input } from "antd";
+import { Button, Checkbox, Divider, Form, Input, message, notification } from "antd";
 import FormItem from "antd/es/form/FormItem";
+import { useNavigate } from "react-router-dom";
 
 
 const Register = () => {
-    const onFinish = async () => {
+    const navigate = useNavigate()
 
+    const onFinish = async () => {
+        if(1) {
+            message.success('Đăng ký thành công');
+            navigate("/dang-nhap")
+        } else {
+            notification.error({
+                message: "Đăng ký thất bại"
+            })
+        }
     }
     return (
         <>

@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
 import Login from "../pages/login/login";
-import Footer from "../components/Footer/footer";
-import Header from "../components/Header/header";
+import Footer from "../components/user/Footer/footer";
+import Header from "../components/user/Header/header";
 import Register from "../pages/register/register";
 import NotFound from "../pages/notFound/notFound";
 import AboutUs from "../pages/aboutUs/aboutUs";
@@ -11,8 +11,9 @@ import Admin from "../pages/admin/admin";
 import BooksManagement from "../pages/admin/managedPages/booksManagement/booksManagement";
 import UsersManagement from "../pages/admin/managedPages/usersManagement/userManagement";
 import OrdersManagemennt from "../pages/admin/managedPages/ordersManagement/ordersManagement";
-import Home from "../pages/Home/Home";
-import Test from "../pages/test/test";
+import Home from "../pages/home/Home";
+// import Test from "../pages/test/test";
+import AdminHeader from "../components/admin/AdminHeader";
 
 const Layout = () => {
     return (
@@ -23,6 +24,15 @@ const Layout = () => {
         </div>
     )
 };
+
+const AdminLayout = () => {
+    return (
+        <div className="layout-admin">
+            <AdminHeader />
+            <Outlet />
+        </div>
+    )
+}
 
 const Routes = () => {
     const router = createBrowserRouter([
@@ -53,26 +63,26 @@ const Routes = () => {
         },
         {
             path: "admin",
-            element: <Admin />,
+            element: <AdminLayout />,
             children: [
                 {
-                    path: "books-management",
+                    path: "books",
                     element: <BooksManagement />
                 },
                 {
-                    path: "users-management",
+                    path: "users",
                     element: <UsersManagement />
                 },
                 {
-                    path: "orders-management",
+                    path: "orders",
                     element: <OrdersManagemennt />
                 }
             ]
         },
-        {
-            path: "test",
-            element: <Test/>
-        }
+        // {
+        //     path: "test",
+        //     element: <Test />
+        // }
     ]);
     return (
         <>
