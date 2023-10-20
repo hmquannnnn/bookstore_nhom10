@@ -1,0 +1,6 @@
+version: "1.0"
+services:
+  backend:
+    build: ./backend
+    ports:
+      - 8000:8000
