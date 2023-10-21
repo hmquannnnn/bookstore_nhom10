@@ -1,9 +1,11 @@
 FROM rust:1.73.0
 
 
-COPY . /app
+COPY ./backend /app
 
-WORKDIR /app/backend
+WORKDIR /app
 
-CMD [ "cargo run" ]
+CMD [ "cargo", "run" ]
+
+EXPOSE 8000
 
