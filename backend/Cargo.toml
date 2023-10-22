@@ -16,3 +16,5 @@ sqlx = { version = "0.7.2", features = ["mysql", "macros", "macros", "runtime-to
 tokio = "1.32.0"
 uuid = { version = "1.4.1", features = ["v4"] }
 watch = "0.2.3"
+
+
