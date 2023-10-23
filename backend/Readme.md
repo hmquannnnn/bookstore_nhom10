@@ -1,5 +1,5 @@
 1. migrate database
-cargo install sqlx-cli
+<p>cargo install sqlx-cli</p>
 sqlx migrate run
 
 2. chay code
