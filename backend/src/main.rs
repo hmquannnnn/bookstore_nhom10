@@ -21,7 +21,6 @@ use util::types::AppState;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
-    
     // load .env file
     let url = match std::env::var("DATABASE_URL") {
         Ok(val) => val,
