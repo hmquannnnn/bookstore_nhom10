@@ -5,7 +5,8 @@ mod util;
 use actix_cors::Cors;
 use actix_web::{
     http::{self},
-    web, App, HttpServer,
+    web::{self, Json},
+    App, HttpServer, Responder,
 };
 use api::{
     book::{get_book, list_book},
@@ -14,9 +15,24 @@ use api::{
     user::get_user,
 };
 use sqlx::mysql::MySqlPoolOptions;
-use util::types::AppState;
+use util::types::{AppState, UserAuth};
 
-// const MIGRATE
+#[derive(serde::Serialize, serde::Deserialize)]
+struct MyObj {
+    name: String,
+    number: i32,
+}
+
+#[derive(serde::Deserialize)]
+struct FormData {
+    username: String,
+}
+
+
+#[actix_web::get("/test")]
+async fn test(form: web::Form<FormData>) -> actix_web::HttpResponse {
+    actix_web::HttpResponse::Ok().body(format!("username: {}", form.username))
+}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -45,7 +61,7 @@ async fn main() -> std::io::Result<()> {
         let cors = Cors::default()
             .allow_any_origin()
             .allow_any_method()
-            .allowed_header(http::header::CONTENT_TYPE);
+            .allow_any_header();
 
         App::new()
             .wrap(cors)
@@ -57,6 +73,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_book)
             .service(list_book)
             .service(get_user)
+            .service(test)
     })
     .bind(("localhost", 8000))?
     .run()

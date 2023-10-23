@@ -1,4 +1,5 @@
 pub mod types {
+    use std::fmt::Error;
     use sqlx::MySqlPool;
 
     #[derive(Clone)]
@@ -11,4 +12,27 @@ pub mod types {
         #[error("wrong password")]
         WrongPassword,
     }
+
+    pub struct ColumnField {
+        pub key: String,
+        pub value: String
+    }
+
+    impl ColumnField {
+        pub fn new(key: String, value: String) -> Self {
+            ColumnField { key, value }
+        }
+    }
+
+    #[derive(serde::Deserialize, serde::Serialize)]
+    pub struct UserAuth {
+        pub email: String,
+        pub password: String,
+    }
+
+    // impl UserAuth {
+    //     pub fn into_column_field(self) -> ColumnField {
+    //         ColumnField::new(self.email, )
+    //     }
+    // }
 }

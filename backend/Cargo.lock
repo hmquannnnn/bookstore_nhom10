@@ -3,20 +3,6 @@
 version = 3
 
 [[package]]
-name = "actic_web"
-version = "0.1.0"
-dependencies = [
- "actix-cors",
- "actix-web",
- "dotenv",
- "serde",
- "sqlx",
- "thiserror",
- "tokio",
- "uuid",
-]
-
-[[package]]
 name = "actix-codec"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -331,6 +317,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71"
 dependencies = [
  "generic-array",
+]
+
+[[package]]
+name = "bookstore-backend"
+version = "0.1.0"
+dependencies = [
+ "actix-cors",
+ "actix-web",
+ "dotenv",
+ "serde",
+ "sqlx",
+ "thiserror",
+ "tokio",
+ "uuid",
 ]
 
 [[package]]

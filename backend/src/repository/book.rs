@@ -1,4 +1,6 @@
 use sqlx::MySqlPool;
+use tokio::join;
+
 
 // struct Book {
 //     id: String,
@@ -50,24 +52,27 @@ pub async fn list_books(start: i32, length: i32, pool: &MySqlPool) -> sqlx::Resu
 
 
 // (id, title, author_id, price, publish_year, back_date_url, front_page_url)
-// pub async fn update_book(book: Book, pool: &MySqlPool) -> sqlx::Result<()> {
-//     sqlx::query!("update book
-//                  set title = ?,
-//                  author_id = ?,
-//                  price = ?,
-//                  publish_year = ?,
-//                  book_in_stocks = ?,
-//                  back_page_url = ?,
-//                  front_page_url = ?",
-//                  book.title,
-//                  book.author_id,
-//                  book.price,
-//                  book.publish_year,
-//                  book.book_in_stocks,
-//                  book.back_page_url,
-//                  book.front_page_url)
-//         .execute(pool)
-//         .await?;
+// pub async fn update_book(column_fields: Vec<ColumnField>, pool: &MySqlPool) -> sqlx::Result<()> {
+//     join!(
+//         update_one_field("book", id_field, value_field, pool)
+//     );
+//     // sqlx::query!("update book
+//     //              set title = ?,
+//     //              author_id = ?,
+//     //              price = ?,
+//     //              publish_year = ?,
+//     //              book_in_stocks = ?,
+//     //              back_page_url = ?,
+//     //              front_page_url = ?",
+//     //              book.title,
+//     //              book.author_id,
+//     //              book.price,
+//     //              book.publish_year,
+//     //              book.book_in_stocks,
+//     //              book.back_page_url,
+//     //              book.front_page_url)
+//     //     .execute(pool)
+//     //     .await?;
 //     Ok(())
 // }
 
