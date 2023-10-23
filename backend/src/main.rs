@@ -13,7 +13,7 @@ use api::{
     index,
     user::get_user,
 };
-use sqlx::{mysql::MySqlPoolOptions};
+use sqlx::mysql::MySqlPoolOptions;
 use util::types::AppState;
 
 // const MIGRATE

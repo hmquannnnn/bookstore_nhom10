@@ -6,18 +6,9 @@ pub mod types {
         pub pool: MySqlPool,
     }
 
-    #[derive(Debug)]
+    #[derive(Debug, thiserror::Error)]
     pub enum LoginError {
+        #[error("wrong password")]
         WrongPassword,
     }
-
-    impl std::fmt::Display for LoginError {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            match self {
-                Self::WrongPassword => write!(f, "wrong password"),
-            }
-        }
-    }
-
-    impl std::error::Error for LoginError {}
 }
