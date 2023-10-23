@@ -16,10 +16,13 @@ use api::{
 use sqlx::{mysql::MySqlPoolOptions, MySqlPool};
 use util::types::AppState;
 
+// const MIGRATE
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    // load .env file
     dotenv::dotenv().ok();
+    
+    // load .env file
     let url = match std::env::var("DATABASE_URL") {
         Ok(val) => val,
         Err(_) => panic!("can't read enviroment valriable"),
@@ -34,7 +37,7 @@ async fn main() -> std::io::Result<()> {
         .unwrap();
 
     // migate database
-    sqlx::migrate!("./migrations").run(&pool).await.unwrap();
+    sqlx::migrate!().run(&pool).await.unwrap();
 
     let app_state = AppState { pool };
 
