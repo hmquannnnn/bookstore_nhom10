@@ -13,7 +13,7 @@ use api::{
     index,
     user::get_user,
 };
-use sqlx::{mysql::MySqlPoolOptions, MySqlPool};
+use sqlx::{mysql::MySqlPoolOptions};
 use util::types::AppState;
 
 // const MIGRATE
@@ -29,7 +29,7 @@ async fn main() -> std::io::Result<()> {
     let url = url.as_str();
 
     // connect to database
-    let pool: MySqlPool = MySqlPoolOptions::new()
+    let pool = MySqlPoolOptions::new()
         .max_connections(10)
         .connect(url)
         .await
