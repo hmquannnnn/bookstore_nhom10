@@ -1,6 +1,6 @@
 // import { useState } from "react";
 
-import { Alert, Button, Divider, Form, Input, message, notification } from "antd";
+import { Button, Divider, Form, Input, message, notification } from "antd";
 import FormItem from "antd/es/form/FormItem";
 // import { useState } from "react";
 // import { fetchUser } from "../../../utils/api"; 
@@ -10,31 +10,22 @@ import { callLogin } from "../../services/api";
 
 
 const Login = () => {
-    // const [data, setData] = useState("");
     const navigate = useNavigate();
-
     const onFinish = async (values) => {
-        /*const user = await fetchUser(value);
-        console.log(user);*/
-        // const { email, password } = values;
-        // const res = await callLogin(email, password);
+        const { email, password } = values;
+        const res = await callLogin(email, password);
 
-        if (1) {
+        if (res?.data) {
+            console.log(res.data);
             message.success('Đăng nhập thành công!');
-
             navigate('/')
-                // <Alert
-                //     message="Success Tips"
-                //     description="Detailed description and advice about successful copywriting."
-                //     type="success"
-                //     showIcon
-                // />
         } else {
             notification.error({
                 message: "Sai email hoặc mật khẩu",
             })
         }
     }
+
     return (
         <>
             <div className="login-page">

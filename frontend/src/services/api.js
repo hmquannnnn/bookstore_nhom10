@@ -1,10 +1,10 @@
-import axios from "../../utils/axiosCustomize";
+import instance from "../utils/axiosCustomize";
 
-export const callLogin = ( email, password) => {
-    return axios.post('url api ', {email, password});
-}
+export const callLogin = (email, password) => {
+  return instance.get(`/user?email=${email}&password=${password}`);
+};
 
 export const callRegister = () => {
-
+    
 }
 
