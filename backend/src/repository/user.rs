@@ -4,7 +4,7 @@ use sqlx::MySqlPool;
 use crate::util::types::{ColumnField, LoginError, UserAuth};
 use super::update_one_field;
 
-#[derive(sqlx::FromRow, serde::Serialize)]
+#[derive(sqlx::FromRow, serde::Serialize, serde::Deserialize)]
 pub struct User {
     pub email: String,
     pub name: String,
