@@ -6,15 +6,18 @@ import { useNavigate } from "react-router-dom";
 
 
 const Register = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const onFinish = async (values) => {
+        // const { name, email, phoneNumber, password } = values;
+        // const res = await callRegister(name, email, phoneNumber, password);
 
-    const onFinish = async () => {
-        if(1) {
-            message.success('Đăng ký thành công');
-            navigate("/dang-nhap")
+        if (1) {
+            // console.log(res.data);
+            message.success('Đăng ký thành công!');
+            navigate('/dang-nhap')
         } else {
             notification.error({
-                message: "Đăng ký thất bại"
+                message: "Có lỗi xảy ra",
             })
         }
     }
