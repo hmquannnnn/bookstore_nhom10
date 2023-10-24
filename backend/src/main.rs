@@ -11,7 +11,7 @@ use api::{
     book::{get_book, list_book},
     image::{delete_image, get_image, put_image},
     index,
-    user::get_user,
+    user::{get_user, resigter_user},
 };
 use sqlx::mysql::MySqlPoolOptions;
 use util::types::AppState;
@@ -55,6 +55,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_book)
             .service(list_book)
             .service(get_user)
+            .service(resigter_user)
     })
     .bind((domain_name.as_str(), port))?
     .workers(2)
