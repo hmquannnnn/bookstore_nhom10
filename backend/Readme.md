@@ -1,13 +1,8 @@
-1. install docker 
+1. migrate database
+<p>
+  cargo install sqlx-cli<br>
+  sqlx migrate run
+</p>
 
-2. tạo docker image
-docker build -t backend:run .
-
-dùng "docker image ls" để xem các image đang có, rồi lấy id của image vừa tạo.
-
-3. chạy docker
- docker run --network=host Image_id
-
-
-
-
+2. chay code
+<p>cargo run</p>
