@@ -33,8 +33,13 @@ async fn main() -> std::io::Result<()> {
         .await
         .unwrap();
 
-    // migate database
-    sqlx::migrate!("./migrations").run(&pool).await.unwrap();
+    // // migate database
+    // let mi = sqlx::migrate!("./migrations").run(&pool).await;
+
+    // let _mi = match mi {
+    //     Ok(mi) => mi,
+    //     Err(error) => panic!("sdfdfdsf {}", error),
+    // };
 
     let app_state = AppState { pool };
 
@@ -56,7 +61,7 @@ async fn main() -> std::io::Result<()> {
             .service(list_book)
             .service(get_user)
     })
-    .bind(("localhost", 8000))?
+    .bind(("localhost", 8080))?
     .run()
     .await
 }
