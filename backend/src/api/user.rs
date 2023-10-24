@@ -1,6 +1,8 @@
+use std::error::Error;
+
 use actix_web::{web::{Json, self}, Responder, post};
 
-use crate::{repository::user::{self, User}, util::types::{AppState, UserAuth}};
+use crate::{repository::{user::{self, User}}, util::types::{AppState, UserAuth}};
 
 
 #[post("/user")]
@@ -23,10 +25,13 @@ pub async fn get_user(data: Json<UserAuth>, app_state: actix_web::web::Data<AppS
 
 
 
-// #[post("/user/resigter")]
-// pub async fn resigter_user(data: Json<User>, app_state: web::Data<AppState>) -> actix_web::Result<impl Responder> {
+#[post("/user/resigter")]
+pub async fn resigter_user(data: Json<User>, app_state: web::Data<AppState>) -> Result<impl Responder, Box<dyn Error>> {
+    let new_user = data.into_inner();
+    let new_user = user::insert_user(new_user, &app_state.pool).await?;
 
-// }
+    Ok(Json(new_user))
+}
 
 // #[patch("/user/name")]
 // pub async fn patch_name(q)
