@@ -1,4 +1,0 @@
-cd migrate
-cargo run
-cd ..
-cargo run
