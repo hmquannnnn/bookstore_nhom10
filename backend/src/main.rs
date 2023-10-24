@@ -36,7 +36,7 @@ async fn main() -> std::io::Result<()> {
         .unwrap();
 
     // migate database
-    sqlx::migrate!("./migrations").run(&pool).await.unwrap();
+     sqlx::migrate!("./migrations").run(&pool).await.unwrap();
 
     let app_state = AppState { pool };
 
