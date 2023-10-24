@@ -1,11 +1,11 @@
-use actix_web::{web::{Json, Query}, Responder, get, patch};
+use actix_web::{web::{Json, self}, Responder, post};
 
-use crate::{repository::user, util::types::{AppState, UserAuth}};
+use crate::{repository::user::{self, User}, util::types::{AppState, UserAuth}};
 
 
-#[get("/user")]
-pub async fn get_user(query: Query<UserAuth>, app_state: actix_web::web::Data<AppState>) -> actix_web::Result<impl Responder> {
-    let user_auth = query.0;
+#[post("/user")]
+pub async fn get_user(data: Json<UserAuth>, app_state: actix_web::web::Data<AppState>) -> actix_web::Result<impl Responder> {
+    let user_auth = data.0;
     let pool = &app_state.pool;
 
     let user = user::select_user(user_auth, pool)
@@ -21,6 +21,12 @@ pub async fn get_user(query: Query<UserAuth>, app_state: actix_web::web::Data<Ap
     }
 }
 
+
+
+// #[post("/user/resigter")]
+// pub async fn resigter_user(data: Json<User>, app_state: web::Data<AppState>) -> actix_web::Result<impl Responder> {
+
+// }
 
 // #[patch("/user/name")]
 // pub async fn patch_name(q)

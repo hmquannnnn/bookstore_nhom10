@@ -1,11 +1,8 @@
 use std::error::Error;
-
 use sqlx::MySqlPool;
 
-use crate::util::types::{LoginError, UserAuth, ColumnField};
-
+use crate::util::types::{ColumnField, LoginError, UserAuth};
 use super::update_one_field;
-
 
 #[derive(sqlx::FromRow, serde::Serialize)]
 pub struct User {
@@ -19,9 +16,13 @@ pub struct User {
 }
 
 async fn auth_user(user_auth: &UserAuth, pool: &MySqlPool) -> sqlx::Result<bool> {
-    let user = sqlx::query_as!(UserAuth, "select email, password from user where email = ?", user_auth.email)
-        .fetch_one(pool)
-        .await?;
+    let user = sqlx::query_as!(
+        UserAuth,
+        "select email, password from user where email = ?",
+        user_auth.email
+    )
+    .fetch_one(pool)
+    .await?;
     Ok(user.password == user_auth.password)
 }
 
@@ -35,8 +36,26 @@ pub async fn select_user(user_auth: UserAuth, pool: &MySqlPool) -> Result<User, 
     Ok(user)
 }
 
+pub async fn insert_user(user: User, pool: &MySqlPool) -> sqlx::Result<User> {
+    sqlx::query!(
+        r"insert into user(email, name, password, address, image_url)
+    values(?, ?, ?, ?, ?)",
+        user.email,
+        user.name,
+        user.password,
+        user.address,
+        user.image_url
+    )
+    .execute(pool)
+    .await?;
+    Ok(user)
+}
 
-pub async fn update_user(user_auth: UserAuth, column_field: ColumnField, pool: &MySqlPool) -> Result<(), Box<dyn Error>> {
+pub async fn update_user(
+    user_auth: UserAuth,
+    column_field: ColumnField,
+    pool: &MySqlPool,
+) -> Result<(), Box<dyn Error>> {
     let auth_success = auth_user(&user_auth, pool).await?;
     if auth_success {
         let id_field = ColumnField::new(String::from("email"), user_auth.email);
@@ -46,7 +65,3 @@ pub async fn update_user(user_auth: UserAuth, column_field: ColumnField, pool: &
     }
     Ok(())
 }
-
-
-
-

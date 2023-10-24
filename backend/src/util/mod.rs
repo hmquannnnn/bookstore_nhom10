@@ -1,10 +1,11 @@
 pub mod types {
-    use std::fmt::Error;
+    
     use sqlx::MySqlPool;
 
     #[derive(Clone)]
     pub struct AppState {
         pub pool: MySqlPool,
+        pub base_url: String,
     }
 
     #[derive(Debug, thiserror::Error)]
