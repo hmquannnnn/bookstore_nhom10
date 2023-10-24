@@ -1,21 +1,14 @@
-use actix_web::{web::{Json, Query}, Responder, get};
+use actix_web::{web::{Json, self}, Responder, post};
 
-use crate::{repository::user, util::types::AppState};
+use crate::{repository::user::{self, User}, util::types::{AppState, UserAuth}};
 
 
-#[derive(serde::Deserialize)]
-pub struct UserLoginInfo {
-    pub email: String,
-    pub password: String
-}
-
-#[get("/user")]
-pub async fn get_user(query: Query<UserLoginInfo>, app_state: actix_web::web::Data<AppState>) -> actix_web::Result<impl Responder> {
-    let email = query.0.email;
-    let password = query.0.password;
+#[post("/user")]
+pub async fn get_user(data: Json<UserAuth>, app_state: actix_web::web::Data<AppState>) -> actix_web::Result<impl Responder> {
+    let user_auth = data.0;
     let pool = &app_state.pool;
 
-    let user = user::select_user(email, password, pool)
+    let user = user::select_user(user_auth, pool)
         .await;
 
     match user {
@@ -27,3 +20,13 @@ pub async fn get_user(query: Query<UserLoginInfo>, app_state: actix_web::web::Da
         }
     }
 }
+
+
+
+// #[post("/user/resigter")]
+// pub async fn resigter_user(data: Json<User>, app_state: web::Data<AppState>) -> actix_web::Result<impl Responder> {
+
+// }
+
+// #[patch("/user/name")]
+// pub async fn patch_name(q)
