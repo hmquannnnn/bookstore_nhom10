@@ -1,5 +1,7 @@
 use actix_web::{
-    get, post, web::{self, Bytes, Json}, HttpResponse, delete, Responder
+    delete, get, put,
+    web::{self, Bytes, Json},
+    HttpResponse, Responder,
 };
 
 use crate::{repository, util::types::AppState};
@@ -10,39 +12,40 @@ pub struct ImageInfo {
 }
 
 #[get("/image")]
-pub async fn get_image(query: web::Query<ImageInfo>, app_state: web::Data<AppState>) -> HttpResponse {
+pub async fn get_image(
+    query: web::Query<ImageInfo>,
+    app_state: web::Data<AppState>,
+) -> HttpResponse {
     let id = query.into_inner().id;
     let pool = &app_state.into_inner().pool;
     let image = repository::image::select_image(id, pool).await;
     match image {
-        Ok(image) => {
-            HttpResponse::Ok().body(image)
-        },
-        _ => {
-            HttpResponse::NotFound().finish()
-        } 
+        Ok(image) => HttpResponse::Ok().body(image),
+        _ => HttpResponse::NotFound().finish(),
     }
 }
 
-#[post("/image")]
-pub async fn post_image(payload: Bytes, app_state: web::Data<AppState>) -> impl Responder {
+#[put("/image")]
+pub async fn put_image(payload: Bytes, app_state: web::Data<AppState>) -> impl Responder {
     let image = payload.to_vec();
-    let action = repository::image::insert_image(image, &app_state.into_inner().pool)
-        .await;
+    let app_state = app_state.into_inner();
+    let action = repository::image::insert_image(image, &app_state.pool).await;
     match action {
-        Ok(id) => Json(id),
-        Err(_) => Json("can't post image".to_string())
+        Ok(id) => HttpResponse::Ok().body(app_state.base_url.as_str().to_owned() + "/image" + id.as_str()),
+        Err(_) => HttpResponse::NotModified().body("can't insert image"),
     }
 }
 
 #[delete("/image")]
-pub async fn delete_image(query: web::Query<ImageInfo>, app_state: web::Data<AppState>) -> HttpResponse {
+pub async fn delete_image(
+    query: web::Query<ImageInfo>,
+    app_state: web::Data<AppState>,
+) -> HttpResponse {
     let id = query.into_inner().id;
     let pool = &app_state.into_inner().pool;
-    let req = repository::image::delete_image(id, pool)
-        .await;
+    let req = repository::image::delete_image(id, pool).await;
     match req {
         Ok(_) => HttpResponse::Ok().finish(),
-        Err(_) => HttpResponse::NotModified().finish()
+        Err(_) => HttpResponse::NotModified().finish(),
     }
 }
