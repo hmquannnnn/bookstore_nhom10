@@ -11,7 +11,7 @@ import Admin from "../pages/admin/admin";
 import BooksManagement from "../pages/admin/managedPages/booksManagement/booksManagement";
 import UsersManagement from "../pages/admin/managedPages/usersManagement/userManagement";
 import OrdersManagemennt from "../pages/admin/managedPages/ordersManagement/ordersManagement";
-import Home from "../pages/home/Home";
+import Home from "../pages/Home/Home";
 // import Test from "../pages/test/test";
 import AdminHeader from "../components/admin/AdminHeader";
 
