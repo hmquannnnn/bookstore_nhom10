@@ -4,13 +4,14 @@ use sqlx::MySqlPool;
 use crate::util::types::{ColumnField, LoginError, UserAuth};
 use super::update_one_field;
 
-#[derive(sqlx::FromRow, serde::Serialize, serde::Deserialize)]
+#[derive(sqlx::FromRow, serde::Serialize, serde::Deserialize, Debug)]
 pub struct User {
     pub email: String,
     pub name: String,
-    pub phone: String,
+    pub phone: Option<String>,
     pub password: String,
     pub address: String,
+    pub role: String,
 
     pub image_url: Option<String>,
 }
@@ -37,13 +38,14 @@ pub async fn select_user(user_auth: UserAuth, pool: &MySqlPool) -> Result<User, 
 }
 
 pub async fn insert_user(user: User, pool: &MySqlPool) -> sqlx::Result<User> {
-    sqlx::query!(
-        r"insert into user(email, name, password, address, image_url)
-    values(?, ?, ?, ?, ?)",
+    sqlx::query_as!(User,
+        "insert into user(email, name, password, phone, address, role, image_url) values(?, ?, ?, ?, ?, ?, ?)",
         user.email,
         user.name,
         user.password,
+        user.phone,
         user.address,
+        user.role,
         user.image_url
     )
     .execute(pool)

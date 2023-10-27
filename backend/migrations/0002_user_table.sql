@@ -4,6 +4,7 @@ create table user (
     phone varchar(15) not null,
     password varchar(256) not null,
     address varchar(256) not null,
+    role varchar(32) not null,
 
     image_url varchar(256)
 );
