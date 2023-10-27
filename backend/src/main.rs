@@ -18,7 +18,7 @@ use util::types::AppState;
 
 
 // #[actix_web::get("/auth")]
-// pub async fn auth_test(data: actix_web::web::Bytes, auth: Authority) -> String {
+// pub async fn auth_test(header: actix_web::web::Header<>) -> String {
 //     auth.host().to_owned()
 // }
 
