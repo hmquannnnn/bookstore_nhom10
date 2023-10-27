@@ -6,6 +6,7 @@ import FormItem from "antd/es/form/FormItem";
 // import { fetchUser } from "../../../utils/api"; 
 import { useNavigate } from "react-router-dom";
 import { callLogin } from "../../services/api";
+import "./login.scss"
 
 
 
@@ -46,6 +47,7 @@ const Login = () => {
                                     labelCol={{ span: 24 }}
                                     label="Email"
                                     name="email"
+                                    style={{padding: "0"}}
                                     rules={[
                                         {
                                             required: true,
@@ -78,9 +80,9 @@ const Login = () => {
                                 >
                                     <Input.Password />
                                 </FormItem>
-                                <Button className="submit-btn" type="primary" htmlType="submit">Đăng nhập</Button>
+                                <Button className="submit-btn" type="primary" htmlType="submit" style={{width: "100%"}}>Đăng nhập</Button>
                                 <Divider />
-                                <p className="text text-normal">Chưa có tài khoản?&#160;
+                                <p className="text text-normal" style={{textAlign: "center"}}>Chưa có tài khoản?&#160;
                                     <span>
                                         <a href="/dang-ky">Đăng ký</a>
                                     </span>

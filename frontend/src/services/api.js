@@ -1,14 +1,19 @@
 import instance from "../utils/axiosCustomize";
 
 export const callLogin = (email, password) => {
-  return instance.post(/*`/user?email=${email}&password=${password}`*/ "user", { email, password });
+  const jsonData = {
+    email: email,
+    password: password
+  }
+  return instance.post("/user", jsonData);
 };
 
 export const callRegister = (name, email, phoneNumber, password) => {
-  return instance.post(/*`/user?email=${email}&password=${password}`*/ "user", {
-    name,
-    email,
-    phoneNumber,
-    password,
-  });
+  const jsonData = {
+    name: name,
+    email: email,
+    phoneNumber: phoneNumber,
+    password: password
+  }
+  return instance.post("/user/register", jsonData);
 };
