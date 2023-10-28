@@ -11,6 +11,7 @@ pub struct User {
     pub phone: Option<String>,
     pub password: String,
     pub address: String,
+    pub role: String,
 
     pub image_url: Option<String>,
 }
@@ -27,7 +28,7 @@ async fn auth_user(user_auth: &UserAuth, pool: &MySqlPool) -> sqlx::Result<bool>
 }
 
 pub async fn select_user(user_auth: UserAuth, pool: &MySqlPool) -> Result<User, Box<dyn Error>> {
-    let user = sqlx::query_as!(User, "select email, name, phone, password, address, image_url from user where email = ?", user_auth.email)
+    let user = sqlx::query_as!(User, "select * from user where email = ?", user_auth.email)
         .fetch_one(pool)
         .await?;
     if user.password != user_auth.password {
@@ -36,7 +37,19 @@ pub async fn select_user(user_auth: UserAuth, pool: &MySqlPool) -> Result<User, 
     Ok(user)
 }
 
-pub async fn insert_user(user: User, pool: &MySqlPool) -> sqlx::Result<User> {
+
+#[derive(sqlx::FromRow, serde::Serialize, serde::Deserialize, Debug)]
+pub struct UserInsert {
+    pub email: String,
+    pub name: String,
+    pub phone: Option<String>,
+    pub password: String,
+    pub address: String,
+
+    pub image_url: Option<String>,
+}
+
+pub async fn insert_user(user: UserInsert, pool: &MySqlPool) -> sqlx::Result<UserInsert> {
     sqlx::query!("insert into user(email, name, password, phone, address, role, image_url) values(?, ?, ?, ?, ?, ?, ?)",
         user.email,
         user.name,

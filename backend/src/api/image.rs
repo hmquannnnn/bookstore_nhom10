@@ -1,6 +1,6 @@
 use actix_web::{
     delete, get, put,
-    web::{self, Bytes, Json},
+    web::{self, Bytes},
     HttpResponse, Responder,
 };
 
