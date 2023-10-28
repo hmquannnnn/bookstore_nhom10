@@ -1,6 +1,7 @@
 import { Button, Checkbox, Col, Divider, Form, InputNumber, Rate, Row, Tabs } from "antd";
-
+// import {useSelector} from "react-redux"
 const Home = () => {
+    // const user = useSelector(state => state.account.user);
     const [form] = Form.useForm();
     const handleChangeFilter = (changeValues, values) => {
         console.log(">>> check handleChangeFilter", changeValues, values);

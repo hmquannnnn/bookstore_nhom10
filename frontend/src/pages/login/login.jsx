@@ -6,19 +6,23 @@ import FormItem from "antd/es/form/FormItem";
 // import { fetchUser } from "../../../utils/api"; 
 import { useNavigate } from "react-router-dom";
 import { callLogin } from "../../services/api";
+import { useDispatch } from "react-redux"
 import "./login.scss"
+import { doLoginAccount } from "../../redux/counter/accountSlice";
 
 
 
 const Login = () => {
+    const dispatch = useDispatch()
     const navigate = useNavigate();
     const onFinish = async (values) => {
         const { email, password } = values;
         const res = await callLogin(email, password);
-        console.log(res);
+        // console.log(res);
         if (res) {
             // localStorage.setItem('access_token', res.data.access_token)
             console.log(res);
+            dispatch(doLoginAccount(res));
             message.success('Đăng nhập thành công!');
             navigate('/')
         } else {
@@ -44,6 +48,7 @@ const Login = () => {
                             >
 
                                 <FormItem
+                                    className="input-box"
                                     labelCol={{ span: 24 }}
                                     label="Email"
                                     name="email"
@@ -63,6 +68,7 @@ const Login = () => {
                                     <Input />
                                 </FormItem>
                                 <FormItem
+                                    className="input-box"
                                     labelCol={{ span: 24 }}
                                     label="Mật khẩu"
                                     name="password"

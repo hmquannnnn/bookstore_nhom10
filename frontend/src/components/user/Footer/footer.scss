@@ -4,7 +4,12 @@ $light-font-weight: 100;
 $normal-font-weight: 200;
 $bold-font-weight: 600;
 
+body {
+    background-color: white;
+}
+
 .container {
+    background-color: white;
     font-family: $font-family;
 }
 
@@ -26,13 +31,10 @@ $bold-font-weight: 600;
     justify-content: flex-start;
 
     .logo,
-    // .payment,
+
     a {
         display: flex;
         flex-direction: row;
-    }
-
-    a {
         text-decoration: none;
         font-size: 14px;
         line-height: 15px;

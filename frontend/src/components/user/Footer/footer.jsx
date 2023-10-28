@@ -44,10 +44,10 @@ const Footer = () => {
                         </div>
                     </div> */}
                     <div className="col-lg-3">
-                        <h4>Theo dõi chúng tôi</h4>
+                        <h4>mạng xã hội</h4>
 
                         <a href="https://www.facebook.com/profile.php?id=61552075941822" target="_blank" rel="noopener noreferrer">
-                            <i className="fa-brands fa-facebook" style={{ color: "black" }}></i>
+                            {/* <i className="fa-brands fa-facebook" style={{ color: "black" }}></i> */}
                             <p>Facebook</p>
                         </a>
                         {/* <a href="https://www.facebook.com/profile.php?id=100010515218862" target="_blank" rel="noopener noreferrer">
@@ -57,7 +57,7 @@ const Footer = () => {
 
 
                         <a href="" target="_blank" rel="noopener noreferrer">
-                            <i className="fa-brands fa-instagram" style={{ color: "black" }}></i>
+                            {/* <i className="fa-brands fa-instagram" style={{ color: "black" }}></i> */}
                             <p>Instagram</p>
                         </a>
 

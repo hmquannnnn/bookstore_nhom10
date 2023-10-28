@@ -31,10 +31,10 @@ const Register = () => {
             <div className="register-page">
                 <main className="main">
                     <div className="container">
-                        <div className="heading">
+                        
                             <h2 className="text text-large">Đăng ký</h2>
 
-                        </div>
+                        
                         <Form
                             name="basic"
                             onFinish={onFinish}
@@ -42,6 +42,7 @@ const Register = () => {
                         >
 
                             <FormItem
+                                className="input-box"
                                 labelCol={{ span: 24 }}
                                 label="Email"
                                 name="email"
@@ -61,6 +62,7 @@ const Register = () => {
                                 <Input />
                             </FormItem>
                             <FormItem
+                                className="input-box"
                                 labelCol={{ span: 24 }}
                                 label="Tên tài khoản"
                                 name="name"
@@ -80,6 +82,7 @@ const Register = () => {
                                 <Input />
                             </FormItem>
                             <FormItem
+                                className="input-box"
                                 labelCol={{ span: 24 }}
                                 label="Số điện thoại"
                                 name="phone"
@@ -98,6 +101,7 @@ const Register = () => {
                                 <Input />
                             </FormItem>
                             <FormItem
+                                className="input-box"
                                 labelCol={{ span: 24 }}
                                 label="Mật khẩu"
                                 name="password"
@@ -118,7 +122,8 @@ const Register = () => {
                             >
                                 <Input.Password />
                             </FormItem>
-                            {/* <Form.Item
+                            <Form.Item
+                                className="input-box"
                                 labelCol={{ span: 24 }}
                                 name="confirm"
                                 label="Xác nhận mật khẩu"
@@ -140,8 +145,9 @@ const Register = () => {
                                 ]}
                             >
                                 <Input.Password />
-                            </Form.Item> */}
+                            </Form.Item> 
                             <Form.Item
+                                className="input-box"
                                 labelCol={{ span: 24 }}
                                 name="address"
                                 label="Địa chỉ"
@@ -155,6 +161,7 @@ const Register = () => {
                                 <Input />
                             </Form.Item>
                             <Form.Item
+                                className="input-box"
                                 name="agreePolicy"
                                 valuePropName="checked"
                                 rules={[
@@ -171,7 +178,7 @@ const Register = () => {
                                     <a href="/chinh-sach-bao-mat">chính sách bảo mật</a>
                                 </Checkbox>
                             </Form.Item>
-                            <Button className="submit-btn" type="primary" htmlType="submit" style={{ width: "100%" }}>Đăng ký</Button>
+                            <Button className="input-box" type="primary" htmlType="submit" style={{ width: "100%" }}>Đăng ký</Button>
                             <Divider />
                             <p className="text text-normal" style={{ textAlign: "center" }}>Đã có tài khoản?&#160;
                                 <span>

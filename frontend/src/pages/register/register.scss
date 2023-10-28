@@ -1,11 +1,44 @@
+body {
+  background-color: #f5f4f4;
+}
+
 .register-page {
-    .main {
-       .container {
-            max-width: 600px;
-            margin: auto;
-            border: 1px solid black;
-            border-radius: 4px;
-            padding: 0 20px;
-        }
+  .main {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+    .container {
+      background-color: white;
+      width: 600px;
+      margin: auto;
+      //   border: 1px solid black;
+      border-radius: 4px;
+      padding: 3px 20px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+      .input-box {
+        margin: 10px 0;
+      }
+
+      .ant-form-item-explain {
+        color: red;
+        font-size: 12px;
+        margin-top: 5px;
+      }
+
+      .ant-form-item-has-error {
+        margin-bottom: 16px;
+      }
+
+      .submit-btn {
+        width: 100%;
+        margin-top: 10px;
+      }
     }
+
+    h2 {
+      text-align: center;
+    }
+  }
 }
