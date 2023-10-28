@@ -10,27 +10,22 @@ import "./register.scss"
 const Register = () => {
     const navigate = useNavigate();
     const onFinish = async (values) => {
-        const { name, email, phoneNumber, password } = values;
+        const { email, name, phone, password, address } = values;
 
-        try {
-            const res = await callRegister(name, email, phoneNumber, password);
-            console.log(res.data);
-            if (res?.data?.email) {
-                console.log(res.data);
-                message.success('Đăng ký thành công!');
-                navigate('/dang-nhap');
-            } else {
-                notification.error({
-                    message: "Có lỗi xảy ra",
-                });
-            }
-        } catch (error) {
-            console.error("Lỗi khi đăng ký:", error);
+        const res = await callRegister(email, name, phone, password, address);
+        if (res) {
+            console.log(res);
+            message.success('Đăng ký thành công!');
+            navigate('/dang-nhap');
+        } else {
             notification.error({
                 message: "Có lỗi xảy ra",
             });
         }
+
+
     }
+
     return (
         <>
             <div className="register-page">
@@ -45,25 +40,7 @@ const Register = () => {
                             onFinish={onFinish}
                             autoComplete="off"
                         >
-                            <FormItem
-                                labelCol={{ span: 24 }}
-                                label="Tên tài khoản"
-                                name="username"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Vui lòng điền tên tài khoản"
-                                    },
-                                    {
-                                        min: 6,
-                                        max: 24,
-                                        message: "Tên tài khoản dài 6-24 kí tự"
-                                    }
 
-                                ]}
-                            >
-                                <Input />
-                            </FormItem>
                             <FormItem
                                 labelCol={{ span: 24 }}
                                 label="Email"
@@ -85,8 +62,27 @@ const Register = () => {
                             </FormItem>
                             <FormItem
                                 labelCol={{ span: 24 }}
+                                label="Tên tài khoản"
+                                name="name"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Vui lòng điền tên tài khoản"
+                                    },
+                                    {
+                                        min: 6,
+                                        max: 24,
+                                        message: "Tên tài khoản dài 6-24 kí tự"
+                                    }
+
+                                ]}
+                            >
+                                <Input />
+                            </FormItem>
+                            <FormItem
+                                labelCol={{ span: 24 }}
                                 label="Số điện thoại"
-                                name="phone-number"
+                                name="phone"
 
                                 rules={[
                                     {
@@ -122,7 +118,7 @@ const Register = () => {
                             >
                                 <Input.Password />
                             </FormItem>
-                            <Form.Item
+                            {/* <Form.Item
                                 labelCol={{ span: 24 }}
                                 name="confirm"
                                 label="Xác nhận mật khẩu"
@@ -144,6 +140,19 @@ const Register = () => {
                                 ]}
                             >
                                 <Input.Password />
+                            </Form.Item> */}
+                            <Form.Item
+                                labelCol={{ span: 24 }}
+                                name="address"
+                                label="Địa chỉ"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Vui lòng điền địa chỉ"
+                                    }
+                                ]}
+                            >
+                                <Input />
                             </Form.Item>
                             <Form.Item
                                 name="agreePolicy"
@@ -162,9 +171,9 @@ const Register = () => {
                                     <a href="/chinh-sach-bao-mat">chính sách bảo mật</a>
                                 </Checkbox>
                             </Form.Item>
-                            <Button className="submit-btn" type="primary" htmlType="submit" style={{width: "100%"}}>Đăng ký</Button>
+                            <Button className="submit-btn" type="primary" htmlType="submit" style={{ width: "100%" }}>Đăng ký</Button>
                             <Divider />
-                            <p className="text text-normal" style={{textAlign: "center"}}>Đã có tài khoản?&#160;
+                            <p className="text text-normal" style={{ textAlign: "center" }}>Đã có tài khoản?&#160;
                                 <span>
                                     <a href="/dang-nhap">Đăng nhập</a>
                                 </span>

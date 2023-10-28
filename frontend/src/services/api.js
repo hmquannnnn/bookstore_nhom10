@@ -8,12 +8,13 @@ export const callLogin = (email, password) => {
   return instance.post("/user", jsonData);
 };
 
-export const callRegister = (name, email, phoneNumber, password) => {
+export const callRegister = (email, name, phone, password, address) => {
   const jsonData = {
-    name: name,
     email: email,
-    phoneNumber: phoneNumber,
-    password: password
+    name: name,
+    phone: phone,
+    password: password,
+    address: address
   }
   return instance.post("/user/register", jsonData);
 };

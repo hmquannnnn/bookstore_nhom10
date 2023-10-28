@@ -15,9 +15,9 @@ const Login = () => {
     const onFinish = async (values) => {
         const { email, password } = values;
         const res = await callLogin(email, password);
-
-        if (res?.data) {
-            localStorage.setItem('access_token', res.data.access_token)
+        console.log(res);
+        if (res) {
+            // localStorage.setItem('access_token', res.data.access_token)
             console.log(res);
             message.success('Đăng nhập thành công!');
             navigate('/')
