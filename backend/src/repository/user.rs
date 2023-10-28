@@ -11,7 +11,6 @@ pub struct User {
     pub phone: Option<String>,
     pub password: String,
     pub address: String,
-    pub role: String,
 
     pub image_url: Option<String>,
 }
@@ -28,7 +27,7 @@ async fn auth_user(user_auth: &UserAuth, pool: &MySqlPool) -> sqlx::Result<bool>
 }
 
 pub async fn select_user(user_auth: UserAuth, pool: &MySqlPool) -> Result<User, Box<dyn Error>> {
-    let user = sqlx::query_as!(User, "select * from user where email = ?", user_auth.email)
+    let user = sqlx::query_as!(User, "select email, name, phone, password, address, image_url from user where email = ?", user_auth.email)
         .fetch_one(pool)
         .await?;
     if user.password != user_auth.password {
@@ -38,14 +37,13 @@ pub async fn select_user(user_auth: UserAuth, pool: &MySqlPool) -> Result<User, 
 }
 
 pub async fn insert_user(user: User, pool: &MySqlPool) -> sqlx::Result<User> {
-    sqlx::query_as!(User,
-        "insert into user(email, name, password, phone, address, role, image_url) values(?, ?, ?, ?, ?, ?, ?)",
+    sqlx::query!("insert into user(email, name, password, phone, address, role, image_url) values(?, ?, ?, ?, ?, ?, ?)",
         user.email,
         user.name,
         user.password,
         user.phone,
         user.address,
-        user.role,
+        "user",
         user.image_url
     )
     .execute(pool)

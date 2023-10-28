@@ -1,7 +1,7 @@
 create table user (
     email varchar(256) primary key,
     name varchar(256) not null,
-    phone varchar(15) not null,
+    phone varchar(15),
     password varchar(256) not null,
     address varchar(256) not null,
     role varchar(32) not null,
