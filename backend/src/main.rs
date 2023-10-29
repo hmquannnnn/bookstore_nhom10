@@ -12,7 +12,7 @@ use api::{
     book::{get_book, list_book},
     image::{delete_image, get_image, put_image},
     index,
-    user::{get_user, resigter_user},
+    user::{get_user, register_user},
 };
 use header::AuthHeader;
 use sqlx::mysql::MySqlPoolOptions;
@@ -70,7 +70,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_book)
             .service(list_book)
             .service(get_user)
-            .service(resigter_user)
+            .service(register_user)
             // .service(patch_user)
             .service(auth_test)
             // .service(auth_test)
