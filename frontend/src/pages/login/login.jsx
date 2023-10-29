@@ -9,6 +9,7 @@ import { callLogin } from "../../services/api";
 import { useDispatch } from "react-redux"
 import "./login.scss"
 import { doLoginAccount } from "../../redux/counter/accountSlice";
+import { useState } from "react";
 
 
 
@@ -19,9 +20,10 @@ const Login = () => {
         const { email, password } = values;
         const res = await callLogin(email, password);
         // console.log(res);
-        if (res) {
+        if (res?.email) {
             // localStorage.setItem('access_token', res.data.access_token)
             console.log(res);
+            console.log(res.access_token);
             dispatch(doLoginAccount(res));
             message.success('Đăng nhập thành công!');
             navigate('/')
@@ -31,6 +33,29 @@ const Login = () => {
             })
         }
     }
+    // const [accessToken, setAccessToken] = useState('');
+
+    // const handleLogin = async () => {
+    //     const response = await fetch('localhost:8080/user', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             username: 'tên_người_dùng',
+    //             password: 'mật_khẩu',
+    //         }),
+    //     });
+
+    //     if (response.ok) {
+    //         const data = await response.json();
+    //         const token = data.access_token; // Trích xuất access token từ phản hồi
+    //         console.log(token);
+    //         setAccessToken(token); // Lưu access token vào state
+    //     } else {
+    //         console.error('Đăng nhập không thành công');
+    //     }
+    // };
 
     return (
         <>
@@ -86,7 +111,7 @@ const Login = () => {
                                 >
                                     <Input.Password />
                                 </FormItem>
-                                <Button className="submit-btn" type="primary" htmlType="submit" style={{width: "100%"}}>Đăng nhập</Button>
+                                <Button className="submit-btn"  type="primary" htmlType="submit" style={{width: "100%"}}>Đăng nhập</Button>
                                 <Divider />
                                 <p className="text text-normal" style={{textAlign: "center"}}>Chưa có tài khoản?&#160;
                                     <span>

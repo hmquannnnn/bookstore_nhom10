@@ -13,8 +13,9 @@ const Register = () => {
         const { email, name, phone, password, address } = values;
 
         const res = await callRegister(email, name, phone, password, address);
-        if (res) {
+        if (res?.email) {
             console.log(res);
+            console.log(res.email);
             message.success('Đăng ký thành công!');
             navigate('/dang-nhap');
         } else {
