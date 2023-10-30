@@ -1,7 +1,7 @@
 use std::error::Error;
 use sqlx::MySqlPool;
 
-use crate::util::types::{ColumnField, LoginError, UserAuth};
+use crate::{util::types::{ColumnField, LoginError, UserAuth}, header::AuthHeader};
 use super::update_one_field;
 
 #[derive(sqlx::FromRow, serde::Serialize, serde::Deserialize, Debug)]
@@ -15,6 +15,8 @@ pub struct User {
 
     pub image_url: Option<String>,
 }
+
+type EitherAuth<T = AuthHeader, E = UserAuth> = std::result::Result<T, E>;
 
 async fn auth_user(user_auth: &UserAuth, pool: &MySqlPool) -> sqlx::Result<bool> {
     let user = sqlx::query_as!(

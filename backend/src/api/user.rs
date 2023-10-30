@@ -1,9 +1,24 @@
 use actix_web::{web::{Json, self}, Responder, post, HttpResponse};
-use crate::{repository::{user::{self, UserInsert}}, util::types::{AppState, UserAuth}};
+use crate::{repository::{user::{self, UserInsert, User}}, util::types::{AppState, UserAuth}};
 
+
+struct UserResponse {
+    user: User,
+    token: String,
+}
+// type EitherAuth<T = AuthHeader, E = UserAuth> = std::result::Result<T, E>;
+
+// pub async fn auth_user(either:  EitherAuth) {
+//     match either {
+//         Ok(header) => {
+
+//         },
+//         Err(user) => 
+//     }
+// }
 
 #[post("/user")]
-pub async fn get_user(data: Json<UserAuth>, app_state: actix_web::web::Data<AppState>) -> actix_web::Result<impl Responder> {
+pub async fn get_user(data: Json<UserAuth>, app_state: web::Data<AppState>) -> actix_web::Result<impl Responder> {
     let user_auth = data.0;
     let pool = &app_state.pool;
 
@@ -28,6 +43,10 @@ pub async fn register_user(data: Json<UserInsert>, app_state: web::Data<AppState
     .await.map_err(|_| actix_web::error::ContentTypeError::ParseError)?;
     Ok(HttpResponse::Ok().json(new_user))
 }
+
+
+
+
 
 // pub struct Basic {
 //     data: String,

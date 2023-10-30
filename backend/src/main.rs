@@ -47,16 +47,16 @@ async fn main() -> std::io::Result<()> {
 
     // migate database
     // sqlx::migrate!().run(&pool).await.unwrap();
-
+    let base_url = "http://".to_owned() + domain_name.as_str() + ":" + port.to_string().as_str();
     let app_state = AppState {
         pool,
-        base_url: "http://".to_owned() + domain_name.as_str() + port.to_string().as_str()
+        base_url
      };
     
     // init server
     HttpServer::new(move || {
         let cors = Cors::default()
-            .allow_any_origin()
+        .allow_any_origin()
             .allow_any_method()
             .allow_any_header();
 
