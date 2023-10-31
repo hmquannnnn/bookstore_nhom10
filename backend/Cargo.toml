@@ -9,7 +9,10 @@ edition = "2021"
 actix-cors = "0.6.4"
 actix-web = {version ="4.4.0"}
 dotenv = "0.15.0"
+hmac = "0.12.1"
+jwt = "0.16.0"
 serde = "1.0.188"
+sha2 = "0.10.8"
 sqlx = { version = "0.7.2", features = ["mysql", "macros", "runtime-tokio", "uuid", "json", "time"] }
 thiserror = "1.0.50"
 tokio = { version = "1.33.0" , features = ["macros"] }

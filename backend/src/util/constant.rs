@@ -1,0 +1,1 @@
+const EXPIRE_INTERVAL: &str = "1 day";
