@@ -1,3 +1,4 @@
+pub mod constant;
 pub mod types {
     
     use sqlx::MySqlPool;

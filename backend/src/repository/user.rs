@@ -1,10 +1,13 @@
 use std::error::Error;
+use hmac::{Hmac, Mac};
+use jwt::SignWithKey;
+use sha2::Sha256;
 use sqlx::MySqlPool;
+use serde::{Deserialize, Serialize};
+use crate::{util::types::{ColumnField, LoginError, UserAuth}, header::AuthHeader};
+use super::{update_one_field, token::insert_token};
 
-use crate::util::types::{ColumnField, LoginError, UserAuth};
-use super::update_one_field;
-
-#[derive(sqlx::FromRow, serde::Serialize, serde::Deserialize, Debug)]
+#[derive(sqlx::FromRow, Serialize, Deserialize, Debug)]
 pub struct User {
     pub email: String,
     pub name: String,
@@ -14,6 +17,12 @@ pub struct User {
     pub role: String,
 
     pub image_url: Option<String>,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct UserResponse {
+    pub user: User,
+    pub token: String,
 }
 
 async fn auth_user(user_auth: &UserAuth, pool: &MySqlPool) -> sqlx::Result<bool> {
@@ -27,14 +36,22 @@ async fn auth_user(user_auth: &UserAuth, pool: &MySqlPool) -> sqlx::Result<bool>
     Ok(user.password == user_auth.password)
 }
 
-pub async fn select_user(user_auth: UserAuth, pool: &MySqlPool) -> Result<User, Box<dyn Error>> {
+pub async fn select_user(user_auth: UserAuth, pool: &MySqlPool) -> Result<UserResponse, Box<dyn Error>> {
     let user = sqlx::query_as!(User, "select * from user where email = ?", user_auth.email)
         .fetch_one(pool)
         .await?;
     if user.password != user_auth.password {
         return Err(Box::new(LoginError::WrongPassword));
-    }
-    Ok(user)
+    } 
+    let mut vec = Vec::new();
+    vec.push(user_auth.email.clone());
+    let token :Hmac<Sha256> = Hmac::new_from_slice(format!("{}{}", user_auth.email, user_auth.password).as_bytes())?;
+    let token = vec.sign_with_key(&token)?;
+    insert_token(&user.email, &token, pool).await?;
+    Ok(UserResponse {
+        user,
+        token
+    })
 }
 
 

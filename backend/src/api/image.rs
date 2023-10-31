@@ -31,8 +31,8 @@ pub async fn put_image(payload: Bytes, app_state: web::Data<AppState>) -> impl R
     let app_state = app_state.into_inner();
     let action = repository::image::insert_image(image, &app_state.pool).await;
     match action {
-        Ok(id) => HttpResponse::Ok().body(app_state.base_url.as_str().to_owned() + "/image" + id.as_str()),
-        Err(_) => HttpResponse::NotModified().body("can't insert image"),
+        Ok(id) => HttpResponse::Ok().body(app_state.base_url.to_owned() + "/image?id=" + id.as_str()),
+        Err(error) => HttpResponse::NotModified().body("can't insert image"),
     }
 }
 
