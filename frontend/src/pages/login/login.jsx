@@ -10,20 +10,28 @@ import { useDispatch } from "react-redux"
 import "./login.scss"
 import { doLoginAccount } from "../../redux/counter/accountSlice";
 import { useState } from "react";
+import { unstable_renderSubtreeIntoContainer } from "react-dom";
 
 
 
-const Login = () => {
+const Login = ({ isLoggedIn, setIsLoggedIn }) => {
+    // const [ isLoggedIn, setIsLoggedIn ] = useState();
     const dispatch = useDispatch()
     const navigate = useNavigate();
     const onFinish = async (values) => {
         const { email, password } = values;
-        const res = await callLogin(email, password);
+        // const res = await callLogin(email, password);
+        // console.log(">>>res: ",res);
+        // console.log(res.access_token);
         // console.log(res);
-        if (res?.email) {
+        // if (res?.email) 
+        if(1)
+        {
+            setIsLoggedIn(true);
+            console.log(">>>login status: ", isLoggedIn)
             // localStorage.setItem('access_token', res.data.access_token)
             console.log(res);
-            console.log(res.access_token);
+            // console.log(res.access_token);
             dispatch(doLoginAccount(res));
             message.success('Đăng nhập thành công!');
             navigate('/')
@@ -33,7 +41,7 @@ const Login = () => {
             })
         }
     }
-   
+
 
     return (
         <>
@@ -55,7 +63,7 @@ const Login = () => {
                                     labelCol={{ span: 24 }}
                                     label="Email"
                                     name="email"
-                                    style={{padding: "0"}}
+                                    style={{ padding: "0" }}
                                     rules={[
                                         {
                                             required: true,
@@ -89,9 +97,9 @@ const Login = () => {
                                 >
                                     <Input.Password />
                                 </FormItem>
-                                <Button className="submit-btn"  type="primary" htmlType="submit" style={{width: "100%"}}>Đăng nhập</Button>
+                                <Button className="submit-btn" type="primary" htmlType="submit" style={{ width: "100%" }}>Đăng nhập</Button>
                                 <Divider />
-                                <p className="text text-normal" style={{textAlign: "center"}}>Chưa có tài khoản?&#160;
+                                <p className="text text-normal" style={{ textAlign: "center" }}>Chưa có tài khoản?&#160;
                                     <span>
                                         <a href="/dang-ky">Đăng ký</a>
                                     </span>

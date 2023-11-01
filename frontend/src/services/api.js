@@ -5,7 +5,7 @@ export const callLogin = (email, password) => {
     email: email,
     password: password
   }
-  return instance.post("/user", jsonData);
+  return instance.post("/user/login", jsonData);
 };
 
 export const callRegister = (email, name, phone, password, address) => {

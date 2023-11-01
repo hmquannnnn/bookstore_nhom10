@@ -15,26 +15,27 @@ import OrdersManagemennt from "../pages/admin/managedPages/ordersManagement/orde
 import AdminHeader from "../components/admin/AdminHeader";
 import Home from "../pages/Home/homePage";
 
-const Layout = () => {
-    return (
-        <div className='layout-app'>
-            <Header />
-            <Outlet />
-            <Footer />
-        </div>
-    )
-};
 
-const AdminLayout = () => {
-    return (
-        <div className="layout-admin">
-            <AdminHeader />
-            <Outlet />
-        </div>
-    )
-}
 
-const Routes = () => {
+const Routes = ({ isLoggedIn, setIsLoggedIn }) => {
+    const Layout = () => {
+        return (
+            <div className='layout-app'>
+                <Header isLoggedIn={isLoggedIn} />
+                <Outlet />
+                <Footer />
+            </div>
+        )
+    };
+
+    const AdminLayout = () => {
+        return (
+            <div className="layout-admin">
+                <AdminHeader />
+                <Outlet />
+            </div>
+        )
+    }
     const router = createBrowserRouter([
         {
             path: "/",
@@ -55,7 +56,7 @@ const Routes = () => {
         },
         {
             path: "dang-nhap",
-            element: <Login />,
+            element: <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>,
         },
         {
             path: "dang-ky",

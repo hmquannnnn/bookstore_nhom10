@@ -8,10 +8,13 @@ import Routes from "./routes/routes";
 
 export default function App() {
   const [ isLoggedIn, setIsLoggedIn ] = useState(false);
-  const handleLogIn = (isLoggedIn) => {
-    setIsLoggedIn(isLoggedIn);
+  const handleLogIn = () => {
+    setIsLoggedIn(true);
+  }
+  const handleLogout = () => {
+    setIsLoggedIn(false)
   }
   return (
-    <Routes/>
+    <Routes isLoggedIn={isLoggedIn} setIsLoggedIn={handleLogIn}  />
   )
 }
