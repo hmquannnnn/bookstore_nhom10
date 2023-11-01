@@ -10,8 +10,8 @@ use crate::util::{constant::EXPIRE_INTERVAL, types::UserAuth};
 pub struct Token {
     pub token: String,
     pub user_email: String,
-    pub issue_at: sqlx::types::time::Date,
-    pub expire_at: sqlx::types::time::Date,
+    pub issue_at: sqlx::types::time::PrimitiveDateTime,
+    pub expire_at: sqlx::types::time::PrimitiveDateTime,
     pub is_expire: i64,
 }
 
@@ -55,7 +55,7 @@ pub async fn insert_token(user_auth: &UserAuth, pool: &MySqlPool) -> sqlx::Resul
 pub async fn check_token(token: &String, pool: &MySqlPool) -> sqlx::Result<TokenSerialize> {
     let token = sqlx::query_as!(
         Token,
-        "select *, expire_at < now() as is_expire from token where token = ?",
+        "select *, expire_at > now() as is_expire from token where token = ?",
         token
     )
     .fetch_one(pool)
