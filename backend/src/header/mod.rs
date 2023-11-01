@@ -1,17 +1,18 @@
 use actix_web::{dev::Payload, FromRequest, HttpRequest};
-use std::{future::Future, pin::Pin};
+use std::{future::{Future, Ready, ready}, pin::Pin};
 
 #[derive(Clone)]
-pub struct AuthHeader(pub String);
+pub struct TokenHeader(pub String);
 
 // fn handle_error<V, E1, E2>(header_value: Result<Result<V, E1>, E2>) => Result<V, < {
 
 // } 
 
 // .ok_or(actix_web::error::ErrorUnauthorized("unknown user"));
-impl FromRequest for AuthHeader {
+impl FromRequest for TokenHeader {
     type Error = actix_web::error::Error;
-    type Future = Pin<Box<dyn Future<Output = Result<AuthHeader, Self::Error>>>>;
+    // type Future = dyn Future<Output = Result<TokenHeader, Self::Error>>;
+    type Future = Ready<Result<Self, Self::Error>>;
 
     fn from_request(req: &HttpRequest, _payload: &mut Payload) -> Self::Future {
         let req = req.headers();
@@ -31,7 +32,7 @@ impl FromRequest for AuthHeader {
         };
 
 
-        let header_value = error_handler(header_value).map(|value| AuthHeader(value.to_string()));
-        Box::pin(async move { header_value })
+        let header_value = error_handler(header_value).map(|value| TokenHeader(value.to_string()));
+        ready(header_value)
     }
 }

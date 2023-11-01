@@ -1,11 +1,12 @@
 use std::error::Error;
+use actix_web::web::{Json, self};
 use hmac::{Hmac, Mac};
 use jwt::SignWithKey;
 use sha2::Sha256;
 use sqlx::MySqlPool;
 use serde::{Deserialize, Serialize};
-use crate::{util::types::{ColumnField, LoginError, UserAuth}, header::AuthHeader};
-use super::{update_one_field, token::insert_token};
+use crate::{util::types::{ColumnField, LoginError, UserAuth}};
+use super::{update_one_field, token::{insert_token}};
 
 #[derive(sqlx::FromRow, Serialize, Deserialize, Debug)]
 pub struct User {
@@ -43,11 +44,7 @@ pub async fn select_user(user_auth: UserAuth, pool: &MySqlPool) -> Result<UserRe
     if user.password != user_auth.password {
         return Err(Box::new(LoginError::WrongPassword));
     } 
-    let mut vec = Vec::new();
-    vec.push(user_auth.email.clone());
-    let token :Hmac<Sha256> = Hmac::new_from_slice(format!("{}{}", user_auth.email, user_auth.password).as_bytes())?;
-    let token = vec.sign_with_key(&token)?;
-    insert_token(&user.email, &token, pool).await?;
+    let token = insert_token(&user_auth, pool).await?;
     Ok(UserResponse {
         user,
         token
