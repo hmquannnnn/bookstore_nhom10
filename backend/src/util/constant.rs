@@ -1,1 +1,1 @@
-const EXPIRE_INTERVAL: &str = "1 day";
+pub const EXPIRE_INTERVAL: &str = " 20 minute ";

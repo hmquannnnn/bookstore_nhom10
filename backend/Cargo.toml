@@ -8,7 +8,9 @@ edition = "2021"
 [dependencies]
 actix-cors = "0.6.4"
 actix-web = {version ="4.4.0"}
+chrono = "0.4.31"
 dotenv = "0.15.0"
+futures-util = "0.3.29"
 hmac = "0.12.1"
 jwt = "0.16.0"
 serde = "1.0.188"

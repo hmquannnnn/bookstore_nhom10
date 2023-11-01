@@ -1,6 +1,6 @@
 use crate::{
-    repository::user::{self, User, UserInsert, UserResponse},
-    util::types::{AppState, UserAuth},
+    repository::{user::{self, User, UserInsert, UserResponse}, token::{check_token, Token, TokenSerialize}},
+    util::types::{AppState, UserAuth}, header::TokenHeader,
 };
 use actix_web::{
     post,
@@ -33,7 +33,7 @@ use actix_web::{
 // //     Ok(user)
 // }
 #[post("/user/login")]
-pub async fn get_user(
+pub async fn user_login(
     data: Json<UserAuth>,
     app_state: web::Data<AppState>,
 ) -> actix_web::Result<impl Responder> {
@@ -58,6 +58,13 @@ pub async fn register_user(
     Ok(HttpResponse::Ok().json(new_user))
 }
 
+#[actix_web::get("/auth")]
+pub async fn auth_test(auth_header: TokenHeader, app_state: web::Data<AppState>) -> actix_web::Result<Json<TokenSerialize>>{
+    let token = auth_header.0;
+   let token = check_token(&token, &app_state.pool).await
+   .map_err(|err| actix_web::error::ErrorUnauthorized(err))?;
+   Ok(Json(token))
+}
 // pub struct Basic {
 //     data: String,
 // }

@@ -2,27 +2,25 @@ mod api;
 mod repository;
 mod util;
 mod header;
+mod middleware;
 
 use actix_cors::Cors;
 use actix_web::{
-    web::{self},
-    App, HttpServer
+    web::{self, Json},
+    App, HttpServer, middleware::Logger, dev::Service
 };
 use api::{
     book::{get_book, list_book},
     image::{delete_image, get_image, put_image},
     index,
-    user::{get_user, register_user},
+    user::{register_user, auth_test, user_login},
 };
-use header::AuthHeader;
+use header::TokenHeader;
+use middleware::SayHi;
 use sqlx::mysql::MySqlPoolOptions;
 use util::types::AppState;
+use futures_util::future::FutureExt;
 
-
-#[actix_web::get("/auth")]
-pub async fn auth_test(auth: AuthHeader) -> String {
-    auth.0
-}
 
 
 #[actix_web::main]
@@ -60,8 +58,11 @@ async fn main() -> std::io::Result<()> {
             .allow_any_method()
             .allow_any_header();
 
-        App::new()
+        let app = 
+            App::new()
             .wrap(cors)
+            .wrap(SayHi)
+            .wrap(Logger::new("for %{}"))
             .app_data(web::Data::new(app_state.clone()))
             .service(index)
             .service(get_image)
@@ -69,10 +70,11 @@ async fn main() -> std::io::Result<()> {
             .service(delete_image)
             .service(get_book)
             .service(list_book)
-            .service(get_user)
+            .service(user_login)
             .service(register_user)
             // .service(patch_user)
-            .service(auth_test)
+            .service(auth_test);
+        app
             // .service(auth_test)
     })
     .bind((domain_name.as_str(), port))?
