@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { callLogin } from "../../services/api";
 import { useDispatch } from "react-redux"
 import "./login.scss"
-import { doLoginAccount } from "../../redux/counter/accountSlice";
+import { doLoginAction } from "../../redux/counter/accountSlice";
 import { useState } from "react";
 import { unstable_renderSubtreeIntoContainer } from "react-dom";
 
@@ -21,17 +21,16 @@ const Login = ({ isLoggedIn, setIsLoggedIn }) => {
     const onFinish = async (values) => {
         const { email, password } = values;
          const res = await callLogin(email, password);
-        console.log(">>>res: ",res);
-         console.log(res.access_token);
-         if (res?.user?.email) 
-        
-        {
+        // console.log(">>>res: ",res);
+        //  console.log(res.access_token);
+         if (res?.user?.email) {
+            //  const info = await callFetchAccount();
             setIsLoggedIn(true);
             console.log(">>>login status: ", isLoggedIn)
-            localStorage.setItem('access_token', res.token)
+            localStorage.setItem('token', res.token)
             // console.log(res);
             console.log(">>>token: " ,res.token);
-            dispatch(doLoginAccount(res));
+            dispatch(doLoginAction(res));
             message.success('Đăng nhập thành công!');
             navigate('/')
         } else {

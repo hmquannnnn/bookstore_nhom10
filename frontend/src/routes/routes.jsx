@@ -14,6 +14,7 @@ import OrdersManagemennt from "../pages/admin/managedPages/ordersManagement/orde
 // import Test from "../pages/test/test";
 import AdminHeader from "../components/admin/AdminHeader";
 import Home from "../pages/Home/homePage";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 
 
@@ -56,7 +57,7 @@ const Routes = ({ isLoggedIn, setIsLoggedIn }) => {
         },
         {
             path: "dang-nhap",
-            element: <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>,
+            element: <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />,
         },
         {
             path: "dang-ky",
@@ -66,6 +67,12 @@ const Routes = ({ isLoggedIn, setIsLoggedIn }) => {
             path: "admin",
             element: <AdminLayout />,
             children: [
+                {
+                    index: true, element:
+                        <ProtectedRoute>
+                            <Admin />
+                        </ProtectedRoute>
+                },
                 {
                     path: "books",
                     element: <BooksManagement />

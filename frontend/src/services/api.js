@@ -18,3 +18,9 @@ export const callRegister = (email, name, phone, password, address) => {
   }
   return instance.post("/user/register", jsonData);
 };
+
+export const callFetchAccount = () => {
+  return instance.get("/user");
+};
+
+// export default { callLogin, callRegister, callFetchAccount };

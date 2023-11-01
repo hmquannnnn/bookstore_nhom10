@@ -4,7 +4,7 @@ import accountSlice from '../redux/counter/accountSlice';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    // counter: counterReducer,
     account: accountSlice
   },
 });
