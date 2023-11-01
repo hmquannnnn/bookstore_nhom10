@@ -1,17 +1,23 @@
 use actix_web::{dev::Payload, FromRequest, HttpRequest};
 use std::{future::{Future, Ready, ready}, pin::Pin};
+use serde::Serialize;
 
-#[derive(Clone)]
-pub struct TokenHeader(pub String);
+use crate::repository::token::decode_token;
+
+#[derive(Clone, Serialize)]
+pub struct JwtTokenHeader {
+    pub user: String,
+    pub name: String
+}
 
 // fn handle_error<V, E1, E2>(header_value: Result<Result<V, E1>, E2>) => Result<V, < {
 
 // } 
 
 // .ok_or(actix_web::error::ErrorUnauthorized("unknown user"));
-impl FromRequest for TokenHeader {
+impl FromRequest for JwtTokenHeader {
     type Error = actix_web::error::Error;
-    // type Future = dyn Future<Output = Result<TokenHeader, Self::Error>>;
+    // type Future = dyn Future<Output = Result<JwtTokenHeader, Self::Error>>;
     type Future = Ready<Result<Self, Self::Error>>;
 
     fn from_request(req: &HttpRequest, _payload: &mut Payload) -> Self::Future {
@@ -26,13 +32,18 @@ impl FromRequest for TokenHeader {
 
         // combime two error
         let error_handler = |result_value| {
-            let result_value = result_value?;
-            let header_value = result_value?;
-            Ok(header_value)
+            let result_value: &str = result_value??;
+            let result_value: String = result_value.to_string();
+            let token_decode =  decode_token(&result_value)
+            .map_err(|error| actix_web::error::ErrorUnauthorized(error.to_string()))?;
+            Ok(token_decode)
         };
 
-
-        let header_value = error_handler(header_value).map(|value| TokenHeader(value.to_string()));
+        let header_value = error_handler(header_value)
+            .map(|value| JwtTokenHeader {
+                user: value.sub, 
+                name: value.name
+            });
         ready(header_value)
     }
 }

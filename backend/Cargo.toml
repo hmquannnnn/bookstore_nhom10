@@ -11,10 +11,10 @@ actix-web = {version ="4.4.0"}
 chrono = "0.4.31"
 dotenv = "0.15.0"
 futures-util = "0.3.29"
-hmac = "0.12.1"
-jwt = "0.16.0"
+jsonwebtoken = "9.1.0"
 serde = "1.0.188"
 sha2 = "0.10.8"
+sha256 = "1.4.0"
 sqlx = { version = "0.7.2", features = ["mysql", "macros", "runtime-tokio", "uuid", "json", "time"] }
 thiserror = "1.0.50"
 tokio = { version = "1.33.0" , features = ["macros"] }

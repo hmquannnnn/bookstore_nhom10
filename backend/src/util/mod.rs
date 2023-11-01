@@ -1,6 +1,7 @@
 pub mod constant;
 pub mod types {
     
+    use actix_web::{Responder, HttpResponse, HttpRequest};
     use sqlx::MySqlPool;
 
     #[derive(Clone)]
@@ -15,6 +16,14 @@ pub mod types {
         WrongPassword,
     }
 
+    // impl Responder for LoginError {
+    //     type Body = MessageBody + 'static;
+
+    //     fn respond_to(self, req: &HttpRequest) -> HttpResponse<Self::Body> {
+
+    //     }
+    // }
+
     pub struct ColumnField {
         pub key: String,
         pub value: String
@@ -25,6 +34,8 @@ pub mod types {
             ColumnField { key, value }
         }
     }
+
+    
 
     #[derive(serde::Deserialize, serde::Serialize)]
     pub struct UserAuth {
