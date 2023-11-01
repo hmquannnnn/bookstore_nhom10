@@ -1,9 +1,8 @@
-use hmac::{Hmac, Mac};
-use jwt::SignWithKey;
 use serde::{Deserialize, Serialize};
-use sha2::Sha256;
+use sha256::digest;
 use sqlx::MySqlPool;
 use chrono::Utc;
+
 
 use crate::util::{constant::EXPIRE_INTERVAL, types::UserAuth};
 
@@ -35,14 +34,15 @@ impl TokenSerialize {
 }
 
 pub async fn insert_token(user_auth: &UserAuth, pool: &MySqlPool) -> sqlx::Result<String> {
-    let mut vec = Vec::new();
-    vec.push(user_auth.email.clone());
-    let token: Hmac<Sha256> =
-        Hmac::new_from_slice(format!("{}{}{}", user_auth.email, user_auth.password, Utc::now().to_string()).as_bytes())
-            .map_err(|_| sqlx::Error::WorkerCrashed)?;
-    let token = vec
-        .sign_with_key(&token)
-        .map_err(|_| sqlx::Error::RowNotFound)?;
+    // let mut vec = Vec::new();
+    // vec.push(user_auth.email.clone());
+    // let token: Hmac<Sha256> =
+    //     Hmac::new_from_slice(format!("{}{}{}", user_auth.email, user_auth.password, Utc::now().to_string()).as_bytes())
+    //         .map_err(|_| sqlx::Error::WorkerCrashed)?;
+    // let token = vec
+    //     .sign_with_key(&token)
+    //     .map_err(|_| sqlx::Error::RowNotFound)?;
+    let token = digest(format!("{}{}{}", user_auth.email, user_auth.password, Utc::now().to_string()).as_bytes());
     sqlx::query("insert into token (token, user_email, issue_at, expire_at) values (?, ?, now(), now() + interval 20 minute)")
     .bind(&token)
     .bind(&user_auth.email)

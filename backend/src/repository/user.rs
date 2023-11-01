@@ -1,8 +1,5 @@
 use std::error::Error;
 use actix_web::web::{Json, self};
-use hmac::{Hmac, Mac};
-use jwt::SignWithKey;
-use sha2::Sha256;
 use sqlx::MySqlPool;
 use serde::{Deserialize, Serialize};
 use crate::{util::types::{ColumnField, LoginError, UserAuth}};
