@@ -38,7 +38,7 @@ const Home = () => {
     return (
         <div className="homepage-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
             <Row gutter={[20, 20]}>
-                <Col className="sidebar" md={4} sm={0} xs={0} style={{ border: "1px solid black" }}>
+                <Col className="sidebar" md={4} sm={0} xs={0} style={{ border: "1px solid black", backgroundColor: "white"}}>
                     <div>
                         <p>Bộ lọc tìm kiếm</p>
                     </div>
@@ -135,7 +135,7 @@ const Home = () => {
                     </Form>
                 </Col>
                 <Col className="content" md={20} sm={24} xs={24} style={{ border: "1px solid red"}}>
-                    <Row style={{border: "1px solid green"}}>
+                    <Row className="category-bar" style={{border: "1px solid green", backgroundColor: "white"}}>
                         <div>
                             <h3 style={{margin: "5px"}}>UETHUVIENSACH</h3>
                             <Tabs defaultActiveKey="1" items={items} onChange={onChange} />

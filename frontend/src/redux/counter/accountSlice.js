@@ -9,6 +9,7 @@ const initialState = {
     phone: "",
     password: "",
     address: "",
+    role: "",
     img_url: ""
   },
   

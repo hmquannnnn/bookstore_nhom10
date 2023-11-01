@@ -73,9 +73,9 @@ const Register = () => {
                                         message: "Vui lòng điền tên tài khoản"
                                     },
                                     {
-                                        min: 6,
+                                        min: 4,
                                         max: 24,
-                                        message: "Tên tài khoản dài 6-24 kí tự"
+                                        message: "Tên tài khoản dài 4-24 kí tự"
                                     }
 
                                 ]}

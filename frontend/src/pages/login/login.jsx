@@ -20,18 +20,17 @@ const Login = ({ isLoggedIn, setIsLoggedIn }) => {
     const navigate = useNavigate();
     const onFinish = async (values) => {
         const { email, password } = values;
-        // const res = await callLogin(email, password);
-        // console.log(">>>res: ",res);
-        // console.log(res.access_token);
-        // console.log(res);
-        // if (res?.email) 
-        if(1)
+         const res = await callLogin(email, password);
+        console.log(">>>res: ",res);
+         console.log(res.access_token);
+         if (res?.user?.email) 
+        
         {
             setIsLoggedIn(true);
             console.log(">>>login status: ", isLoggedIn)
-            // localStorage.setItem('access_token', res.data.access_token)
-            console.log(res);
-            // console.log(res.access_token);
+            localStorage.setItem('access_token', res.token)
+            // console.log(res);
+            console.log(">>>token: " ,res.token);
             dispatch(doLoginAccount(res));
             message.success('Đăng nhập thành công!');
             navigate('/')
@@ -67,7 +66,6 @@ const Login = ({ isLoggedIn, setIsLoggedIn }) => {
                                     rules={[
                                         {
                                             required: true,
-
                                             message: "Vui lòng điền email"
                                         },
                                         {

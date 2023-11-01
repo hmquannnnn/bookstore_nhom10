@@ -5,8 +5,10 @@
 // import React, { useState } from 'react';
 import { useState } from "react";
 import Routes from "./routes/routes";
+import { useSelector } from "react-redux";
 
 export default function App() {
+  const isAuthenticated = useSelector(state => state.account.isAuthenticated)
   const [ isLoggedIn, setIsLoggedIn ] = useState(false);
   const handleLogIn = () => {
     setIsLoggedIn(true);
@@ -15,6 +17,7 @@ export default function App() {
     setIsLoggedIn(false)
   }
   return (
+    
     <Routes isLoggedIn={isLoggedIn} setIsLoggedIn={handleLogIn}  />
   )
 }
