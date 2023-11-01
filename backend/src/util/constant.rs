@@ -1,1 +1,2 @@
-pub const EXPIRE_INTERVAL: &str = " 20 minute ";
+pub const EXPIRE_INTERVAL: i64 = 20;
+pub const APP_SECRET: &str = "kjksjdfkkkkkkkkkkk";

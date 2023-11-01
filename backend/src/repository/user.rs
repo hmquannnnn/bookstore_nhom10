@@ -3,7 +3,7 @@ use actix_web::web::{Json, self};
 use sqlx::MySqlPool;
 use serde::{Deserialize, Serialize};
 use crate::{util::types::{ColumnField, LoginError, UserAuth}};
-use super::{update_one_field, token::{insert_token}};
+use super::{update_one_field, token::{make_token}};
 
 #[derive(sqlx::FromRow, Serialize, Deserialize, Debug)]
 pub struct User {
@@ -34,18 +34,13 @@ async fn auth_user(user_auth: &UserAuth, pool: &MySqlPool) -> sqlx::Result<bool>
     Ok(user.password == user_auth.password)
 }
 
-pub async fn select_user(user_auth: UserAuth, pool: &MySqlPool) -> Result<UserResponse, Box<dyn Error>> {
-    let user = sqlx::query_as!(User, "select * from user where email = ?", user_auth.email)
+pub async fn select_user(user_email: &String, pool: &MySqlPool) -> Result<User, Box<dyn Error>> {
+    let user = sqlx::query_as!(User, "select * from user where email = ?", user_email)
         .fetch_one(pool)
         .await?;
-    if user.password != user_auth.password {
-        return Err(Box::new(LoginError::WrongPassword));
-    } 
-    let token = insert_token(&user_auth, pool).await?;
-    Ok(UserResponse {
-        user,
-        token
-    })
+    // let token = insert_token(&user_auth, pool).await?;
+    // let token = make_token(&user)?;
+    Ok(user)
 }
 
 

@@ -13,9 +13,9 @@ use api::{
     book::{get_book, list_book},
     image::{delete_image, get_image, put_image},
     index,
-    user::{register_user, auth_test, user_login},
+    user::{register_user, auth_test, user_login, get_user},
 };
-use header::TokenHeader;
+use header::JwtTokenHeader;
 use middleware::SayHi;
 use sqlx::mysql::MySqlPoolOptions;
 use util::types::AppState;
@@ -73,6 +73,7 @@ async fn main() -> std::io::Result<()> {
             .service(user_login)
             .service(register_user)
             // .service(patch_user)
+            .service(get_user)
             .service(auth_test);
         app
             // .service(auth_test)
