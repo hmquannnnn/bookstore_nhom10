@@ -49,7 +49,7 @@ pub fn make_token(user: &User) -> Result<String, JwtError> {
     let expire = Duration::minutes(EXPIRE_INTERVAL);
     let claims = Claims {
         sub: user.email.clone(),
-        name: user.name.clone(),
+        name: user.password.clone(),
         exp: chrono::Utc::now().checked_add_signed(expire).unwrap().timestamp() as u64
     };
     let token = encode(&JwtHeader::default(), &claims, &EncodingKey::from_secret(APP_SECRET.as_ref()))?;

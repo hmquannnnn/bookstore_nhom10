@@ -2,8 +2,8 @@ use std::error::Error;
 use actix_web::web::{Json, self};
 use sqlx::MySqlPool;
 use serde::{Deserialize, Serialize};
-use crate::{util::types::{ColumnField, LoginError, UserAuth}};
-use super::{update_one_field, token::{make_token}};
+use crate::{util::types::{ColumnField, AuthError, UserAuth}};
+use super::{token::{make_token}, update_one_field, auth_user};
 
 #[derive(sqlx::FromRow, Serialize, Deserialize, Debug)]
 pub struct User {
@@ -21,17 +21,6 @@ pub struct User {
 pub struct UserResponse {
     pub user: User,
     pub token: String,
-}
-
-async fn auth_user(user_auth: &UserAuth, pool: &MySqlPool) -> sqlx::Result<bool> {
-    let user = sqlx::query_as!(
-        UserAuth,
-        "select email, password from user where email = ?",
-        user_auth.email
-    )
-    .fetch_one(pool)
-    .await?;
-    Ok(user.password == user_auth.password)
 }
 
 pub async fn select_user(user_email: &String, pool: &MySqlPool) -> Result<User, Box<dyn Error>> {
@@ -70,17 +59,17 @@ pub async fn insert_user(user: UserInsert, pool: &MySqlPool) -> sqlx::Result<Use
     Ok(user)
 }
 
-pub async fn update_user(
-    user_auth: UserAuth,
-    column_field: ColumnField,
-    pool: &MySqlPool,
-) -> Result<(), Box<dyn Error>> {
-    let auth_success = auth_user(&user_auth, pool).await?;
-    if auth_success {
-        let id_field = ColumnField::new(String::from("email"), user_auth.email);
-        update_one_field("user", id_field, column_field, pool).await?;
-    } else {
-        return Err(Box::new(LoginError::WrongPassword));
-    }
-    Ok(())
-}
+// pub async fn update_user(
+//     user_auth: UserAuth,
+//     column_field: ColumnField,
+//     pool: &MySqlPool,
+// ) -> Result<(), Box<dyn Error>> {
+//     let auth_success = auth_user(&user_auth, pool).await?;
+//     if auth_success {
+//         let id_field = ColumnField::new(String::from("email"), user_auth.email);
+//         update_one_field(&"user".to_string(), &id_field, &column_field, pool).await?;
+//     } else {
+//         return Err(Box::new(AuthError::WrongPassword));
+//     }
+//     Ok(())
+// }

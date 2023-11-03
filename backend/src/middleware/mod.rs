@@ -38,6 +38,7 @@ pub struct SayHiMiddleware<S> {
     service: S,
 }
 
+
 impl<S, B> Service<ServiceRequest> for SayHiMiddleware<S>
 where
     S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
@@ -57,7 +58,7 @@ where
         Box::pin(async move {
             let res = fut.await?;
             match JwtTokenHeader::extract(res.request()).await{
-                Ok(token) => println!("Hi from response {}", token.user),
+                Ok(token) => println!("Hi from response {}", token.email),
                 Err(_) => println!("canndn")
             };
             Ok(res)

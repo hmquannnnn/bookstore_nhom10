@@ -4,13 +4,14 @@ use actix_web::{
     Responder,
 };
 
-use crate::{repository::book, util::types::AppState};
+use crate::{repository::book, util::types::AppState, header::JwtTokenHeader};
 
 // #[get("/image")]
 // pub async fn get_image(query: web::Query<ImageInfo>, app_state: web::Data<AppState>) -> HttpResponse {
 
 #[get("/book")]
 pub async fn get_book(
+    auth_header: JwtTokenHeader,
     query: Query<String>,
     app_state: actix_web::web::Data<AppState>,
 ) -> actix_web::Result<impl Responder> {
@@ -32,6 +33,7 @@ pub struct BookListInfo {
 
 #[get("/book/list")]
 pub async fn list_book(
+    auth_header: JwtTokenHeader,
     query: Query<BookListInfo>,
     app_state: actix_web::web::Data<AppState>,
 ) -> actix_web::Result<impl Responder> {
@@ -45,6 +47,7 @@ pub async fn list_book(
 
     Ok(Json(book))
 }
+
 
 // #[patch("/book")]
 // pub async fn patch_book(query: Query<()>)
