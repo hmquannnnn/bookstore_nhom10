@@ -9,6 +9,7 @@
 
 
 api:
+========================================================
 
 update các field trong bảng
 PATCH /{table}
@@ -24,10 +25,28 @@ PATCH /{table}
     }
 }
 
+========================================================
+
 xoa hang
 
 DELETE /{table}
 {
     "key": "name",
     "value": "1124333243"
+}
+========================================================
+
+
+lấy cart 
+GET /cart?email=
+
+========================================================
+
+thêm cart
+PUT /cart 
+
+{
+    "user_email": "String",
+    "book_id": "String",
+    "quantity_ordered": "i64",
 }
