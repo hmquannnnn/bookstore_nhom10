@@ -13,7 +13,7 @@ use api::{
     book::{get_book, list_book},
     image::{delete_image, get_image, put_image},
     index,
-    user::{register_user, auth_test, user_login, get_user}, update, delete, cart::{get_cart, put_cart},
+    user::{register_user, auth_test, user_login, get_user}, update, delete, cart::{get_cart, put_cart, patch_cart, delete_cart},
 };
 use header::JwtTokenHeader;
 use middleware::SayHi;
@@ -78,7 +78,8 @@ async fn main() -> std::io::Result<()> {
             .service(delete)
             .service(get_cart)
             .service(put_cart)
-            
+            .service(patch_cart)
+            .service(delete_cart)
             ;
         app
             // .service(auth_test)

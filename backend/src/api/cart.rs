@@ -1,7 +1,7 @@
 use actix_web::{
     get,
     web::{self, Json, Query},
-    HttpResponse, put,
+    HttpResponse, put, delete, patch,
 };
 use futures_util::future::join;
 use sqlx::query;
@@ -48,6 +48,34 @@ pub async fn get_cart(
     }
 }
 
+#[delete("/cart")]
+pub async fn delete_cart(
+    data: Json<Cart>,
+    jwt_header: JwtTokenHeader,
+    app_state: web::Data<AppState>,
+) -> Result<Json<Cart>, AuthError> {
+    let cart = &data.0;
+    let pool = &app_state.pool;
+
+    let auth = auth_user(&jwt_header.into_user_auth(), pool).await?;
+
+    match auth {
+        true => {
+            sqlx::query!(
+                "delete from cart where user_email = ? & book_id = ?",
+                cart.user_email,
+                cart.book_id,
+            )
+            .execute(pool)
+            .await
+            .map_err(|_| AuthError::FailToUpdate)?;
+            Ok(data)
+        }
+        false => Err(AuthError::FailAuthenticate),
+    }
+}
+
+
 #[put("/cart")]
 pub async fn put_cart(
     data: Json<Cart>,
@@ -75,3 +103,34 @@ pub async fn put_cart(
         false => Err(AuthError::FailAuthenticate),
     }
 }
+
+
+#[patch("/cart")]
+pub async fn patch_cart(
+    data: Json<Cart>,
+    jwt_header: JwtTokenHeader,
+    app_state: web::Data<AppState>,
+) -> Result<Json<Cart>, AuthError> {
+    let cart = &data.0;
+    let pool = &app_state.pool;
+
+    let auth = auth_user(&jwt_header.into_user_auth(), pool).await?;
+
+    match auth {
+        true => {
+            sqlx::query!(
+                "update cart set quantity_ordered = ? where user_email = ? & book_id = ? ",
+                cart.quantity_ordered,
+                cart.user_email,
+                cart.book_id
+            )
+            .execute(pool)
+            .await
+            .map_err(|_| AuthError::FailToUpdate)?;
+            Ok(data)
+        }
+        false => Err(AuthError::FailAuthenticate),
+    }
+}
+
+
