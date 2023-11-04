@@ -2,7 +2,7 @@ use std::error::Error;
 use actix_web::web::{Json, self};
 use sqlx::MySqlPool;
 use serde::{Deserialize, Serialize};
-use crate::{util::types::{ColumnField, AuthError, UserAuth}};
+use crate::{util::types::{ColumnField, AppError, UserAuth}};
 use super::{token::{make_token}, update_one_field, auth_user};
 
 #[derive(sqlx::FromRow, Serialize, Deserialize, Debug)]
@@ -69,7 +69,7 @@ pub async fn insert_user(user: UserInsert, pool: &MySqlPool) -> sqlx::Result<Use
 //         let id_field = ColumnField::new(String::from("email"), user_auth.email);
 //         update_one_field(&"user".to_string(), &id_field, &column_field, pool).await?;
 //     } else {
-//         return Err(Box::new(AuthError::WrongPassword));
+//         return Err(Box::new(AppError::WrongPassword));
 //     }
 //     Ok(())
 // }

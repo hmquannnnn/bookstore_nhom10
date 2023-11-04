@@ -1,6 +1,6 @@
 use crate::{
     repository::{user::{self, User, UserInsert, UserResponse}, token::{Token, TokenSerialize, Claims, decode_token, make_token}},
-    util::types::{AppState, UserAuth, AuthError}, header::JwtTokenHeader,
+    util::types::{AppState, UserAuth, AppError}, header::JwtTokenHeader,
 };
 use actix_web::{
     post,
@@ -46,9 +46,9 @@ pub async fn user_login(
         .map_err(|error| actix_web::error::ErrorBadRequest(error))?;
 
     if user.password != user_auth.password {
-        return Err(actix_web::error::ErrorBadRequest(AuthError::WrongPassword));
+        return Err(actix_web::error::ErrorBadRequest(AppError::WrongPassword));
     }
-    let token = make_token(&user).map_err(|_| actix_web::error::ErrorBadRequest(AuthError::WrongPassword))?;
+    let token = make_token(&user).map_err(|_| actix_web::error::ErrorBadRequest(AppError::WrongPassword))?;
     Ok(Json(UserResponse {
         user,
         token

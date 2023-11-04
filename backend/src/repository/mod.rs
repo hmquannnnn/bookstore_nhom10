@@ -5,14 +5,14 @@
 
 use sqlx::{MySqlPool, query};
 
-use crate::util::types::{AuthError, ColumnField, UserAuth};
+use crate::util::types::{AppError, ColumnField, UserAuth};
 
 pub mod book;
 pub mod image;
 pub mod token;
 pub mod user;
 
-pub async fn auth_user(user_auth: &UserAuth, pool: &MySqlPool) -> Result<bool, AuthError> {
+pub async fn auth_user(user_auth: &UserAuth, pool: &MySqlPool) -> Result<bool, AppError> {
     let user = sqlx::query_as!(
         UserAuth,
         "select email, password from user where email = ?",
@@ -20,7 +20,7 @@ pub async fn auth_user(user_auth: &UserAuth, pool: &MySqlPool) -> Result<bool, A
     )
     .fetch_one(pool)
     .await
-    .map_err(|_| AuthError::FailAuthenticate)?;
+    .map_err(|_| AppError::FailAuthenticate)?;
     Ok(user.password == user_auth.password)
 }
 
@@ -48,19 +48,19 @@ pub async fn update_one_field_auth(
     id_field: &ColumnField,
     value_field: &ColumnField,
     pool: &MySqlPool,
-) -> Result<(), AuthError> {
+) -> Result<(), AppError> {
     let auth_success = auth_user(user_auth, pool)
         .await
-        .map_err(|_| AuthError::FailAuthenticate)?;
+        .map_err(|_| AppError::FailAuthenticate)?;
 
     match auth_success {
         true => {
             update_one_field(table, id_field, value_field, pool)
                 .await
-                .map_err(|_| AuthError::FailToUpdate)?;
+                .map_err(|_| AppError::FailToUpdate)?;
             Ok(())
         }
-        false => Err(AuthError::FailAuthenticate),
+        false => Err(AppError::FailAuthenticate),
     }
 }
 
@@ -69,10 +69,10 @@ pub async fn detete_auth(
     table: &String,
     field: &ColumnField,
     pool: &MySqlPool,
-) -> Result<(), AuthError> {
+) -> Result<(), AppError> {
     let auth_success = auth_user(user_auth, pool)
         .await
-        .map_err(|_| AuthError::FailAuthenticate)?;
+        .map_err(|_| AppError::FailAuthenticate)?;
 
     match auth_success {
         true => {
@@ -81,10 +81,10 @@ pub async fn detete_auth(
                 .bind(&field.value)
                 .execute(pool)
                 .await
-                .map_err(|_| AuthError::FailToUpdate)?;
+                .map_err(|_| AppError::FailToUpdate)?;
             Ok(())
         }
-        false => Err(AuthError::FailAuthenticate),
+        false => Err(AppError::FailAuthenticate),
     }
 }
 
@@ -94,18 +94,18 @@ pub async fn detete_auth(
 //     id: &String,
 //     pool: &MySqlPool,
 //     action: impl Fn() -> ()
-// ) -> Result<(), AuthError> {
+// ) -> Result<(), AppError> {
 //     let auth_success = auth_user(user_auth, pool)
 //         .await
-//         .map_err(|_| AuthError::FailAuthenticate)?;
+//         .map_err(|_| AppError::FailAuthenticate)?;
 
 //     match auth_success {
 //         true => {
 //             update_one_field(table, id_field, value_field, pool)
 //                 .await
-//                 .map_err(|_| AuthError::FailToUpdate)?;
+//                 .map_err(|_| AppError::FailToUpdate)?;
 //             Ok(())
 //         }
-//         false => Err(AuthError::FailAuthenticate),
+//         false => Err(AppError::FailAuthenticate),
 //     }
 // }

@@ -9,7 +9,7 @@ use sqlx::query;
 use crate::{
     header::JwtTokenHeader,
     repository::{auth_user, book::Book},
-    util::types::{AppState, AuthError},
+    util::types::{AppState, AppError, AppResult},
 };
 
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -29,22 +29,22 @@ pub async fn get_cart(
     query: Query<CartQuery>,
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
-) -> Result<Json<Vec<Cart>>, AuthError> {
-    // join!(auth_user(&jwt_header.into_user_auth(), &app_state.pool)).a
+) -> AppResult<Json<Vec<Cart>>> {
+    // join!(auth_user(&jwt_header.to_user_auth(), &app_state.pool)).a
     let email = &query.email;
     let pool = &app_state.pool;
     let fut_all = join(
-        auth_user(&jwt_header.into_user_auth(), pool),
+        auth_user(&jwt_header.to_user_auth(), pool),
         sqlx::query_as!(Cart, "select * from cart where user_email = ?", email).fetch_all(pool),
     )
     .await;
 
     let auth = fut_all.0?;
-    let carts = fut_all.1.map_err(|_| AuthError::FailToFetch)?;
+    let carts = fut_all.1.map_err(|_| AppError::FailToFetch)?;
 
     match auth {
         true => Ok(Json(carts)),
-        false => Err(AuthError::FailToFetch),
+        false => Err(AppError::FailToFetch),
     }
 }
 
@@ -53,11 +53,11 @@ pub async fn delete_cart(
     data: Json<Cart>,
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
-) -> Result<Json<Cart>, AuthError> {
+) -> AppResult<Json<Cart>> {
     let cart = &data.0;
     let pool = &app_state.pool;
 
-    let auth = auth_user(&jwt_header.into_user_auth(), pool).await?;
+    let auth = auth_user(&jwt_header.to_user_auth(), pool).await?;
 
     match auth {
         true => {
@@ -68,10 +68,10 @@ pub async fn delete_cart(
             )
             .execute(pool)
             .await
-            .map_err(|_| AuthError::FailToUpdate)?;
+            .map_err(|_| AppError::FailToUpdate)?;
             Ok(data)
         }
-        false => Err(AuthError::FailAuthenticate),
+        false => Err(AppError::FailAuthenticate),
     }
 }
 
@@ -81,11 +81,11 @@ pub async fn put_cart(
     data: Json<Cart>,
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
-) -> Result<Json<Cart>, AuthError> {
+) -> AppResult<Json<Cart>> {
     let cart = &data.0;
     let pool = &app_state.pool;
 
-    let auth = auth_user(&jwt_header.into_user_auth(), pool).await?;
+    let auth = auth_user(&jwt_header.to_user_auth(), pool).await?;
 
     match auth {
         true => {
@@ -97,10 +97,10 @@ pub async fn put_cart(
             )
             .execute(pool)
             .await
-            .map_err(|_| AuthError::FailToUpdate)?;
+            .map_err(|_| AppError::FailToUpdate)?;
             Ok(data)
         }
-        false => Err(AuthError::FailAuthenticate),
+        false => Err(AppError::FailAuthenticate),
     }
 }
 
@@ -110,11 +110,11 @@ pub async fn patch_cart(
     data: Json<Cart>,
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
-) -> Result<Json<Cart>, AuthError> {
+) -> Result<Json<Cart>, AppError> {
     let cart = &data.0;
     let pool = &app_state.pool;
 
-    let auth = auth_user(&jwt_header.into_user_auth(), pool).await?;
+    let auth = auth_user(&jwt_header.to_user_auth(), pool).await?;
 
     match auth {
         true => {
@@ -126,10 +126,10 @@ pub async fn patch_cart(
             )
             .execute(pool)
             .await
-            .map_err(|_| AuthError::FailToUpdate)?;
+            .map_err(|_| AppError::FailToUpdate)?;
             Ok(data)
         }
-        false => Err(AuthError::FailAuthenticate),
+        false => Err(AppError::FailAuthenticate),
     }
 }
 

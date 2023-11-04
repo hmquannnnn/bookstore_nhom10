@@ -10,14 +10,14 @@ pub mod types {
         pub base_url: String,
     }
 
-
+    pub type AppResult<T, E = AppError> = Result<T, E>;
     pub enum Role {
         User,
         Addmin
     }
 
     #[derive(Debug, thiserror::Error,)]
-    pub enum AuthError {
+    pub enum AppError {
         #[error("wrong password")]
         WrongPassword,
         #[error("invaild token")]
@@ -28,13 +28,13 @@ pub mod types {
         FailToFetch,
     }
 
-    impl ResponseError for AuthError {
+    impl ResponseError for AppError {
         fn status_code(&self) -> actix_web::http::StatusCode {
             StatusCode::BAD_REQUEST
         }
     }
 
-    // impl Responder for AuthError {
+    // impl Responder for AppError {
     //     type Body = MessageBody + 'static;
 
     //     fn respond_to(self, req: &HttpRequest) -> HttpResponse<Self::Body> {

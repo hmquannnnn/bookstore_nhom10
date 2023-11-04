@@ -11,7 +11,7 @@ pub struct JwtTokenHeader {
 }
 
 impl JwtTokenHeader {
-    pub fn into_user_auth(self) -> UserAuth {
+    pub fn to_user_auth(self) -> UserAuth {
         return UserAuth { email: self.email, password: self.password };
     }
 }
