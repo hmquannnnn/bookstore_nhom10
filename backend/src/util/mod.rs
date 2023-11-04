@@ -34,6 +34,13 @@ pub mod types {
         }
     }
 
+
+    #[derive(serde::Serialize)]
+    pub struct Message<T>  {
+        pub message: String,
+        pub payload: T
+    }
+
     // impl Responder for AppError {
     //     type Body = MessageBody + 'static;
 
