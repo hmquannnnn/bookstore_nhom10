@@ -1,4 +1,4 @@
-import "./footer.css"
+import "./footer.scss"
 // import React from "react";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -37,25 +37,31 @@ const Footer = () => {
                         <a href="/chinh-sach-bao-mat">Chính sách bảo mật</a>
                         <a href="/chinh-sach-doi/tra-hang">Chính sách đổi/trả hàng</a>
                     </div>
-                    <div className="col-lg-3">
+                    {/* <div className="col-lg-3">
                         <h4>Phương thức thanh toán</h4>
                         <div className="payment">
                             <img src="https://bizweb.dktcdn.net/100/363/455/themes/918830/assets/payment_method.png?1695376539935"></img>
                         </div>
-                    </div>
-                    {/* <div className="col-lg-3">
-                        <h4>Theo dõi chúng tôi</h4>
+                    </div> */}
+                    <div className="col-lg-3">
+                        <h4>mạng xã hội</h4>
 
-                        <a href="https://www.facebook.com/profile.php?id=100010515218862">
-                             <FontAwesomeIcon icon="fa-brands fa-facebook" /> 
-                            <i className="fa-brands fa-facebook" style={{ color: "black" }}></i>
+                        <a href="https://www.facebook.com/profile.php?id=61552075941822" target="_blank" rel="noopener noreferrer">
+                            {/* <i className="fa-brands fa-facebook" style={{ color: "black" }}></i> */}
+                            <p>Facebook</p>
+                        </a>
+                        {/* <a href="https://www.facebook.com/profile.php?id=100010515218862" target="_blank" rel="noopener noreferrer">
+                            <FontAwesomeIcon icon={['fab', 'facebook']} style={{ color: "black" }} />
+                            <p>Facebook</p>
+                        </a> */}
+
+
+                        <a href="" target="_blank" rel="noopener noreferrer">
+                            {/* <i className="fa-brands fa-instagram" style={{ color: "black" }}></i> */}
+                            <p>Instagram</p>
                         </a>
 
-                        <a href="">
-                            <i className="fa-brands fa-instagram" style={{ color: "black" }}></i>
-                        </a>
-
-                    </div>  */}
+                    </div> 
                 </div>
             </div>
         </div>

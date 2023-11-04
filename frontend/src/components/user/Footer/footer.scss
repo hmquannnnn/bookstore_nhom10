@@ -1,0 +1,69 @@
+$font-family: 'Montserrat', sans-serif;
+$primary-color: black;
+$light-font-weight: 100;
+$normal-font-weight: 200;
+$bold-font-weight: 600;
+
+body {
+    background-color: white;
+}
+
+.container {
+    background-color: white;
+    font-family: $font-family;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin: auto;
+    margin-bottom: 2rem;
+    max-width: 1440px;
+}
+
+.col-lg-3 {
+    margin: 1rem;
+    width: 22%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    .logo,
+
+    a {
+        display: flex;
+        flex-direction: row;
+        text-decoration: none;
+        font-size: 14px;
+        line-height: 15px;
+        margin: 0.5rem 0;
+        cursor: pointer;
+        color: $primary-color;
+        font-weight: $light-font-weight;
+    }
+
+    h4 {
+        text-transform: uppercase;
+        font-size: 18px;
+        line-height: 17px;
+        margin-bottom: 0.9rem;
+        font-weight: $bold-font-weight;
+    }
+
+    .slogan {
+        font-style: italic;
+        font-weight: $light-font-weight;
+    }
+
+    .logo img {
+        max-width: 100%;
+        width: auto;
+        height: unset;
+    }
+
+    i {
+        padding-right: 6px;
+    }
+}

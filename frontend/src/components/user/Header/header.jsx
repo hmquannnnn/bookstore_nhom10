@@ -3,28 +3,33 @@ import "./header.scss"
 // import { useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai"
 import { Badge, Button, Dropdown } from "antd"
+import { useState } from "react";
 
-const items = [
-    {
-        key: '1',
-        label: (
-            <a href="/dang-nhap">
-                Đăng nhập
-            </a>
-        ),
-    },
-    {
-        key: '2',
-        label: (
-            <a href="/dang-ky">
-                Đăng ký
-            </a>
-        ),
-    },
-];
 
-const Header = () => {
-    // const [openDrawer, setOpenDrawer] = useState(false); 
+
+const Header = ({ isLoggedIn }) => {
+    const [ dropDown, setDropDown ] = useState();
+    const handleDropDown = () => {
+        setDropDown(!dropDown);
+    }
+    const items = [
+        {
+            key: '1',
+            label: (
+                <a href="/dang-nhap">
+                    Đăng nhập
+                </a>
+            ),
+        },
+        {
+            key: '2',
+            label: (
+                <a href="/dang-ky">
+                    Đăng ký
+                </a>
+            ),
+        },
+    ];
     
     return (
         <>
