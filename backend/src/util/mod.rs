@@ -1,7 +1,7 @@
 pub mod constant;
 pub mod types {
     
-    use actix_web::{Responder, HttpResponse, HttpRequest};
+    use actix_web::{Responder, HttpResponse, HttpRequest, body::MessageBody, ResponseError, http::StatusCode};
     use sqlx::MySqlPool;
 
     #[derive(Clone)]
@@ -10,13 +10,38 @@ pub mod types {
         pub base_url: String,
     }
 
-    #[derive(Debug, thiserror::Error)]
-    pub enum LoginError {
-        #[error("wrong password")]
-        WrongPassword,
+    pub type AppResult<T, E = AppError> = Result<T, E>;
+    pub enum Role {
+        User,
+        Addmin
     }
 
-    // impl Responder for LoginError {
+    #[derive(Debug, thiserror::Error,)]
+    pub enum AppError {
+        #[error("wrong password")]
+        WrongPassword,
+        #[error("invaild token")]
+        FailAuthenticate,
+        #[error("fail to update")]
+        FailToUpdate,
+        #[error("fail to fetch")]
+        FailToFetch,
+    }
+
+    impl ResponseError for AppError {
+        fn status_code(&self) -> actix_web::http::StatusCode {
+            StatusCode::BAD_REQUEST
+        }
+    }
+
+
+    #[derive(serde::Serialize)]
+    pub struct Message<T>  {
+        pub message: String,
+        pub payload: T
+    }
+
+    // impl Responder for AppError {
     //     type Body = MessageBody + 'static;
 
     //     fn respond_to(self, req: &HttpRequest) -> HttpResponse<Self::Body> {
@@ -24,6 +49,8 @@ pub mod types {
     //     }
     // }
 
+
+    #[derive(serde::Serialize, serde::Deserialize)]
     pub struct ColumnField {
         pub key: String,
         pub value: String

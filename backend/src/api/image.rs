@@ -1,10 +1,14 @@
 use actix_web::{
     delete, get, put,
-    web::{self, Bytes},
+    web::{self, Bytes, Json},
     HttpResponse, Responder,
 };
 
-use crate::{repository, util::types::AppState};
+use crate::{
+    header::JwtTokenHeader,
+    repository::{self, auth_user},
+    util::types::{AppError, AppResult, AppState},
+};
 
 #[derive(serde::Deserialize)]
 pub struct ImageInfo {
@@ -25,27 +29,54 @@ pub async fn get_image(
     }
 }
 
+#[derive(serde::Serialize)]
+pub struct ImageUrl {
+    url: String,
+}
+
 #[put("/image")]
-pub async fn put_image(payload: Bytes, app_state: web::Data<AppState>) -> impl Responder {
+pub async fn put_image(
+    jwt_header: JwtTokenHeader,
+    payload: Bytes,
+    app_state: web::Data<AppState>,
+) -> AppResult<impl Responder> {
     let image = payload.to_vec();
     let app_state = app_state.into_inner();
-    let action = repository::image::insert_image(image, &app_state.pool).await;
-    match action {
-        Ok(id) => HttpResponse::Ok().body(app_state.base_url.to_owned() + "/image?id=" + id.as_str()),
-        Err(_) => HttpResponse::NotModified().body("can't insert image"),
+    let pool = &app_state.pool;
+
+    let auth_success = auth_user(&jwt_header.to_user_auth(), pool).await?;
+
+    match auth_success {
+        true => {
+            let id = repository::image::insert_image(image, &app_state.pool)
+                .await
+                .map_err(|_| AppError::FailToUpdate)?;
+            Ok(Json(ImageUrl {
+                url: app_state.base_url.to_owned() + "/image?id=" + id.as_str(),
+            }))
+        }
+        false => Err(AppError::FailAuthenticate),
     }
 }
 
 #[delete("/image")]
 pub async fn delete_image(
+    jwt_header: JwtTokenHeader,
     query: web::Query<ImageInfo>,
     app_state: web::Data<AppState>,
-) -> HttpResponse {
+) -> AppResult<impl Responder> {
     let id = query.into_inner().id;
     let pool = &app_state.into_inner().pool;
-    let req = repository::image::delete_image(id, pool).await;
-    match req {
-        Ok(_) => HttpResponse::Ok().finish(),
-        Err(_) => HttpResponse::NotModified().finish(),
+
+    let auth_success = auth_user(&jwt_header.to_user_auth(), pool).await?;
+
+    match auth_success {
+        true => {
+            let _ = repository::image::delete_image(id, pool)
+                .await
+                .map_err(|_| AppError::FailToFetch)?;
+            Ok(Json("update success"))
+        }
+        false => Err(AppError::FailAuthenticate),
     }
 }

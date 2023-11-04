@@ -1,20 +1,21 @@
-use actix_web::{dev::Payload, FromRequest, HttpRequest};
-use std::{future::{Future, Ready, ready}, pin::Pin};
+use actix_web::{dev::Payload, http::header::AsHeaderName, FromRequest, HttpRequest};
 use serde::Serialize;
+use std::{future::{ready, Ready}, error::Error};
 
-use crate::repository::token::decode_token;
+use crate::{repository::token::decode_token, util::types::UserAuth};
 
 #[derive(Clone, Serialize)]
 pub struct JwtTokenHeader {
-    pub user: String,
-    pub name: String
+    pub email: String,
+    pub password: String,
 }
 
-// fn handle_error<V, E1, E2>(header_value: Result<Result<V, E1>, E2>) => Result<V, < {
+impl JwtTokenHeader {
+    pub fn to_user_auth(self) -> UserAuth {
+        return UserAuth { email: self.email, password: self.password };
+    }
+}
 
-// } 
-
-// .ok_or(actix_web::error::ErrorUnauthorized("unknown user"));
 impl FromRequest for JwtTokenHeader {
     type Error = actix_web::error::Error;
     // type Future = dyn Future<Output = Result<JwtTokenHeader, Self::Error>>;
@@ -22,28 +23,21 @@ impl FromRequest for JwtTokenHeader {
 
     fn from_request(req: &HttpRequest, _payload: &mut Payload) -> Self::Future {
         let req = req.headers();
-        let auth_header = req.into_iter().find(|header| header.0.as_str() == "auth");
-        let header_value = auth_header.map(|value| {
-            value
-            .1
-            .to_str()
-            .map_err(|_| actix_web::error::ErrorUnauthorized("unknown user"))
-        }).ok_or(actix_web::error::ErrorUnauthorized("unknown user"));
-
+        let header_value = req.get("auth").ok_or(actix_web::error::ErrorUnauthorized(
+            "can't find the field auth",
+        ));
         // combime two error
-        let error_handler = |result_value| {
-            let result_value: &str = result_value??;
-            let result_value: String = result_value.to_string();
-            let token_decode =  decode_token(&result_value)
-            .map_err(|error| actix_web::error::ErrorUnauthorized(error.to_string()))?;
-            Ok(token_decode)
-        };
+        let error_handler =
+            |result_value: Result<&actix_web::http::header::HeaderValue, actix_web::Error>| {
+                let result_value = result_value?.to_str()?.to_string();
+                let token_decode = decode_token(&result_value)?;
+                Ok(token_decode)
+            };
 
-        let header_value = error_handler(header_value)
-            .map(|value| JwtTokenHeader {
-                user: value.sub, 
-                name: value.name
-            });
+        let header_value = error_handler(header_value).map(|value| JwtTokenHeader {
+            email: value.sub,
+            password: value.name,
+        }).map_err(|error: Box<dyn Error>| actix_web::error::ErrorUnauthorized(error.to_string()));
         ready(header_value)
     }
 }
