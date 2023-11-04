@@ -6,17 +6,31 @@ import FormItem from "antd/es/form/FormItem";
 // import { fetchUser } from "../../../utils/api"; 
 import { useNavigate } from "react-router-dom";
 import { callLogin } from "../../services/api";
+import { useDispatch } from "react-redux"
+import "./login.scss"
+import { doLoginAction } from "../../redux/counter/accountSlice";
+import { useState } from "react";
+import { unstable_renderSubtreeIntoContainer } from "react-dom";
 
 
 
-const Login = () => {
+const Login = ({ isLoggedIn, setIsLoggedIn }) => {
+    // const [ isLoggedIn, setIsLoggedIn ] = useState();
+    const dispatch = useDispatch()
     const navigate = useNavigate();
     const onFinish = async (values) => {
         const { email, password } = values;
-        const res = await callLogin(email, password);
-
-        if (res?.data) {
-            console.log(res.data);
+         const res = await callLogin(email, password);
+        // console.log(">>>res: ",res);
+        //  console.log(res.access_token);
+         if (res?.user?.email) {
+            //  const info = await callFetchAccount();
+            setIsLoggedIn(true);
+            console.log(">>>login status: ", isLoggedIn)
+            localStorage.setItem('token', res.token)
+            // console.log(res);
+            console.log(">>>token: " ,res.token);
+            dispatch(doLoginAction(res));
             message.success('Đăng nhập thành công!');
             navigate('/')
         } else {
@@ -25,6 +39,7 @@ const Login = () => {
             })
         }
     }
+
 
     return (
         <>
@@ -42,13 +57,14 @@ const Login = () => {
                             >
 
                                 <FormItem
+                                    className="input-box"
                                     labelCol={{ span: 24 }}
                                     label="Email"
                                     name="email"
+                                    style={{ padding: "0" }}
                                     rules={[
                                         {
                                             required: true,
-
                                             message: "Vui lòng điền email"
                                         },
                                         {
@@ -60,6 +76,7 @@ const Login = () => {
                                     <Input />
                                 </FormItem>
                                 <FormItem
+                                    className="input-box"
                                     labelCol={{ span: 24 }}
                                     label="Mật khẩu"
                                     name="password"
@@ -77,9 +94,9 @@ const Login = () => {
                                 >
                                     <Input.Password />
                                 </FormItem>
-                                <Button className="submit-btn" type="primary" htmlType="submit">Đăng nhập</Button>
+                                <Button className="submit-btn" type="primary" htmlType="submit" style={{ width: "100%" }}>Đăng nhập</Button>
                                 <Divider />
-                                <p className="text text-normal">Chưa có tài khoản?&#160;
+                                <p className="text text-normal" style={{ textAlign: "center" }}>Chưa có tài khoản?&#160;
                                     <span>
                                         <a href="/dang-ky">Đăng ký</a>
                                     </span>
