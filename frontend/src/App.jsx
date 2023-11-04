@@ -12,16 +12,19 @@ import { doGetAccountAction } from "./redux/counter/accountSlice";
 export default function App() {
   const isAuthenticated = useSelector(state => state.account.isAuthenticated);
   const dispatch = useDispatch();
-  const getAccount = async () => {
-    const res = await callFetchAccount();
-    console.log(">>> check res: ", res)
-    if (res) {
-      dispatch(doGetAccountAction(res));
+  
+    const getAccount = async () => {
+      const res = await callFetchAccount();
+      console.log(">>> check res: ", res)
+      if (res) {
+        dispatch(doGetAccountAction(res));
+      }
     }
-  }
-  useEffect(() => {
-    getAccount();
-  }, [])
+    useEffect(() => {
+      getAccount();
+    }, [])
+  
+  
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const handleLogIn = () => {
     setIsLoggedIn(true);

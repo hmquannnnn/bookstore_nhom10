@@ -28,7 +28,7 @@ export const accountSlice = createSlice({
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
       state.isAuthenticated = true;
-      state.user = action.payload;
+      state.user = action.payload.user;
     },
     doGetAccountAction: (state, action) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It

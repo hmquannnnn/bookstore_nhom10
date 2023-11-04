@@ -3,33 +3,36 @@ import "./header.scss"
 // import { useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai"
 import { Badge, Button, Dropdown } from "antd"
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import AccountDropDown from "./AccountDropDown/AccountDropDown";
+import { Link } from "react-router-dom";
 
 
 
-const Header = ({ isLoggedIn }) => {
-    const [ dropDown, setDropDown ] = useState();
-    const handleDropDown = () => {
-        setDropDown(!dropDown);
-    }
+const Header = () => {
     const items = [
         {
             key: '1',
+
             label: (
-                <a href="/dang-nhap">
+                <Link to="/dang-nhap">
                     Đăng nhập
-                </a>
-            ),
+                </Link>
+            )
+
         },
         {
             key: '2',
             label: (
-                <a href="/dang-ky">
+                <Link to="/dang-ky">
                     Đăng ký
-                </a>
-            ),
+                </Link>
+            )
+
         },
-    ];
+    ]
+    
     
     return (
         <>
@@ -55,7 +58,7 @@ const Header = ({ isLoggedIn }) => {
                     </div>
                     <nav className="page-header__bottom">
                         <div className="navigation">
-                            <a href="/gio-hang">
+                            <a href="/gio-hang" style={{marginRight: "35px", marginLeft: "10px"}}>
                                 <Badge
                                     count={100}
                                     overflowCount={99}
@@ -63,14 +66,12 @@ const Header = ({ isLoggedIn }) => {
                                     <AiOutlineShoppingCart className="cart-icon" href="/gio-hang" />
                                 </Badge>
                             </a>
+                            {/* <AccountDropDown style={{marginLeft: "35px"}}/>  */}
                             <Dropdown
-                                className="dropdown"
-                                menu={{
-                                    items,
-                                }}
-                                placement="bottomRight"
+                                menu={{ items }}
+                                placement="bottom"
                             >
-                                <Button>Quản lý tài khoản</Button>
+                                <Button>Quản lí tài khoản</Button>
                             </Dropdown>
                         </div>
                     </nav>
