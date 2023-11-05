@@ -19,7 +19,7 @@ instance.interceptors.request.use(
 );
 
 instance.defaults.headers.common = {
-  auth: ` ${localStorage.getItem("token")}`,
+  auth: `${localStorage.getItem("token")}`,
 };
 
 // Add a response interceptor

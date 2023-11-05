@@ -26,6 +26,7 @@ const Login = () => {
          if (res?.user?.email) {
             console.log(">>>res: ", res);
             dispatch(doLoginAction(res));
+            localStorage.setItem("token", res.token);
             const role = res.user.role;
             if(role === "admin") {
                 navigate("/admin");
