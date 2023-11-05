@@ -20,7 +20,7 @@ const Home = () => {
         },
         {
             key: "2",
-            label: "Hàng mới",
+            label: "Đánh giá",
             children: <></>
         },
         {

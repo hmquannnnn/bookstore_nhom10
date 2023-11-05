@@ -14,7 +14,7 @@ import { unstable_renderSubtreeIntoContainer } from "react-dom";
 
 
 
-const Login = ({ isLoggedIn, setIsLoggedIn }) => {
+const Login = () => {
     // const [ isLoggedIn, setIsLoggedIn ] = useState();
     const dispatch = useDispatch()
     const navigate = useNavigate();
@@ -24,15 +24,17 @@ const Login = ({ isLoggedIn, setIsLoggedIn }) => {
         // console.log(">>>res: ",res);
         //  console.log(res.access_token);
          if (res?.user?.email) {
-            //  const info = await callFetchAccount();
-            setIsLoggedIn(true);
-            console.log(">>>login status: ", isLoggedIn)
-            localStorage.setItem('token', res.token)
-            // console.log(res);
-            console.log(">>>token: " ,res.token);
+            console.log(">>>res: ", res);
             dispatch(doLoginAction(res));
+            localStorage.setItem("token", res.token);
+            const role = res.user.role;
+            if(role === "admin") {
+                navigate("/admin");
+            } else {
+                navigate('/')
+            }
             message.success('Đăng nhập thành công!');
-            navigate('/')
+            
         } else {
             notification.error({
                 message: "Sai email hoặc mật khẩu",

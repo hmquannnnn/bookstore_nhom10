@@ -15,28 +15,29 @@ import OrdersManagemennt from "../pages/admin/managedPages/ordersManagement/orde
 import AdminHeader from "../components/admin/AdminHeader";
 import Home from "../pages/Home/homePage";
 import ProtectedRoute from "../components/ProtectedRoute";
+import LayoutAdmin from "../pages/admin/LayoutAdmin";
+import UserProfile from "../pages/UserProfile/UserProfile";
 
+const Layout = () => {
+    return (
+        <div className='layout-app'>
+            <Header/>
+            <Outlet />
+            <Footer />
+        </div>
+    )
+};
 
+const AdminLayout = () => {
+    return (
+        <div className="layout-admin">
+            <AdminHeader />
+            <Outlet />
+        </div>
+    )
+}
 
 const Routes = ({ isLoggedIn, setIsLoggedIn }) => {
-    const Layout = () => {
-        return (
-            <div className='layout-app'>
-                <Header isLoggedIn={isLoggedIn} />
-                <Outlet />
-                <Footer />
-            </div>
-        )
-    };
-
-    const AdminLayout = () => {
-        return (
-            <div className="layout-admin">
-                <AdminHeader />
-                <Outlet />
-            </div>
-        )
-    }
     const router = createBrowserRouter([
         {
             path: "/",
@@ -52,6 +53,10 @@ const Routes = ({ isLoggedIn, setIsLoggedIn }) => {
                 {
                     path: "gio-hang",
                     element: <Cart />
+                },
+                {
+                    path: "thong-tin-tai-khoan",
+                    element: <UserProfile/>
                 }
             ],
         },
@@ -66,6 +71,7 @@ const Routes = ({ isLoggedIn, setIsLoggedIn }) => {
         {
             path: "admin",
             element: <AdminLayout />,
+            errorElement: <NotFound />,
             children: [
                 {
                     index: true, element:
