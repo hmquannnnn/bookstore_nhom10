@@ -23,7 +23,7 @@ struct UpdateType {
 }
 
 
-#[patch("/{table}")]
+#[patch("update/{table}")]
 pub async fn update(path: web::Path<String>, jwt_header: JwtTokenHeader, data: Json<UpdateType>, app_state: web::Data<AppState>) -> actix_web::Result<impl Responder> {
     let id_field = &data.0.id_field;
     let value_field = &data.0.value_field;
@@ -37,7 +37,7 @@ struct DeleteType {
     id: String
 }
 
-#[delete("/{table}")]
+#[delete("/admin/{table}")]
 pub async fn delete(path: web::Path<String>, jwt_header: JwtTokenHeader, data: Json<ColumnField>, app_state: web::Data<AppState>) -> ActixResut<impl Responder> {
     repository::detete_auth(&jwt_header.to_user_auth(), &path, &data.0, &app_state.pool).await
     .map_err(|error| actix_error::ErrorNotAcceptable(error.to_string()))?;

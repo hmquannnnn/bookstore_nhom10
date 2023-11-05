@@ -6,7 +6,7 @@ create table book(
     publish_year varchar(256) not null,
     number_of_purchases int,
     book_in_stocks int not null,
-    ratting float,
+    rating float,
     desciption text,
 
     front_page_url varchar(256),

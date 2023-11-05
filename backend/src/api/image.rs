@@ -6,7 +6,7 @@ use actix_web::{
 
 use crate::{
     header::JwtTokenHeader,
-    repository::{self, auth_user},
+    repository::{self, auth_user, auth_admin},
     util::types::{AppError, AppResult, AppState},
 };
 
@@ -68,7 +68,7 @@ pub async fn delete_image(
     let id = query.into_inner().id;
     let pool = &app_state.into_inner().pool;
 
-    let auth_success = auth_user(&jwt_header.to_user_auth(), pool).await?;
+    let auth_success = auth_admin(&jwt_header.to_user_auth(), pool).await?;
 
     match auth_success {
         true => {

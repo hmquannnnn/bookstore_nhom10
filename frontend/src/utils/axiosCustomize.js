@@ -19,7 +19,8 @@ instance.interceptors.request.use(
 );
 
 instance.defaults.headers.common = {
-  auth: `Bearer ${localStorage.getItem("token")}`,
+  // cậu không cần để chữ Bearer vào đâu
+  auth: `${localStorage.getItem("token")}`,
 };
 
 // Add a response interceptor
