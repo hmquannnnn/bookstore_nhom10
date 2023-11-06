@@ -3,7 +3,7 @@
 //     pub data: Vec<u8>,
 // }
 
-use sqlx::{MySqlPool, query};
+use sqlx::{MySqlPool};
 
 use crate::util::types::{AppError, ColumnField, UserAuth};
 

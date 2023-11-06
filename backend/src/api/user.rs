@@ -1,13 +1,18 @@
 use crate::{
-    repository::{user::{self, User, UserInsert, UserResponse}, token::{Token, TokenSerialize, Claims, decode_token, make_token}},
-    util::types::{AppState, UserAuth, AppError}, header::JwtTokenHeader,
+    header::JwtTokenHeader,
+    repository::{
+        image::insert_image,
+        token::{make_token},
+        user::{self, User, UserInsert, UserResponse},
+    },
+    util::{types::{AppError, AppResult, AppState, Message, UserAuth}, to_image_url},
 };
 use actix_web::{
-    post,
-    web::{self, Json},
-    HttpResponse, Responder,
-    Result as ActixResult, get
+    get, post, put,
+    web::{self, Bytes, Json},
+    HttpResponse, Responder, Result as ActixResult,
 };
+
 
 // type EitherAuth<T = AuthHeader, E = UserAuth> = std::result::Result<T, E>;
 
@@ -48,17 +53,15 @@ pub async fn user_login(
     if user.password != user_auth.password {
         return Err(actix_web::error::ErrorBadRequest(AppError::WrongPassword));
     }
-    let token = make_token(&user).map_err(|_| actix_web::error::ErrorBadRequest(AppError::WrongPassword))?;
-    Ok(Json(UserResponse {
-        user,
-        token
-    }))
+    let token = make_token(&user)
+        .map_err(|_| actix_web::error::ErrorBadRequest(AppError::WrongPassword))?;
+    Ok(Json(UserResponse { user, token }))
 }
 
 #[get("/user")]
 pub async fn get_user(
     auth_header: JwtTokenHeader,
-    app_state: web::Data<AppState>
+    app_state: web::Data<AppState>,
 ) -> ActixResult<Json<User>> {
     let user_email = auth_header.email;
     // let user_name = auth_header.name;
@@ -67,7 +70,6 @@ pub async fn get_user(
     let user = user::select_user(&user_email, pool).await?;
     Ok(Json(user))
 }
-
 
 #[post("/user/register")]
 pub async fn register_user(
@@ -79,6 +81,34 @@ pub async fn register_user(
         .await
         .map_err(|_| actix_web::error::ContentTypeError::ParseError)?;
     Ok(HttpResponse::Ok().json(new_user))
+}
+
+#[put("/user/image")]
+pub async fn insert_image_user(
+    auth_header: JwtTokenHeader,
+    data: Bytes,
+    app_state: web::Data<AppState>,
+) -> AppResult<Json<Message<String>>> {
+    let pool = &app_state.pool;
+    let user_auth = auth_header.to_user_auth();
+
+    let id = insert_image(data.to_vec(), pool)
+        .await
+        .map_err(|_| AppError::FailToUpdate)?;
+    let url = to_image_url(&app_state, id);
+    sqlx::query!(
+        "update user set image_url = ? where email = ?",
+        url,
+        user_auth.email
+    )
+    .execute(pool)
+    .await
+    .map_err(|_| AppError::FailToUpdate)?;
+
+    Ok(Json(Message {
+        message: "success",
+        payload: Some(url),
+    }))
 }
 
 // #[actix_web::get("/auth")]

@@ -1,9 +1,9 @@
 use std::error::Error;
-use actix_web::web::{Json, self};
+
 use sqlx::MySqlPool;
 use serde::{Deserialize, Serialize};
-use crate::{util::types::{ColumnField, AppError, UserAuth}};
-use super::{token::{make_token}, update_one_field, auth_user};
+
+
 
 #[derive(sqlx::FromRow, Serialize, Deserialize, Debug)]
 pub struct User {
@@ -58,6 +58,8 @@ pub async fn insert_user(user: UserInsert, pool: &MySqlPool) -> sqlx::Result<Use
     .await?;
     Ok(user)
 }
+
+// pub async fn update_image(use)
 
 // pub async fn update_user(
 //     user_auth: UserAuth,

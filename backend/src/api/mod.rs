@@ -1,8 +1,8 @@
 use actix_web::{
-    get, delete, Responder, web::{Json, self}, Error, patch, error as actix_error, HttpResponse, Result as ActixResut
+    get, delete, Responder, web::{Json, self}, patch, error as actix_error, HttpResponse, Result as ActixResut
 };
 
-use crate::{util::types::{UserAuth, ColumnField, AppState}, header::JwtTokenHeader, repository::{update_one_field_auth, self}};
+use crate::{util::types::{ColumnField, AppState}, header::JwtTokenHeader, repository::{update_one_field_auth, self}};
 
 
 pub mod image;
@@ -17,7 +17,7 @@ pub async fn index() -> impl Responder {
 
 
 #[derive(serde::Serialize, serde::Deserialize)]
-struct UpdateType {
+pub struct UpdateType {
     id_field: ColumnField,
     value_field: ColumnField
 }

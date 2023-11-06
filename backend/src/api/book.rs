@@ -1,19 +1,22 @@
 use actix_web::{
     get,
     web::{Json, Query},
-    Responder,
+    Responder
 };
 use futures_util::future::join;
 
 use crate::{repository::{book, auth_user}, util::types::{AppState, AppResult, AppError}, header::JwtTokenHeader};
 
-// #[get("/image")]
-// pub async fn get_image(query: web::Query<ImageInfo>, app_state: web::Data<AppState>) -> HttpResponse {
 
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct BookQuery {
     id: String
 }
+
+// pub async fn auth_fetch<F1, F2, T>(auth: impl F1, action: impl F2) 
+// where F1: FnOnce(AuthHeader, &MySqlPool) -> Future::<Output=Result<bool, AppError>>, F2: FnOnce() -> Future::<Output=sqlx::Result<T> {
+//     todo!()
+// }
 
 
 #[get("/book")]

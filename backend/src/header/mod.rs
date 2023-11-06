@@ -1,4 +1,4 @@
-use actix_web::{dev::Payload, http::header::AsHeaderName, FromRequest, HttpRequest};
+use actix_web::{dev::Payload, FromRequest, HttpRequest};
 use serde::Serialize;
 use std::{future::{ready, Ready}, error::Error};
 

@@ -1,14 +1,13 @@
 use actix_web::{
     delete, get, patch, put,
     web::{self, Json, Query},
-    HttpResponse,
 };
 use futures_util::future::join;
-use sqlx::query;
+
 
 use crate::{
     header::JwtTokenHeader,
-    repository::{auth_user, book::Book},
+    repository::{auth_user},
     util::types::{AppError, AppResult, AppState, Message},
 };
 

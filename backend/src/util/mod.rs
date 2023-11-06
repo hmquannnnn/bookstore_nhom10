@@ -1,7 +1,12 @@
+use actix_web::{web};
+
+
+use self::types::{AppState};
+
 pub mod constant;
 pub mod types {
     
-    use actix_web::{Responder, HttpResponse, HttpRequest, body::MessageBody, ResponseError, http::StatusCode};
+    use actix_web::{ResponseError, http::StatusCode};
     use sqlx::MySqlPool;
 
     #[derive(Clone)]
@@ -76,3 +81,32 @@ pub mod types {
     //     }
     // }
 }
+
+
+pub struct Converter<T>(T);
+
+type SqlxConverter<T> = Converter<sqlx::Result<T>>;
+
+impl<T> SqlxConverter<T> {
+    pub fn convert(self) -> actix_web::Result<T> {
+        self.0.map_err(|err| {
+            actix_web::error::ErrorBadRequest(err.to_string())
+        })
+    }
+}
+
+pub fn to_image_url(app_state: &web::Data<AppState>, id: String) -> String {
+    return app_state.base_url.clone() + "/image?id=" + id.as_str();
+} 
+
+
+// type AppConverter<T> = Converter<actix_web::Result<T>>;
+//
+// impl<T> AppConverter<T> {
+//     pub fn convert(self) -> AppResult<T> {
+//         self.0.map_err(|err| {
+//             actix_web::error::ErrorBadRequest(err.to_string())
+//         })
+//     }
+// }
+//

@@ -1,13 +1,13 @@
-use std::ops::Add;
+
 
 use jsonwebtoken::{encode, Header as JwtHeader, EncodingKey, errors::Error as JwtError, decode, Validation, DecodingKey};
 use serde::{Deserialize, Serialize};
-use sha256::digest;
-use sqlx::MySqlPool;
-use chrono::{Utc, Duration};
 
 
-use crate::util::{constant::{EXPIRE_INTERVAL, APP_SECRET}, types::UserAuth};
+use chrono::{Duration};
+
+
+use crate::util::{constant::{EXPIRE_INTERVAL, APP_SECRET}};
 
 use super::user::User;
 
