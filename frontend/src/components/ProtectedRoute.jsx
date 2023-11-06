@@ -4,7 +4,7 @@ import NotAuthorized from "../pages/NotAuthorized";
 
 const ProtectedRoute = (props) => {
     const adminRoute = window.location.pathname.startsWith("/admin");
-    console.log(">>>check route: " ,adminRoute);
+    // console.log(">>>check route: " ,adminRoute);
     const isAuthenticated = useSelector(state => state.account.isAuthenticated);
     const userRole = useSelector(state => state.account.user.role);
     console.log(">>>role: ", userRole);
