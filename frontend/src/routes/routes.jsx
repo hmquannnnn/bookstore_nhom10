@@ -17,11 +17,12 @@ import Home from "../pages/Home/homePage";
 import ProtectedRoute from "../components/ProtectedRoute";
 import LayoutAdmin from "../pages/admin/LayoutAdmin";
 import UserProfile from "../pages/UserProfile/UserProfile";
+import { useSelector } from "react-redux";
 
 const Layout = () => {
     return (
         <div className='layout-app'>
-            <Header/>
+            <Header />
             <Outlet />
             <Footer />
         </div>
@@ -29,9 +30,10 @@ const Layout = () => {
 };
 
 const AdminLayout = () => {
+    const role = useSelector(state => state.account.user.role)
     return (
         <div className="layout-admin">
-            <AdminHeader />
+            {role==="admin" && <AdminHeader />}
             <Outlet />
         </div>
     )
@@ -56,7 +58,7 @@ const Routes = ({ isLoggedIn, setIsLoggedIn }) => {
                 },
                 {
                     path: "thong-tin-tai-khoan",
-                    element: <UserProfile/>
+                    element: <UserProfile />
                 }
             ],
         },
