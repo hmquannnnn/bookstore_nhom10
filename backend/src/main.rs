@@ -1,27 +1,29 @@
 mod api;
-mod repository;
-mod util;
 mod header;
 mod middleware;
+mod repository;
+mod util;
 
 use actix_cors::Cors;
 use actix_web::{
+    dev::Service,
+    middleware::Logger,
     web::{self, Json},
-    App, HttpServer, middleware::Logger, dev::Service
+    App, HttpServer,
 };
 use api::{
     book::{get_book, list_book},
+    cart::{delete_cart, get_cart, patch_cart, put_cart},
+    delete,
     image::{delete_image, get_image, put_image},
-    index,
-    user::{register_user, user_login, get_user}, update, delete, cart::{get_cart, put_cart, patch_cart, delete_cart},
+    index, update,
+    user::{get_user, register_user, user_login},
 };
+use futures_util::future::FutureExt;
 use header::JwtTokenHeader;
 use middleware::SayHi;
 use sqlx::mysql::MySqlPoolOptions;
 use util::types::AppState;
-use futures_util::future::FutureExt;
-
-
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -30,11 +32,11 @@ async fn main() -> std::io::Result<()> {
     let url = dotenv::var("DATABASE_URL").unwrap();
     let domain_name = match dotenv::var("DOMAIN_NAME") {
         Ok(value) => value,
-        Err(_) => "localhost".to_owned()
+        Err(_) => "localhost".to_owned(),
     };
     let port = match dotenv::var("PORT") {
         Ok(value) => value.parse::<u16>().unwrap(),
-        Err(_) => 8000
+        Err(_) => 8000,
     };
     // connect to database
     let pool = MySqlPoolOptions::new()
@@ -44,22 +46,21 @@ async fn main() -> std::io::Result<()> {
         .unwrap();
 
     // migate database
-    // sqlx::migrate!().run(&pool).await.unwrap();
+    match sqlx::migrate!().run(&pool).await {
+        Ok(_) => println!("migrate success"),
+        Err(_) => println!("migrate fail"),
+    };
     let base_url = "http://".to_owned() + domain_name.as_str() + ":" + port.to_string().as_str();
-    let app_state = AppState {
-        pool,
-        base_url
-     };
-    
+    let app_state = AppState { pool, base_url };
+
     // init server
     HttpServer::new(move || {
         let cors = Cors::default()
-        .allow_any_origin()
+            .allow_any_origin()
             .allow_any_method()
             .allow_any_header();
 
-        let app = 
-            App::new()
+        let app = App::new()
             .wrap(cors)
             .wrap(SayHi)
             .wrap(Logger::new("for %{}"))
@@ -79,10 +80,9 @@ async fn main() -> std::io::Result<()> {
             .service(get_cart)
             .service(put_cart)
             .service(patch_cart)
-            .service(delete_cart)
-            ;
+            .service(delete_cart);
         app
-            // .service(auth_test)
+        // .service(auth_test)
     })
     .bind((domain_name.as_str(), port))?
     .workers(2)
