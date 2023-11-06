@@ -24,6 +24,18 @@ pub async fn auth_user(user_auth: &UserAuth, pool: &MySqlPool) -> Result<bool, A
     Ok(user.password == user_auth.password)
 }
 
+pub async fn auth_admin(admin_auth: &UserAuth, pool: &MySqlPool) -> Result<bool, AppError> {
+    let user = sqlx::query_as!(
+        UserAuth,
+        "select email, password from user where email = ? and role = \"admin\"",
+        admin_auth.email
+    )
+    .fetch_one(pool)
+    .await
+    .map_err(|_| AppError::FailAuthenticate)?;
+    Ok(user.password == admin_auth.password)
+}
+
 pub async fn update_one_field(
     table: &String,
     id_field: &ColumnField,
@@ -70,9 +82,8 @@ pub async fn detete_auth(
     field: &ColumnField,
     pool: &MySqlPool,
 ) -> Result<(), AppError> {
-    let auth_success = auth_user(user_auth, pool)
-        .await
-        .map_err(|_| AppError::FailAuthenticate)?;
+    let auth_success = auth_admin(user_auth, pool)
+        .await?;
 
     match auth_success {
         true => {

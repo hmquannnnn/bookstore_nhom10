@@ -1,4 +1,4 @@
-create table ratting(
+create table rating(
     user_email varchar(64) not null,
     book_id varchar(64) not null,
     ratting float not null,

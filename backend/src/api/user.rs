@@ -81,13 +81,13 @@ pub async fn register_user(
     Ok(HttpResponse::Ok().json(new_user))
 }
 
-#[actix_web::get("/auth")]
-pub async fn auth_test(auth_header: JwtTokenHeader, app_state: web::Data<AppState>) -> actix_web::Result<Json<Claims>>{
-    let token = auth_header.email;
-    let aa = decode_token(&token)
-    .map_err(|_| actix_web::error::ContentTypeError::ParseError)?;
-   Ok(Json(aa))
-}
+// #[actix_web::get("/auth")]
+// pub async fn auth_test(auth_header: JwtTokenHeader, app_state: web::Data<AppState>) -> actix_web::Result<Json<Claims>>{
+//     let token = auth_header.email;
+//     let aa = decode_token(&token)
+//     .map_err(|_| actix_web::error::ContentTypeError::ParseError)?;
+//    Ok(Json(aa))
+// }
 
 // pub struct Basic {
 //     data: String,

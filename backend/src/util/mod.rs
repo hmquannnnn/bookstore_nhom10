@@ -35,10 +35,10 @@ pub mod types {
     }
 
 
-    #[derive(serde::Serialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     pub struct Message<T>  {
-        pub message: String,
-        pub payload: T
+        pub message: &'static str,
+        pub payload: Option<T>
     }
 
     // impl Responder for AppError {

@@ -10,13 +10,19 @@ use crate::{repository::{book, auth_user}, util::types::{AppState, AppResult, Ap
 // #[get("/image")]
 // pub async fn get_image(query: web::Query<ImageInfo>, app_state: web::Data<AppState>) -> HttpResponse {
 
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct BookQuery {
+    id: String
+}
+
+
 #[get("/book")]
 pub async fn get_book(
     auth_header: JwtTokenHeader,
-    query: Query<String>,
+    query: Query<BookQuery>,
     app_state: actix_web::web::Data<AppState>,
 ) -> AppResult<impl Responder> {
-    let book_id = query.0;
+    let book_id = query.0.id;
     let pool = &app_state.pool;
 
     let fut_all = join(
@@ -63,6 +69,7 @@ pub async fn list_book(
         false => Err(AppError::FailAuthenticate)
     }
 }
+
 
 
 // #[patch("/book")]

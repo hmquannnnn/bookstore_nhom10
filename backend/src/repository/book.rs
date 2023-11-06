@@ -22,7 +22,7 @@ pub struct Book {
 	pub publish_year: String,
     pub number_of_purchases:  Option<i32>,
     pub book_in_stocks: i32,
-    pub ratting: Option<f32>,
+    pub rating: Option<f32>,
     pub desciption: Option<String>,
 
 	pub back_page_url: Option<String>,
