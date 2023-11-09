@@ -3,27 +3,35 @@ mod header;
 mod middleware;
 mod repository;
 mod util;
+mod body;
 
 use actix_cors::Cors;
 use actix_web::{
-    web::{self},
-    App, HttpServer, middleware::Logger
+    web::{self, Json},
+    App, HttpServer
 };
 use api::{
     book::{get_book, list_book},
     cart::{delete_cart, get_cart, patch_cart, put_cart},
-    delete,
     image::{delete_image, get_image, put_image},
     index,
-    user::{register_user, user_login, get_user, insert_image_user}, update,
+    user::{register_user, user_login, get_user, insert_image_user, update_user_name, update_user_phone, update_user_address}, update,
 };
 
 use middleware::SayHi;
 use sqlx::mysql::MySqlPoolOptions;
 use util::types::AppState;
 
-
-
+#[actix_web::get("/any")]
+pub async fn any_type(
+    payload: Json<serde_json::Value>
+) -> Json<serde_json::Value> {
+    let value = payload.0.as_object().unwrap();
+    for v in value.into_iter() {
+        println!("{} {}", v.0, v.1);
+    }
+    Json(payload.0)
+}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -63,7 +71,6 @@ async fn main() -> std::io::Result<()> {
         let app = App::new()
             .wrap(cors)
             .wrap(SayHi)
-            .wrap(Logger::new("for %{}"))
             .app_data(web::Data::new(app_state.clone()))
             .service(index)
             .service(get_image)
@@ -74,14 +81,15 @@ async fn main() -> std::io::Result<()> {
             .service(user_login)
             .service(register_user)
             .service(get_user)
-            // .service(auth_test)
             .service(update)
-            .service(delete)
             .service(get_cart)
             .service(put_cart)
             .service(patch_cart)
             .service(delete_cart)
             .service(insert_image_user)
+            .service(update_user_name)
+            .service(update_user_phone)
+            .service(update_user_address)
             ;
         app
         // .service(auth_test)
