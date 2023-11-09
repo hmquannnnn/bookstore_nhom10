@@ -86,7 +86,7 @@ pub async fn register_user(
     Ok(HttpResponse::Ok().json(new_user))
 }
 
-#[put("/user/image/{d}")]
+#[put("/user/image")]
 pub async fn insert_image_user(
     auth_header: JwtTokenHeader,
     data: Bytes,
