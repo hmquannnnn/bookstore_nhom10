@@ -2,18 +2,21 @@ use crate::{
     header::JwtTokenHeader,
     repository::{
         image::insert_image,
-        token::{make_token},
+        token::make_token,
         user::{self, User, UserInsert, UserResponse},
     },
-    util::{types::{AppError, AppResult, AppState, Message, UserAuth}, to_image_url},
+    util::{
+        to_image_url,
+        types::{AppError, AppResult, AppState, Message, UserAuth}
+    },
 };
 use actix_web::{
-    get, post, put,
+    get,
+    patch, post, put,
     web::{self, Bytes, Json},
     HttpResponse, Responder, Result as ActixResult,
 };
-
-
+use crate::update_user_field;
 // type EitherAuth<T = AuthHeader, E = UserAuth> = std::result::Result<T, E>;
 
 // pub async fn auth_user(either:  EitherAuth) {
@@ -83,7 +86,7 @@ pub async fn register_user(
     Ok(HttpResponse::Ok().json(new_user))
 }
 
-#[put("/user/image")]
+#[put("/user/image/{d}")]
 pub async fn insert_image_user(
     auth_header: JwtTokenHeader,
     data: Bytes,
@@ -91,7 +94,6 @@ pub async fn insert_image_user(
 ) -> AppResult<Json<Message<String>>> {
     let pool = &app_state.pool;
     let user_auth = auth_header.to_user_auth();
-
     let id = insert_image(data.to_vec(), pool)
         .await
         .map_err(|_| AppError::FailToUpdate)?;
@@ -111,19 +113,34 @@ pub async fn insert_image_user(
     }))
 }
 
-// #[actix_web::get("/auth")]
-// pub async fn auth_test(auth_header: JwtTokenHeader, app_state: web::Data<AppState>) -> actix_web::Result<Json<Claims>>{
-//     let token = auth_header.email;
-//     let aa = decode_token(&token)
-//     .map_err(|_| actix_web::error::ContentTypeError::ParseError)?;
-//    Ok(Json(aa))
-// }
+update_user_field!(update_user_name, "/user/name/{value}", name); 
+update_user_field!(update_user_address,"/user/address/{value}", address); 
+update_user_field!(update_user_phone, "/user/phone/{value}", phone); 
 
-// pub struct Basic {
-//     data: String,
-// }
+#[macro_export]
+macro_rules! update_user_field {
+    ( $name:ident, $path:expr, $field:ident ) => {
+        #[patch($path)]
+        pub async fn $name(
+            path: actix_web::web::Path<String>,
+            jwt: JwtTokenHeader,
+            app_state: web::Data<AppState>,
+            ) -> AppResult<Json<Message<()>>> {
+            let user_email = jwt.email;
+            let value = path.as_str();
+            
+            let query = format!("update user set {} = ? where email = ?", stringify!($field));
+            sqlx::query(query.as_str())
+                .bind(value)
+                .bind(user_email)
+                .execute(&app_state.pool)
+                .await
+                .map_err(|_| AppError::FailToUpdate)?;
+            Ok(Json(Message {
+                message: "update success",
+                payload: None,
+            }))
+        }
+    };
+}
 
-// #[patch("/user/field/{field}")]
-// pub async fn patch_user(path: web::Path<String>, header: BasicAuth, app_state: web::Data<AppState>) -> actix_web::Result<HttpResponse> {
-//     Ok(HttpResponse::Ok().body(format!("path: {}, header: {}", path.into_inner(), header.password().unwrap())))
-// }

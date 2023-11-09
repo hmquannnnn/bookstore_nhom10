@@ -1,13 +1,13 @@
 use actix_web::{
-    get, delete, Responder, web::{Json, self}, patch, error as actix_error, HttpResponse, Result as ActixResut
+    get, Responder, web::{Json, self}, patch, error as actix_error, HttpResponse 
 };
 
-use crate::{util::types::{ColumnField, AppState}, header::JwtTokenHeader, repository::{update_one_field_auth, self}};
+use crate::{util::types::{ColumnField, AppState}, header::JwtTokenHeader, repository::update_one_field_auth};
 
 
 pub mod image;
 pub mod book;
-pub mod user;
+#[macro_use] pub mod user;
 pub mod cart;
 
 #[get("/")]
@@ -37,10 +37,10 @@ struct DeleteType {
     id: String
 }
 
-#[delete("/admin/{table}")]
-pub async fn delete(path: web::Path<String>, jwt_header: JwtTokenHeader, data: Json<ColumnField>, app_state: web::Data<AppState>) -> ActixResut<impl Responder> {
-    repository::detete_auth(&jwt_header.to_user_auth(), &path, &data.0, &app_state.pool).await
-    .map_err(|error| actix_error::ErrorNotAcceptable(error.to_string()))?;
-    Ok(HttpResponse::Accepted().body("update success"))
-}
+// #[delete("/admin/{table}")]
+// pub async fn delete(path: web::Path<String>, jwt_header: JwtTokenHeader, data: Json<ColumnField>, app_state: web::Data<AppState>) -> ActixResut<impl Responder> {
+//     repository::detete_auth(&jwt_header.to_user_auth(), &path, &data.0, &app_state.pool).await
+//     .map_err(|error| actix_error::ErrorNotAcceptable(error.to_string()))?;
+//     Ok(HttpResponse::Accepted().body("update success"))
+// }
 
