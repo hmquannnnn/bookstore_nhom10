@@ -14,7 +14,7 @@ use api::{
     cart::{delete_cart, get_cart, patch_cart, put_cart},
     image::{delete_image, get_image, put_image},
     index,
-    user::{register_user, user_login, get_user, insert_image_user, update_user_name, update_user_phone, update_user_address, patch_user_image}, update,
+    user::{register_user, user_login, get_user, insert_image_user, update_user_name, update_user_phone, update_user_address, patch_user_image, update_user_password}, update,
 };
 
 use middleware::SayHi;
@@ -90,6 +90,7 @@ async fn main() -> std::io::Result<()> {
             .service(update_user_phone)
             .service(update_user_address)
             .service(patch_user_image)
+            .service(update_user_password)
             ;
         app
         // .service(auth_test)

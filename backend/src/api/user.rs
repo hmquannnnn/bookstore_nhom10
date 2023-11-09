@@ -126,6 +126,7 @@ pub async fn patch_user_image(
 update_user_field!(update_user_name, "/user/name/{value}", name); 
 update_user_field!(update_user_address,"/user/address/{value}", address); 
 update_user_field!(update_user_phone, "/user/phone/{value}", phone); 
+update_user_field!(update_user_password, "/user/password/{value}", password); 
 
 #[macro_export]
 macro_rules! update_user_field {
