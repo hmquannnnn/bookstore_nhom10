@@ -1,4 +1,6 @@
-use sqlx::{MySqlPool, Row};
+use std::fmt::Display;
+
+use sqlx::{MySqlPool, Row, MySql};
 
 
 pub async fn select_image(id: String, pool: &MySqlPool) -> sqlx::Result<Vec<u8>> {
@@ -22,7 +24,8 @@ pub async fn insert_image(image: Vec<u8>, pool: &MySqlPool) -> sqlx::Result<Stri
     Ok(id)
 }
 
-pub async fn delete_image(id: String, pool: &MySqlPool) -> sqlx::Result<()> {
+pub async fn delete_image<'a, T>(id: &'a T, pool: &MySqlPool) -> sqlx::Result<()>
+where T: Display + Send + Sync + sqlx::Encode<'a, MySql> + Sized + sqlx::Type<MySql>  {
     sqlx::query("delete from images where id = ?")
         .bind(id)
         .execute(pool)

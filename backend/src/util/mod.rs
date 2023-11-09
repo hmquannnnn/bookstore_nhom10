@@ -34,6 +34,8 @@ pub mod types {
         FailToUpdate,
         #[error("fail to fetch")]
         FailToFetch,
+        #[error("unknow user")]
+        UnknownUser,
         #[error("unknow type please make sure it is format correctly")]
         ParseError,
     }

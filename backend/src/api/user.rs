@@ -1,46 +1,25 @@
 use crate::{
     header::JwtTokenHeader,
     repository::{
-        image::insert_image,
+        image::{insert_image, delete_image},
         token::make_token,
-        user::{self, User, UserInsert, UserResponse},
+        user::{self, User, UserInsert, UserResponse, select_user},
     },
     util::{
         to_image_url,
         types::{AppError, AppResult, AppState, Message, UserAuth}
     },
 };
+
 use actix_web::{
     get,
     patch, post, put,
     web::{self, Bytes, Json},
     HttpResponse, Responder, Result as ActixResult,
 };
+use tokio::join;
 use crate::update_user_field;
-// type EitherAuth<T = AuthHeader, E = UserAuth> = std::result::Result<T, E>;
 
-// pub async fn auth_user(either:  EitherAuth) {
-//     match either {
-//         Ok(header) => {
-
-//         },
-//         Err(user) =>
-//     }
-// }
-
-// // #[post("/user/login")]
-// // pub async fn get_user(
-// //     data: Json<UserAuth>,
-// //     app_state: web::Data<AppState>,
-// // ) -> actix_web::Result<impl Responder> {
-// //     let user_auth = data.0;
-// //     let pool = &app_state.pool;
-
-// //     let user = user::select_user(user_auth, pool)
-// //         .await
-// //         .map_err(|error| actix_web::error::ErrorBadRequest(error))?;
-// //     Ok(user)
-// }
 #[post("/user/login")]
 pub async fn user_login(
     data: Json<UserAuth>,
@@ -112,6 +91,37 @@ pub async fn insert_image_user(
         payload: Some(url),
     }))
 }
+
+#[patch("/user/image")]
+pub async fn patch_user_image(
+    jwt: JwtTokenHeader,
+    data: Bytes,
+    app_state: web::Data<AppState>
+    ) -> AppResult<Json<Message<String>>> {
+    let pool = &app_state.pool;
+    let user_email = &jwt.email;
+    let user = select_user(user_email, pool)
+        .await
+        .map_err(|_| AppError::UnknownUser)?;
+    let id = user.image_url;
+    let url = match id {
+        Some(id) => {
+            let id = id.split("=").next().ok_or(AppError::ParseError)?;
+            let fut_all = join!(
+                insert_image(data.to_vec(), pool),
+                delete_image(&id, pool)
+                );
+            let id = fut_all.0.map_err(|_| AppError::FailToUpdate)?; 
+            Some(to_image_url(&app_state, id))
+        },
+        None => {
+            let id = insert_image(data.to_vec(), pool).await.map_err(|_| AppError::FailToFetch)?;
+            Some(to_image_url(&app_state, id))
+        } 
+    };
+    Ok(Json(Message { message: "update success", payload: url }))
+}
+
 
 update_user_field!(update_user_name, "/user/name/{value}", name); 
 update_user_field!(update_user_address,"/user/address/{value}", address); 
