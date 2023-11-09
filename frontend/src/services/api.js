@@ -23,10 +23,6 @@ export const callFetchAccount = () => {
   return instance.get("/user");
 };
 
-// export const callChangeAvatar = () => {
-//   return instance.put("/user/image");
-// }
-
 export const callChangeAvatar = (formData) => {
   return instance.put("/user/image", formData, {
     headers: {
@@ -34,5 +30,3 @@ export const callChangeAvatar = (formData) => {
     },
   });
 };
-
-// export default { callLogin, callRegister, callFetchAccount };
