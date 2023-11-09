@@ -15,7 +15,7 @@ export default function App() {
   
     const getAccount = async () => {
       const res = await callFetchAccount();
-      console.log(">>> check res: ", res)
+      console.log(">>> check fetchAccount: ", res)
       if (res) {
         dispatch(doGetAccountAction(res));
       }
@@ -25,16 +25,10 @@ export default function App() {
     }, [])
   
   
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const handleLogIn = () => {
-    setIsLoggedIn(true);
-  }
-  const handleLogout = () => {
-    setIsLoggedIn(false)
-  }
+  
   return (
 
-    <Routes isLoggedIn={isLoggedIn} setIsLoggedIn={handleLogIn} />
+    <Routes/>
   )
 }
 

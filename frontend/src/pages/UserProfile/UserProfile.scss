@@ -1,0 +1,66 @@
+$btn-background-color: white;
+$btn-color: #0b74e5;
+$btn-border-color: #0b74e5;
+$lightgrey : #a4a4af;
+
+.ant-form-item {
+  margin: 5px;
+  //   color: #a4a4af;
+}
+
+.ant-divider-vertical {
+  bottom: 10px;
+  margin-top: 20px;
+}
+
+
+
+.profile-page {
+  .ant-btn {
+  color: $btn-color;
+  border: 1px solid $btn-border-color;
+  background-color: $btn-background-color;
+  border-radius: 4px;
+}
+  .main {
+    .info {
+      .ant-divider-horizontal {
+        margin: 10px 0;
+      }
+      .avatar {
+        .upload-file {
+          background-color: white;
+          border-radius: 50%;
+          padding: 2px;
+          cursor: pointer;
+          position: relative;
+          bottom: 60px;
+          left: 130px;
+          border: 1px solid $lightgrey;
+          color: $lightgrey;
+        }
+      }
+      .user-info {
+        .ant-btn {
+          padding: 0 50px;
+          margin-top: 30px;
+        }
+      }
+    }
+    .abc {
+      .ant-btn {
+        padding: 0 30px;
+      }
+      .container {
+        color: #a4a4af;
+        display: flex;
+        align-items: stretch;
+        .icon {
+          margin-right: 8px;
+          font-size: 16px;
+          position: relative;
+        }
+      }
+    }
+  }
+}

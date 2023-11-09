@@ -39,7 +39,7 @@ const AdminLayout = () => {
     )
 }
 
-const Routes = ({ isLoggedIn, setIsLoggedIn }) => {
+const Routes = () => {
     const router = createBrowserRouter([
         {
             path: "/",
@@ -64,7 +64,7 @@ const Routes = ({ isLoggedIn, setIsLoggedIn }) => {
         },
         {
             path: "dang-nhap",
-            element: <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />,
+            element: <Login/>,
         },
         {
             path: "dang-ky",
