@@ -23,4 +23,16 @@ export const callFetchAccount = () => {
   return instance.get("/user");
 };
 
+// export const callChangeAvatar = () => {
+//   return instance.put("/user/image");
+// }
+
+export const callChangeAvatar = (formData) => {
+  return instance.put("/user/image", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data", // Đặt kiểu dữ liệu thành multipart/form-data
+    },
+  });
+};
+
 // export default { callLogin, callRegister, callFetchAccount };
