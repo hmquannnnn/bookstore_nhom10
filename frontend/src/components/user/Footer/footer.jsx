@@ -56,7 +56,7 @@ const Footer = () => {
                         </a> */}
 
 
-                        <a href="" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.instagram.com/uethuviensach/?igshid=NzZlODBkYWE4Ng%3D%3D&fbclid=IwAR2PgwiCyo3fwBW0lBXKFqIhISfRTyC1dSOvaA4nMMZRpU5ecwjmAAfiqfY" target="_blank" rel="noopener noreferrer">
                             {/* <i className="fa-brands fa-instagram" style={{ color: "black" }}></i> */}
                             <p>Instagram</p>
                         </a>
