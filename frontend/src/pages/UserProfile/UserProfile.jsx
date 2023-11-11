@@ -7,6 +7,8 @@ import "./UserProfile.scss"
 import { callChangeAddress, callChangeAvatar, callChangeName, callFetchAccount } from "../../services/api";
 import { useEffect, useState } from "react";
 import { doChangeNameAction, doGetAccountAction, updateAvatar } from "../../redux/counter/accountSlice";
+import { Link } from "react-router-dom";
+import path from "../../routes/path";
 
 // const props = {
 //     beforeUpload: (file) => {
@@ -184,7 +186,11 @@ const UserProfile = () => {
                                             </div>
 
                                         </div>
-                                        <Button style={{ position: "relative", left: "340px", top: "10px" }}>Cập nhật</Button>
+                                        <Button style={{ position: "relative", left: "340px", top: "10px" }}>
+                                            <Link to={path.changePhone}>
+                                                Cập nhật
+                                            </Link>
+                                        </Button>
                                     </div>
                                     
                                 </div>

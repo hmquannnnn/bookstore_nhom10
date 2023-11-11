@@ -18,6 +18,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import LayoutAdmin from "../pages/admin/LayoutAdmin";
 import UserProfile from "../pages/UserProfile/UserProfile";
 import { useSelector } from "react-redux";
+import ChangePhone from "../pages/EditUser/ChangePhone/ChangePhone";
 
 const Layout = () => {
     return (
@@ -59,6 +60,10 @@ const Routes = () => {
                 {
                     path: "thong-tin-tai-khoan",
                     element: <UserProfile />
+                },
+                {
+                    path: "/doi-so-dien-thoai",
+                    element: <ChangePhone/>
                 }
             ],
         },

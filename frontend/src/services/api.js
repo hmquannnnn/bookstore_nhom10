@@ -24,7 +24,7 @@ export const callFetchAccount = () => {
 };
 
 export const callChangeAvatar = (formData) => {
-  return instance.put("/user/image", formData, {
+  return instance.patch("/user/image", formData, {
     headers: {
       "Content-Type": "multipart/form-data", // Đặt kiểu dữ liệu thành multipart/form-data
     },
@@ -41,3 +41,9 @@ export const callChangeName = (name) => {
 export const callChangeAddress = (address) => {
   return instance.patch(`/user/address/${address}`);
 }
+
+export const callChangePhone = (phone) => {
+  return instance.patch(`/user/phone/${phone}`);
+};
+
+
