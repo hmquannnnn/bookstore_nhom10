@@ -10,7 +10,7 @@ use actix_web::{
     web::{self, Json}, App, HttpServer
 };
 use api::{
-    book::{get_book, list_book},
+    book::{get_book, list_book, patch_book_image},
     cart::{delete_cart, get_cart, patch_cart, put_cart},
     image::{delete_image, get_image, put_image},
     index,
@@ -57,7 +57,8 @@ async fn main() -> std::io::Result<()> {
         Ok(_) => println!("migrate success"),
         Err(_) => println!("migrate fail"),
     };
-    let base_url = "http://".to_owned() + domain_name.as_str() + ":" + port.to_string().as_str();
+
+    let base_url = format!("{}{}:{}", "http://", domain_name, port);
     let app_state = AppState { pool, base_url };
 
     // init server
@@ -91,6 +92,7 @@ async fn main() -> std::io::Result<()> {
             .service(update_user_address)
             .service(patch_user_image)
             .service(update_user_password)
+            .service(patch_book_image)
             ;
         app
         // .service(auth_test)

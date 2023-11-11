@@ -1,23 +1,17 @@
 use actix_web::{
     get,
-    web::{Json, Query},
-    Responder
+    web::{Json, Query, Bytes},
+    Responder, patch
 };
 use futures_util::future::join;
 
-use crate::{repository::{book, auth_user}, util::types::{AppState, AppResult, AppError}, header::JwtTokenHeader};
+use crate::{repository::{book::{self, select_book}, auth_user, image::insert_image}, util::{types::{AppState, AppResult, AppError, Message}, to_image_url}, header::JwtTokenHeader};
 
 
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct BookQuery {
     id: String
 }
-
-// pub async fn auth_fetch<F1, F2, T>(auth: impl F1, action: impl F2) 
-// where F1: FnOnce(AuthHeader, &MySqlPool) -> Future::<Output=Result<bool, AppError>>, F2: FnOnce() -> Future::<Output=sqlx::Result<T> {
-//     todo!()
-// }
-
 
 #[get("/book")]
 pub async fn get_book(
@@ -30,7 +24,7 @@ pub async fn get_book(
 
     let fut_all = join(
         auth_user(&auth_header.to_user_auth(), pool), 
-        book::select_book(book_id, pool)
+        book::select_book(&book_id, pool)
     ).await;
     
     let book = fut_all.1
@@ -73,7 +67,32 @@ pub async fn list_book(
     }
 }
 
+#[derive(serde::Deserialize)]
+pub struct BookId {
+    pub id: String,
+}
 
+#[patch("/book/image")]
+pub async fn patch_book_image(
+    _jwt: JwtTokenHeader,
+    query: Query<BookId>,
+    payload: Bytes,
+    app_state: actix_web::web::Data<AppState>,
+    ) -> AppResult<Json<Message<String>>> {
+    let book_id = &query.id;
+    let _ = select_book(&book_id, &app_state.pool)
+        .await
+        .map_err(|_| AppError::NonExistBook)?;
+    let id = uuid::Uuid::new_v4().to_string();
+    let url = to_image_url(&app_state, &id);
+    let _ = join(
+        insert_image(payload.to_vec(), &id, &app_state.pool),
+        sqlx::query!("update book set back_page_url = ?", url) 
+        .execute(&app_state.pool)
+    ).await;
+    Ok(Json(Message{
+        message: "insert success",
+        payload: Some(url)
+    }))
+}
 
-// #[patch("/book")]
-// pub async fn patch_book(query: Query<()>)

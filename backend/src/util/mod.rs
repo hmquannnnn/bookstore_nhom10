@@ -34,8 +34,10 @@ pub mod types {
         FailToUpdate,
         #[error("fail to fetch")]
         FailToFetch,
-        #[error("unknow user")]
+        #[error("unknown user")]
         UnknownUser,
+        #[error("non exist book")]
+        NonExistBook,
         #[error("unknow type please make sure it is format correctly")]
         ParseError,
     }
@@ -148,10 +150,9 @@ impl Converter for JsonMapConverter {
 //     }
 // }
 
-pub fn to_image_url(app_state: &web::Data<AppState>, id: String) -> String {
-    return app_state.base_url.clone() + "/image?id=" + id.as_str();
+pub fn to_image_url(app_state: &web::Data<AppState>, id: &String) -> String {
+    return format!("{}/image?id={}", app_state.base_url, id);
 }
-
 // type AppConverter<T> = Converter<actix_web::Result<T>>;
 //
 // impl<T> AppConverter<T> {

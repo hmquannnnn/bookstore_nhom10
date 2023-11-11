@@ -3,8 +3,6 @@ use std::error::Error;
 use sqlx::MySqlPool;
 use serde::{Deserialize, Serialize};
 
-
-
 #[derive(sqlx::FromRow, Serialize, Deserialize, Debug)]
 pub struct User {
     pub email: String,
