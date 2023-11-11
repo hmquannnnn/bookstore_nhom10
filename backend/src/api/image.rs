@@ -7,7 +7,7 @@ use actix_web::{
 use crate::{
     header::JwtTokenHeader,
     repository::{self, auth_user, auth_admin},
-    util::types::{AppError, AppResult, AppState},
+    util::{types::{AppError, AppResult, AppState, Message}, to_image_url},
 };
 
 #[derive(serde::Deserialize)]
@@ -41,18 +41,18 @@ pub async fn put_image(
     app_state: web::Data<AppState>,
 ) -> AppResult<impl Responder> {
     let image = payload.to_vec();
-    let app_state = app_state.into_inner();
     let pool = &app_state.pool;
 
     let auth_success = auth_user(&jwt_header.to_user_auth(), pool).await?;
 
+    let id = uuid::Uuid::new_v4().to_string();
     match auth_success {
         true => {
-            let id = repository::image::insert_image(image, &app_state.pool)
+            repository::image::insert_image(image, &id, &app_state.pool)
                 .await
                 .map_err(|_| AppError::FailToUpdate)?;
             Ok(Json(ImageUrl {
-                url: app_state.base_url.to_owned() + "/image?id=" + id.as_str(),
+                url: to_image_url(&app_state, &id),
             }))
         }
         false => Err(AppError::FailAuthenticate),
@@ -64,7 +64,7 @@ pub async fn delete_image(
     jwt_header: JwtTokenHeader,
     query: web::Query<ImageInfo>,
     app_state: web::Data<AppState>,
-) -> AppResult<impl Responder> {
+) -> AppResult<Json<Message<()>>> {
     let id = query.into_inner().id;
     let pool = &app_state.into_inner().pool;
 
@@ -72,10 +72,10 @@ pub async fn delete_image(
 
     match auth_success {
         true => {
-            let _ = repository::image::delete_image(id, pool)
+            let _ = repository::image::delete_image(&id, pool)
                 .await
                 .map_err(|_| AppError::FailToFetch)?;
-            Ok(Json("update success"))
+            Ok(Json(Message { message: "delete success", payload: None }))
         }
         false => Err(AppError::FailAuthenticate),
     }

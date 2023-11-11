@@ -29,7 +29,7 @@ pub struct Book {
 	pub front_page_url: Option<String>
 }
 
-pub async fn select_book(id: String, pool: &MySqlPool) -> sqlx::Result<Book> {
+pub async fn select_book(id: &String, pool: &MySqlPool) -> sqlx::Result<Book> {
     let book = sqlx::query_as!(Book, "select * from book where id = ?", id)
         .fetch_one(pool)
         .await?;
