@@ -68,7 +68,7 @@ async fn main() -> std::io::Result<()> {
             .allow_any_method()
             .allow_any_header();
 
-        let app = App::new()
+         App::new()
             .wrap(cors)
             .wrap(SayHi)
             .app_data(web::Data::new(app_state.clone()))
@@ -93,9 +93,6 @@ async fn main() -> std::io::Result<()> {
             .service(patch_user_image)
             .service(update_user_password)
             .service(patch_book_image)
-            ;
-        app
-        // .service(auth_test)
     })
     .bind((domain_name.as_str(), port))?
     .workers(2)

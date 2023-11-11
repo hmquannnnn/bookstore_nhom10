@@ -46,7 +46,7 @@ pub mod types {
         fn status_code(&self) -> actix_web::http::StatusCode {
             StatusCode::BAD_REQUEST
         }
-    }
+    } 
 
     #[derive(serde::Serialize, serde::Deserialize)]
     pub struct Message<T> {
