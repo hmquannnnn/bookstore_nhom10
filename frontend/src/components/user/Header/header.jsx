@@ -13,27 +13,15 @@ import { doGetAccountAction, doLogOutAction } from "../../../redux/counter/accou
 
 
 const Header = () => {
-    const navigate = useNavigate();
-    const isAuthenticated = useSelector(state => state.account.isAuthenticated);
-    
-    const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated);
-    useEffect(() => {
-        setIsLoggedIn(isAuthenticated);
-        console.log("check: ", isAuthenticated, isLoggedIn);
-    }, [isAuthenticated])
-    const handleLogIn = () => {
-        setIsLoggedIn(true);
-    }
     const dispatch = useDispatch();
-
     const handleLogOut = () => {
         console.log("logout");
         localStorage.clear();
         dispatch(doLogOutAction());
-        setIsLoggedIn(false);
-        setItems(defaultItems);
-        
+        // setIsLoggedIn(false);
+        // setItems(defaultItems);
     }
+
     const defaultItems = [
         {
             key: '1',
@@ -73,21 +61,50 @@ const Header = () => {
             )
         }
     ]
-    console.log("isauth: ", isAuthenticated);
-    console.log("login status: ", isLoggedIn);
-    const [ openAlert, setOpenAlert ] = useState(false);
-    const handleCartClick = () => {
-        if(!isLoggedIn) {
-            setOpenAlert(true);
-        } else {
-            navigate("/gio-hang");
-        }
+    const navigate = useNavigate();
+    const isAuthenticated = useSelector(state => state.account.isAuthenticated);
+    const [items, setItems] = useState(defaultItems);
+    const handleChangeDropdown = () => {
+
     }
+    
+   
+    useEffect(() => {
+        isAuthenticated ? setItems( loggedInItems ) : setItems( defaultItems )
+    }, [isAuthenticated])
+  
 
+    
+    
+    // console.log("isauth: ", isAuthenticated);
+    
+    // const [ openAlert, setOpenAlert ] = useState(false);
+    // const handleCartClick = () => {
+    //     if(isAuthenticated) {
+    //         setOpenAlert(true);
+    //     } else {
+    //         navigate("/gio-hang");
+    //     }
+    // }
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const showModal = () => {
+        if(isAuthenticated) {
+            navigate("/gio-hang")
+        } else {
+            setIsModalOpen(true);
+        }
+        
+    };
+    const handleOk = () => {
+        setIsModalOpen(false);
+        navigate("dang-nhap")
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
 
-    const [items, setItems] = useState(isLoggedIn ? loggedInItems : defaultItems);
-    // console.log(">>>log in status", isLoggedIn);
-    // console.log(">>>dropdown: ", items);
+    
+ 
 
     return (
         <>
@@ -113,14 +130,27 @@ const Header = () => {
                     </div>
                     <nav className="page-header__bottom">
                         <div className="navigation">
-                            <a href="/gio-hang" style={{ marginRight: "35px", marginLeft: "10px" }} onClick={handleCartClick}>
+                            <a  style={{ marginRight: "35px", marginLeft: "10px" }} onClick={showModal}>
                                 <Badge
                                     count={100}
                                     overflowCount={99}
                                     size={"small"}>
-                                    <AiOutlineShoppingCart className="cart-icon" href="/gio-hang" />
+                                    <AiOutlineShoppingCart className="cart-icon"  />
                                 </Badge>
                             </a>
+                            {/* <Button type="primary" onClick={showModal}>
+                                Open Modal
+                            </Button> */}
+                            <Modal title="Bạn chưa đăng nhập" 
+                                open={isModalOpen} 
+                                onOk={handleOk} 
+                                okText="Đăng nhập"
+                                onCancel={handleCancel}
+                                cancelText="Hủy"
+                            >
+                                <p>Đăng nhập để truy cập giỏ hàng</p>
+                                
+                            </Modal>
                             {/* <Modal
                                 title="Bạn cần đăng nhập để truy cập giỏ hàng"
                                 open={openAlert}

@@ -4,9 +4,9 @@ import { FiSmartphone, FiLock } from "react-icons/fi"
 import { BiPencil } from "react-icons/bi"
 import { useDispatch, useSelector } from "react-redux";
 import "./UserProfile.scss"
-import { callChangeAvatar, callFetchAccount } from "../../services/api";
+import { callChangeAddress, callChangeAvatar, callChangeName, callFetchAccount } from "../../services/api";
 import { useEffect, useState } from "react";
-import { doGetAccountAction, updateAvatar } from "../../redux/counter/accountSlice";
+import { doChangeNameAction, doGetAccountAction, updateAvatar } from "../../redux/counter/accountSlice";
 
 // const props = {
 //     beforeUpload: (file) => {
@@ -29,6 +29,11 @@ const UserProfile = () => {
     // setImageURL(user.image_url);
     console.log(">>>user: ", user);
     const [ key, setKey ] = useState(0);
+    const [ userName, setUserName ] = useState(user.name);
+    useEffect(() => {
+        setUserName(user.name);
+    }, [user.name])
+
     // console.log(">>>old image url: ", imageURL);
     const handleImageURL = (newURL) => {
         setImageURL(newURL);
@@ -41,15 +46,22 @@ const UserProfile = () => {
     //     // Khi updatedUser thay đổi, cập nhật imageURL dựa trên updatedUser.image_url
     //     setImageURL(updatedUser.image_url);
     // }, [updatedUser]);
-    const onFinish = () => {
-
+    const onFinish = async ({ name, address}) => {
+        const nameRes = await callChangeName(name);
+        const addressRes = await callChangeAddress(address);
+        if (addressRes.message === "update success" || nameRes.message === "update success") {
+            window.location.reload();
+        }
+    }
+    const handleChangeName = (e) => {
+        setUserName(e.target.value);
     }
     const customRequest = async ({ file, onSuccess, onError }) => {
         try {
             const formData = new FormData();
             formData.append("file", file);
-
             const response = await callChangeAvatar(formData); 
+            console.log(">>>check: ", response);
             if(response && response.payload) {
                 console.log(">>>success");
                 const updatedUser = await callFetchAccount(); 
@@ -60,17 +72,9 @@ const UserProfile = () => {
                     console.log(">>>new user: ", imageURL, "vs ", response.payload)
                     setKey(1);
                     dispatch(updateAvatar(response.payload));
+                    window.location.reload();
                 }
-                // handleImageURL(response.payload);
-                
-                
-                
             }
-            // console.log(">>>new image url: ", imageURL);
-            // Gọi hàm callChangeAvatar với đối tượng FormData
-            // console.log(">>>check res: ", response);
-            // console.log(">>>file: ", file);
-            // Handle the success response here if needed
             onSuccess(response, file);
         } catch (error) {
             // Handle any errors or display an error message
@@ -80,7 +84,7 @@ const UserProfile = () => {
     };
     const getAccount = async () => {
         const res = await callFetchAccount();
-        console.log(">>> check fetchAccount: ", res)
+        // console.log(">>> check fetchAccount: ", res)
         if (res) {
             dispatch(doGetAccountAction(res));
         }
@@ -126,7 +130,7 @@ const UserProfile = () => {
                                             label="Tên tài khoản"
                                             labelCol={{ span: 24 }}
                                         >
-                                            <Input placeholder={user.name} style={{ borderRadius: "2px" }} />
+                                            <Input placeholder={userName} onChange={handleChangeName} style={{ borderRadius: "2px" }} />
                                         </Form.Item>
                                         {/* <Form.Item
                                             name="email"
@@ -169,8 +173,8 @@ const UserProfile = () => {
                                                 <p>{user.email}</p>
                                             </div>
                                         </div>
-                                        <Button style={{position: "relative", left: "320px", top: "10px"}}>Cập nhật</Button>
-                                    </div>
+                                        {/* <Button style={{position: "relative", left: "320px", top: "10px"}}>Cập nhật</Button> */}
+                                    </div> 
                                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                                         <div className="container">
                                             <FiSmartphone className="icon" style={{ top: "12px" }} />
@@ -180,7 +184,7 @@ const UserProfile = () => {
                                             </div>
 
                                         </div>
-                                        <Button style={{ position: "relative", left: "320px", top: "10px" }}>Cập nhật</Button>
+                                        <Button style={{ position: "relative", left: "340px", top: "10px" }}>Cập nhật</Button>
                                     </div>
                                     
                                 </div>

@@ -30,3 +30,14 @@ export const callChangeAvatar = (formData) => {
     },
   });
 };
+
+export const callChangeName = (name) => {
+  console.log("call this name: ", name, " "+typeof(name));
+  const formattedName = String(name);
+  console.log(">>>url :", `/user/name/${formattedName}`, "and ", formattedName);
+  return instance.patch(`/user/name/${name}`);
+}
+
+export const callChangeAddress = (address) => {
+  return instance.patch(`/user/address/${address}`);
+}
