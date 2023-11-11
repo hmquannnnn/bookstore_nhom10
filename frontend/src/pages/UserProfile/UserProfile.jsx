@@ -205,7 +205,12 @@ const UserProfile = () => {
                                             <FiLock className="icon" style={{ top: "12px" }} />
                                             <p className="text">Đổi mật khẩu</p>
                                         </div>
-                                        <Button style={{ position: "relative", left: "342px", top: "10px" }}>Cập nhật</Button>
+                                        <Button style={{ position: "relative", left: "342px", top: "10px" }}>
+                                            <Link to={path.changePassword}>
+                                                Cập nhật
+                                            </Link>
+                                            
+                                        </Button>
                                     </div>
                                     
                                 </div>

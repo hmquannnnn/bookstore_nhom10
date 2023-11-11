@@ -19,6 +19,8 @@ import LayoutAdmin from "../pages/admin/LayoutAdmin";
 import UserProfile from "../pages/UserProfile/UserProfile";
 import { useSelector } from "react-redux";
 import ChangePhone from "../pages/EditUser/ChangePhone/ChangePhone";
+import ChangePassword from "../pages/EditUser/ChangePassword/ChangePassword";
+import path from "./path";
 
 const Layout = () => {
     return (
@@ -64,6 +66,10 @@ const Routes = () => {
                 {
                     path: "/doi-so-dien-thoai",
                     element: <ChangePhone/>
+                },
+                {
+                    path: path.changePassword,
+                    element: <ChangePassword/>
                 }
             ],
         },

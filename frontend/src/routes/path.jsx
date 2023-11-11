@@ -9,7 +9,8 @@ const path = {
     booksManagement: "/books",
     usersManagement: "/users",
     ordersManagemennt: "/orders",
-    changePhone: "/doi-so-dien-thoai"
+    changePhone: "/doi-so-dien-thoai",
+    changePassword: "/doi-mat-khau"
 }
 
 export default path;
