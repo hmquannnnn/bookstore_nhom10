@@ -128,40 +128,7 @@ pub async fn patch_user_image(
 update_user_field!(update_user_name, "/user/name/{value}", name); 
 update_user_field!(update_user_address,"/user/address/{value}", address); 
 update_user_field!(update_user_phone, "/user/phone/{value}", phone); 
-
-
-#[derive(serde::Deserialize)]
-pub struct Password {
-    old: String,
-    new: String,
-}
-
-#[patch("/user/password")]
-pub async fn update_user_password(
-        jwt: JwtTokenHeader,
-        password: Json<Password>,
-        app_state: web::Data<AppState>,    
-    ) -> AppResult<Json<Message<()>>> {
-    let user_email = jwt.email;
-    let old_pass = sqlx::query!("select password from user where email = ?", user_email)
-        .fetch_one(&app_state.pool)
-        .await
-        .map_err(|_| AppError::UnknownUser)?
-        .password;
-    if password.old.eq(&old_pass) {
-        sqlx::query!("update user set password = ? where email = ?", password.new, user_email)
-            .execute(&app_state.pool)
-            .await
-            .map_err(|_| AppError::UnknownUser)?;
-    } else {
-        return Ok(Json(Message { message: "wrong password", payload: None }))
-    }
-    Ok(Json(Message{
-        message: "update success",
-        payload: None,
-    }))
-}
-
+update_user_field!(update_user_password, "/user/password/{value}", password); 
 
 #[macro_export]
 macro_rules! update_user_field {

@@ -13,6 +13,7 @@ pub struct BookQuery {
     id: String
 }
 
+
 #[get("/book")]
 pub async fn get_book(
     auth_header: JwtTokenHeader,
@@ -96,3 +97,31 @@ pub async fn patch_book_image(
     }))
 }
 
+// update_book_field!(update_book_name, )
+
+#[macro_export]
+macro_rules! update_book_field {
+    ( $name:ident, $path:expr, $field:ident) => {
+        #[patch($path)]
+        pub async fn $name(
+            path: actix_web::web::Path<String>,
+            jwt: JwtTokenHeader,
+            app_state: web::Data<AppState>,
+            ) -> AppResult<Json<Message<()>>> {
+            let user_email = jwt.email;
+            let value = path.as_str();
+             
+            let query = format!("update book set {} = ? where id = ?", stringify!($field));
+            sqlx::query(query.as_str())
+                .bind(value)
+                .bind(user_email)
+                .execute(&app_state.pool)
+                .await
+                .map_err(|_| AppError::FailToUpdate)?;
+            Ok(Json(Message {
+                message: "update success",
+                payload: None,
+            }))
+        }
+    };
+}
