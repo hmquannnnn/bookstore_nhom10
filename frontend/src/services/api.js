@@ -24,7 +24,7 @@ export const callFetchAccount = () => {
 };
 
 export const callChangeAvatar = (formData) => {
-  return instance.put("/user/image", formData, {
+  return instance.patch("/user/image", formData, {
     headers: {
       "Content-Type": "multipart/form-data", // Đặt kiểu dữ liệu thành multipart/form-data
     },
@@ -36,8 +36,28 @@ export const callChangeName = (name) => {
   const formattedName = String(name);
   console.log(">>>url :", `/user/name/${formattedName}`, "and ", formattedName);
   return instance.patch(`/user/name/${name}`);
-}
+};
 
 export const callChangeAddress = (address) => {
   return instance.patch(`/user/address/${address}`);
-}
+};
+
+export const callChangePhone = (phone) => {
+  return instance.patch(`/user/phone/${phone}`);
+};
+
+export const callChangePassword = (oldPassword, newPassword) => {
+  const data = {
+    old: oldPassword,
+    new: newPassword
+  }
+  console.log(">>>data: ", data)
+  const jsonData = JSON.stringify(data)
+  console.log(jsonData);
+  return instance.patch("user/password", jsonData, {
+  headers: {
+    'Content-Type': 'application/json',
+  },});
+};
+
+

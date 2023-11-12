@@ -72,20 +72,6 @@ const Header = () => {
     useEffect(() => {
         isAuthenticated ? setItems( loggedInItems ) : setItems( defaultItems )
     }, [isAuthenticated])
-  
-
-    
-    
-    // console.log("isauth: ", isAuthenticated);
-    
-    // const [ openAlert, setOpenAlert ] = useState(false);
-    // const handleCartClick = () => {
-    //     if(isAuthenticated) {
-    //         setOpenAlert(true);
-    //     } else {
-    //         navigate("/gio-hang");
-    //     }
-    // }
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {
         if(isAuthenticated) {
