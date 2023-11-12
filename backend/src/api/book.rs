@@ -24,7 +24,7 @@ pub async fn get_book(
     let pool = &app_state.pool;
 
     let fut_all = join(
-        auth_user(&auth_header.to_user_auth(), pool), 
+        auth_user(&auth_header, pool), 
         book::select_book(&book_id, pool)
     ).await;
     
@@ -52,7 +52,7 @@ pub async fn list_book(
     let start = query.0.start;
     let length = query.0.length;
     let pool = &app_state.pool;
-    let auth = auth_header.to_user_auth();
+    let auth = auth_header;
 
     let fut_all = join(
         auth_user(&auth, pool),

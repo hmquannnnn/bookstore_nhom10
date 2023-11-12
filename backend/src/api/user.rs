@@ -7,7 +7,7 @@ use crate::{
     },
     util::{
         to_image_url,
-        types::{AppError, AppResult, AppState, Message, UserAuth}
+        types::{AppError, AppResult, AppState, Message, UserLogin}
     },
 };
 
@@ -22,7 +22,7 @@ use crate::update_user_field;
 
 #[post("/user/login")]
 pub async fn user_login(
-    data: Json<UserAuth>,
+    data: Json<UserLogin>,
     app_state: web::Data<AppState>,
 ) -> actix_web::Result<impl Responder> {
     let user_auth = data.0;
@@ -72,7 +72,7 @@ pub async fn insert_image_user(
     app_state: web::Data<AppState>,
 ) -> AppResult<Json<Message<String>>> {
     let pool = &app_state.pool;
-    let user_auth = auth_header.to_user_auth();
+    let user_auth = auth_header;
     let id = uuid::Uuid::new_v4().to_string();
     insert_image(data.to_vec(), &id, pool)
         .await

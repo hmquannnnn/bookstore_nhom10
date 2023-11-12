@@ -72,7 +72,7 @@ pub async fn insert_image_user(
     app_state: web::Data<AppState>,
 ) -> AppResult<Json<Message<String>>> {
     let pool = &app_state.pool;
-    let user_auth = auth_header.to_user_auth();
+    let user_auth = auth_header;
     let id = uuid::Uuid::new_v4().to_string();
     insert_image(data.to_vec(), &id, pool)
         .await

@@ -2,18 +2,13 @@ use actix_web::{dev::Payload, FromRequest, HttpRequest};
 use serde::Serialize;
 use std::{future::{ready, Ready}, error::Error};
 
-use crate::{repository::token::decode_token, util::types::UserAuth};
+use crate::{repository::token::decode_token, util::types::Role};
 
 #[derive(Clone, Serialize)]
 pub struct JwtTokenHeader {
     pub email: String,
     pub password: String,
-}
-
-impl JwtTokenHeader {
-    pub fn to_user_auth(self) -> UserAuth {
-        return UserAuth { email: self.email, password: self.password };
-    }
+    pub role: Role,
 }
 
 impl FromRequest for JwtTokenHeader {
@@ -31,13 +26,12 @@ impl FromRequest for JwtTokenHeader {
             |result_value: Result<&actix_web::http::header::HeaderValue, actix_web::Error>| {
                 let result_value = result_value?.to_str()?.to_string();
                 let token_decode = decode_token(&result_value)?;
-                Ok(token_decode)
+                let jwt = JwtTokenHeader::try_from(token_decode)?; 
+                Ok(jwt)
             };
-
-        let header_value = error_handler(header_value).map(|value| JwtTokenHeader {
-            email: value.sub,
-            password: value.name,
-        }).map_err(|error: Box<dyn Error>| actix_web::error::ErrorUnauthorized(error.to_string()));
-        ready(header_value)
+        
+        let jwt = error_handler(header_value)
+        .map_err(|error: Box<dyn Error>| actix_web::error::ErrorUnauthorized(error.to_string()));
+        ready(jwt)
     }
 }
