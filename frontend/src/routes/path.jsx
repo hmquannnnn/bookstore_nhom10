@@ -1,3 +1,5 @@
+const adminURL = "/admin";
+
 const path = {
     home: "/",
     logIn: "/dang-nhap",
@@ -5,10 +7,10 @@ const path = {
     aboutUs: "/gioi-thieu",
     cart: "/gio-hang",
     userProfile: "/thong-tin-tai-khoan",
-    admin: "/admin",
-    booksManagement: "/books",
-    usersManagement: "/users",
-    ordersManagemennt: "/orders",
+    admin: adminURL,
+    booksManagement: `${adminURL}/books`,
+    usersManagement: `${adminURL}/users`,
+    ordersManagemennt: `${adminURL}/orders`,
     changePhone: "/doi-so-dien-thoai",
     changePassword: "/doi-mat-khau"
 }

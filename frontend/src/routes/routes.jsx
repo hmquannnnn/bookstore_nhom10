@@ -45,26 +45,26 @@ const AdminLayout = () => {
 const Routes = () => {
     const router = createBrowserRouter([
         {
-            path: "/",
+            path: path.home,
             element: <Layout />,
             errorElement: <NotFound />,
 
             children: [
                 { index: true, element: <Home /> },
                 {
-                    path: "gioi-thieu",
+                    path: path.aboutUs,
                     element: <AboutUs />
                 },
                 {
-                    path: "gio-hang",
+                    path: path.cart,
                     element: <Cart />
                 },
                 {
-                    path: "thong-tin-tai-khoan",
+                    path: path.userProfile,
                     element: <UserProfile />
                 },
                 {
-                    path: "/doi-so-dien-thoai",
+                    path: path.changePhone,
                     element: <ChangePhone/>
                 },
                 {
@@ -74,7 +74,7 @@ const Routes = () => {
             ],
         },
         {
-            path: "dang-nhap",
+            path: path.logIn,
             element: <Login/>,
         },
         {
@@ -82,7 +82,7 @@ const Routes = () => {
             element: <Register />,
         },
         {
-            path: "admin",
+            path: path.admin,
             element: <AdminLayout />,
             errorElement: <NotFound />,
             children: [
@@ -93,15 +93,15 @@ const Routes = () => {
                         </ProtectedRoute>
                 },
                 {
-                    path: "books",
+                    path: path.booksManagement,
                     element: <BooksManagement />
                 },
                 {
-                    path: "users",
+                    path: path.usersManagement,
                     element: <UsersManagement />
                 },
                 {
-                    path: "orders",
+                    path: path.ordersManagemennt,
                     element: <OrdersManagemennt />
                 }
             ]

@@ -26,28 +26,20 @@ import path from "../../routes/path";
 const UserProfile = () => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.account.user);
-    // console.log(">>>url: ", user.image_url);
     const [ imageURL, setImageURL ] = useState(user.image_url);
-    // setImageURL(user.image_url);
     console.log(">>>user: ", user);
     const [ key, setKey ] = useState(0);
     const [ userName, setUserName ] = useState(user.name);
     useEffect(() => {
         setUserName(user.name);
     }, [user.name])
-
-    // console.log(">>>old image url: ", imageURL);
     const handleImageURL = (newURL) => {
         setImageURL(newURL);
     }
     useEffect(() => {
-        // Khi imageURL thay đổi, sẽ thực hiện cập nhật trên giao diện
+        
         setImageURL(user.image_url)
     }, [user.image_url]);
-    // useEffect(() => {
-    //     // Khi updatedUser thay đổi, cập nhật imageURL dựa trên updatedUser.image_url
-    //     setImageURL(updatedUser.image_url);
-    // }, [updatedUser]);
     const onFinish = async ({ name, address}) => {
         const nameRes = await callChangeName(name);
         const addressRes = await callChangeAddress(address);
@@ -79,14 +71,12 @@ const UserProfile = () => {
             }
             onSuccess(response, file);
         } catch (error) {
-            // Handle any errors or display an error message
             console.error("Error uploading avatar:", error);
             onError(error);
         }
     };
     const getAccount = async () => {
         const res = await callFetchAccount();
-        // console.log(">>> check fetchAccount: ", res)
         if (res) {
             dispatch(doGetAccountAction(res));
         }
@@ -97,11 +87,11 @@ const UserProfile = () => {
 
     return (
         <>
-            <div className="profile-page" style={{ margin: "auto", width: "1440px", height: "800px" }}>
+            <div className="profile-page" style={{ margin: "auto", width: "1440px", height: "630px" }}>
                 <h3 style={{ fontFamily: "Arial, Helvetica, sans-serif", fontSize: "22px" }}>Thông tin tài khoản</h3>
-                <div className="main" style={{ backgroundColor: "white", borderRadius: "5px", height: "550px" }}>
+                <div className="main" style={{ backgroundColor: "white", borderRadius: "5px", height: "400px" }}>
                     <Row>
-                        <Col className="info" md={14} style={{ height: "500px" }}>
+                        <Col className="info" md={14} style={{ height: "400px" }}>
                             <h4 style={{ fontSize: "20px", color: "#64646D", fontWeight: "400", margin: "5px 0 0 10px" }}>Thông tin cá nhân</h4>
                             {/* <Divider/> */}
                             <Row>
@@ -162,8 +152,8 @@ const UserProfile = () => {
                             </Row>
 
                         </Col>
-                        <Divider type="vertical" style={{ height: "500px" }} />
-                        <Col className="abc" md={9} style={{ height: "500px" }}>
+                        <Divider type="vertical" style={{ height: "350px" }} />
+                        <Col className="abc" md={9} style={{ height: "400px" }}>
                             <Row>
                                 <div>
                                     <h4 style={{ fontSize: "20px", color: "#64646D", fontWeight: "400", margin: "5px 0 0 0" }}>Email và Số điện thoại</h4>
@@ -175,7 +165,6 @@ const UserProfile = () => {
                                                 <p>{user.email}</p>
                                             </div>
                                         </div>
-                                        {/* <Button style={{position: "relative", left: "320px", top: "10px"}}>Cập nhật</Button> */}
                                     </div> 
                                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                                         <div className="container">
