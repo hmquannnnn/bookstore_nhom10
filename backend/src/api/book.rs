@@ -1,40 +1,41 @@
 use actix_web::{
-    get,
-    web::{Json, Query, Bytes},
-    Responder, patch
+    get, patch,
+    web::{Bytes, Json, Query},
+    Responder,
 };
 use futures_util::future::join;
 
-use crate::{repository::{book::{self, select_book}, auth_user, image::insert_image}, util::{types::{AppState, AppResult, AppError, Message}, to_image_url}, header::JwtTokenHeader};
+use crate::{
+    header::JwtTokenHeader,
+    repository::{
+        book::{self, select_book, Book, list_books_sort},
+        image::insert_image, self,
+    },
+    util::{
+        to_image_url,
+        types::{AppError, AppResult, AppState, Message},
+    }, update_field,
+};
 
+use crate::update_book_field;
 
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct BookQuery {
-    id: String
+    id: String,
 }
-
 
 #[get("/book")]
 pub async fn get_book(
-    auth_header: JwtTokenHeader,
     query: Query<BookQuery>,
     app_state: actix_web::web::Data<AppState>,
 ) -> AppResult<impl Responder> {
     let book_id = query.0.id;
     let pool = &app_state.pool;
 
-    let fut_all = join(
-        auth_user(&auth_header, pool), 
-        book::select_book(&book_id, pool)
-    ).await;
-    
-    let book = fut_all.1
+    let book = book::select_book(&book_id, pool)
+        .await
         .map_err(|_| AppError::FailToFetch)?;
-    
-    match fut_all.0? {
-        true => Ok(Json(book)),
-        false => Err(AppError::FailAuthenticate)
-    }
+    Ok(Json(book))
 }
 
 #[derive(serde::Deserialize)]
@@ -45,27 +46,17 @@ pub struct BookListInfo {
 
 #[get("/book/list")]
 pub async fn list_book(
-    auth_header: JwtTokenHeader,
     query: Query<BookListInfo>,
     app_state: actix_web::web::Data<AppState>,
 ) -> AppResult<impl Responder> {
     let start = query.0.start;
     let length = query.0.length;
     let pool = &app_state.pool;
-    let auth = auth_header;
 
-    let fut_all = join(
-        auth_user(&auth, pool),
-        book::list_books(start, length, pool)
-    ).await;
-
-    let book = fut_all.1
+    let book = book::list_books(start, length, pool)
+        .await
         .map_err(|_| AppError::FailToFetch)?;
-
-    match fut_all.0? {
-        true => Ok(Json(book)),
-        false => Err(AppError::FailAuthenticate)
-    }
+    Ok(Json(book))
 }
 
 #[derive(serde::Deserialize)]
@@ -79,7 +70,7 @@ pub async fn patch_book_image(
     query: Query<BookId>,
     payload: Bytes,
     app_state: actix_web::web::Data<AppState>,
-    ) -> AppResult<Json<Message<String>>> {
+) -> AppResult<Json<Message<String>>> {
     let book_id = &query.id;
     let _ = select_book(&book_id, &app_state.pool)
         .await
@@ -88,40 +79,32 @@ pub async fn patch_book_image(
     let url = to_image_url(&app_state, &id);
     let _ = join(
         insert_image(payload.to_vec(), &id, &app_state.pool),
-        sqlx::query!("update book set back_page_url = ?", url) 
-        .execute(&app_state.pool)
-    ).await;
-    Ok(Json(Message{
+        sqlx::query!("update book set front_page_url = ?", url).execute(&app_state.pool),
+    )
+    .await;
+    Ok(Json(Message {
         message: "insert success",
-        payload: Some(url)
+        payload: Some(url),
     }))
 }
 
-// update_book_field!(update_book_name, )
+update_book_field!(update_book_title, "/book/title/{value}", title);
+update_book_field!(update_book_price, "/book/price/{value}", price);
+update_book_field!(update_book_descption, "/book/price/{value}", desciption);
 
 #[macro_export]
 macro_rules! update_book_field {
-    ( $name:ident, $path:expr, $field:ident) => {
-        #[patch($path)]
-        pub async fn $name(
-            path: actix_web::web::Path<String>,
-            jwt: JwtTokenHeader,
-            app_state: web::Data<AppState>,
-            ) -> AppResult<Json<Message<()>>> {
-            let user_email = jwt.email;
-            let value = path.as_str();
-             
-            let query = format!("update book set {} = ? where id = ?", stringify!($field));
-            sqlx::query(query.as_str())
-                .bind(value)
-                .bind(user_email)
-                .execute(&app_state.pool)
-                .await
-                .map_err(|_| AppError::FailToUpdate)?;
-            Ok(Json(Message {
-                message: "update success",
-                payload: None,
-            }))
-        }
+    ( $name:ident, $path:expr, $field:ident ) => {
+       update_field!( book, $name, $path, $field );
     };
+}
+
+
+#[get("/book/stored/desc")]
+pub async fn fetch_storted_books(query: Query<BookListInfo>, app_state: actix_web::web::Data<AppState>) -> AppResult<Json<Vec<Book>>> {
+    let start = query.start;
+    let length = query.length;
+    let books = list_books_sort(start, length, &app_state.pool)
+        .await?;
+    Ok(Json(books))
 }
