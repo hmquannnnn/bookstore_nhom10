@@ -51,7 +51,6 @@ export const callChangePassword = (oldPassword, newPassword) => {
     old: oldPassword,
     new: newPassword
   }
-  console.log(">>>data: ", data)
   const jsonData = JSON.stringify(data)
   console.log(jsonData);
   return instance.patch("user/password", jsonData, {

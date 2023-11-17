@@ -36,7 +36,7 @@ const AdminLayout = () => {
     const role = useSelector(state => state.account.user.role)
     return (
         <div className="layout-admin">
-            {role==="admin" && <AdminHeader />}
+            {role === "admin" && <AdminHeader />}
             <Outlet />
         </div>
     )
@@ -50,7 +50,10 @@ const Routes = () => {
             errorElement: <NotFound />,
 
             children: [
-                { index: true, element: <Home /> },
+                {
+                    index: true,
+                    element: <Home />
+                },
                 {
                     path: path.aboutUs,
                     element: <AboutUs />
@@ -65,20 +68,20 @@ const Routes = () => {
                 },
                 {
                     path: path.changePhone,
-                    element: <ChangePhone/>
+                    element: <ChangePhone />
                 },
                 {
                     path: path.changePassword,
-                    element: <ChangePassword/>
+                    element: <ChangePassword />
                 }
             ],
         },
         {
             path: path.logIn,
-            element: <Login/>,
+            element: <Login />,
         },
         {
-            path: "dang-ky",
+            path: path.register,
             element: <Register />,
         },
         {
@@ -87,7 +90,8 @@ const Routes = () => {
             errorElement: <NotFound />,
             children: [
                 {
-                    index: true, element:
+                    index: true,
+                    element:
                         <ProtectedRoute>
                             <Admin />
                         </ProtectedRoute>

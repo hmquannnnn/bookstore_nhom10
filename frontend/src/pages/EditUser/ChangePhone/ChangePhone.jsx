@@ -2,6 +2,7 @@ import { Button, Form, Input } from "antd";
 import { callChangePhone } from "../../../services/api";
 import { useNavigate } from "react-router-dom";
 import path from "../../../routes/path";
+import "./ChangePhone.scss"
 
 const ChangePhone = () => {
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ const ChangePhone = () => {
     }
     return (
         <>
-            <div className="container">
+            
                 <div className="main">
                     <h3>Đổi số điện thoại</h3>
                     <Form
@@ -39,7 +40,7 @@ const ChangePhone = () => {
                         <Button type="primary" htmlType="submit" style={{width: "100%"}}>Xác nhận</Button>
                     </Form>
                 </div>
-            </div>
+            
         </>
     )
 }

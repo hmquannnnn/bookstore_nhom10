@@ -67,7 +67,7 @@ const ChangePassword = () => {
                                     },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
-                                            if (!value || getFieldValue('password') === value) {
+                                            if (!value || getFieldValue('new') === value) {
                                                 return Promise.resolve();
                                             }
                                             return Promise.reject(new Error('Mật khẩu không trùng khớp'));
