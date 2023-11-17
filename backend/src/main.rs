@@ -11,7 +11,7 @@ use actix_web::{
     web::{self, Json}, App, HttpServer
 };
 use api::{
-    book::{get_book, list_book, patch_book_image, update_book_title, update_book_price, update_book_descption, fetch_storted_books},
+    book::{get_book, list_book, patch_book_image, update_book_title, update_book_price, update_book_descption, fetch_sorted_books, fetch_sorted_books_asc},
     cart::{delete_cart, get_cart, patch_cart, put_cart},
     image::{delete_image, get_image, put_image},
     index,
@@ -98,7 +98,8 @@ async fn main() -> std::io::Result<()> {
             .service(update_book_price)
             .service(update_book_descption)
             .service(get_genres)
-            .service(fetch_storted_books)
+            .service(fetch_sorted_books)
+            .service(fetch_sorted_books_asc)
     })
     .bind((domain_name.as_str(), port))?
     .workers(2)

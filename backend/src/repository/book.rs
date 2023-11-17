@@ -104,6 +104,20 @@ pub async fn list_books_sort(start: i32, length: i32, pool: &MySqlPool) -> AppRe
 }
 
 
+pub async fn list_books_sort_asc(start: i32, length: i32, pool: &MySqlPool) -> AppResult<Vec<Book>> {
+    let books = fetch_match!(sqlx::query_as!(Book,
+    "select book.*, author.name as author_name from (
+    select * from book
+    order by rating asc 
+    limit ? offset ?
+    ) book
+    join author
+    where author.id = book.author_id", length, start)
+        .fetch_all(pool)
+        .await)?;
+    Ok(books)
+}
+
 pub async fn list_book_by_genre(start: i32, length: i32, genre_id: i32, pool: &MySqlPool) -> sqlx::Result<Vec<BookFetch>> {
     // let mut query_builder = sqlx::QueryBuilder::from("select book_id id from book_genre where genre_id in (");
     // let mut separeted = query_builder.separated(", ");
@@ -122,6 +136,9 @@ pub async fn list_book_by_genre(start: i32, length: i32, genre_id: i32, pool: &M
         .await
 }
 
+
+
+
 // pub async fn delete_book(id: String, pool: &MySqlPool) -> sqlx::Result<()> {
 //     sqlx::query!("delete from book where id = ?", id)
 //         .execute(pool)
@@ -130,28 +147,4 @@ pub async fn list_book_by_genre(start: i32, length: i32, genre_id: i32, pool: &M
 // }
 
 
-// (id, title, author_id, price, publish_year, back_date_url, front_page_url)
-// pub async fn update_book(column_fields: Vec<ColumnField>, pool: &MySqlPool) -> sqlx::Result<()> {
-//     join!(
-//         update_one_field("book", id_field, value_field, pool)
-//     );
-//     // sqlx::query!("update book
-//     //              set title = ?,
-//     //              author_id = ?,
-//     //              price = ?,
-//     //              publish_year = ?,
-//     //              book_in_stocks = ?,
-//     //              back_page_url = ?,
-//     //              front_page_url = ?",
-//     //              book.title,
-//     //              book.author_id,
-//     //              book.price,
-//     //              book.publish_year,
-//     //              book.book_in_stocks,
-//     //              book.back_page_url,
-//     //              book.front_page_url)
-//     //     .execute(pool)
-//     //     .await?;
-//     Ok(())
-// }
 

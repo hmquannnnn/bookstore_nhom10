@@ -8,8 +8,8 @@ use futures_util::future::join;
 use crate::{
     header::JwtTokenHeader,
     repository::{
-        book::{self, select_book, Book, list_books_sort},
-        image::insert_image, self,
+        book::{self, select_book, Book, list_books_sort, list_books_sort_asc},
+        image::insert_image,
     },
     util::{
         to_image_url,
@@ -18,6 +18,7 @@ use crate::{
 };
 
 use crate::update_book_field;
+use crate::book_sort;
 
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct BookQuery {
@@ -100,11 +101,41 @@ macro_rules! update_book_field {
 }
 
 
-#[get("/book/stored/desc")]
-pub async fn fetch_storted_books(query: Query<BookListInfo>, app_state: actix_web::web::Data<AppState>) -> AppResult<Json<Vec<Book>>> {
+#[get("/book/sort/desc")]
+pub async fn fetch_sorted_books(query: Query<BookListInfo>, app_state: actix_web::web::Data<AppState>) -> AppResult<Json<Vec<Book>>> {
     let start = query.start;
     let length = query.length;
     let books = list_books_sort(start, length, &app_state.pool)
         .await?;
     Ok(Json(books))
 }
+
+
+#[get("/book/sort/asc")]
+pub async fn fetch_sorted_books_asc(query: Query<BookListInfo>, app_state: actix_web::web::Data<AppState>) -> AppResult<Json<Vec<Book>>> {
+    let start = query.start;
+    let length = query.length;
+    let books = list_books_sort_asc(start, length, &app_state.pool)
+        .await?;
+    Ok(Json(books))
+}
+
+// book_sort!("/book/rating/sort", fetch_books_sort_rating, book by rating order asc);
+
+#[macro_export]
+macro_rules! book_sort {
+    ( $path:expr, $name:ident, $table:ident by $column:ident order $order:ident) => {
+        #[get("/book/sort/asc")]
+        pub async fn $name(query: Query<BookListInfo>, app_state: actix_web::web::Data<AppState>) -> actix_web::Result<Json<Vec<Book>>> {
+            let start = query.start;
+            let length = query.length;
+            let books = list_books_sort_asc(start, length, &app_state.pool)
+                .await?;
+            Ok(Json(books))
+        }
+    };
+}
+
+
+
+
