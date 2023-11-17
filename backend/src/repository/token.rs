@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use chrono::{Duration};
 
 
-use crate::util::{constant::{EXPIRE_INTERVAL, APP_SECRET}};
+use crate::{util::{constant::{EXPIRE_INTERVAL, APP_SECRET}, types::{Role, AppError}}, header::JwtTokenHeader};
 
 use super::user::User;
 
@@ -41,15 +41,25 @@ impl TokenSerialize {
 #[derive(Serialize, Deserialize)]
 pub struct Claims {
     pub sub: String,
-    pub name: String,
+    pub pass: String,
+    pub rol: String,
     pub exp: u64
+}
+
+
+impl TryFrom<Claims> for JwtTokenHeader {
+    type Error = AppError;
+    fn try_from(value: Claims) -> Result<Self, Self::Error> {
+        Ok(JwtTokenHeader { email: value.sub, password: value.pass, role: value.rol.try_into()?}) 
+    }
 }
 
 pub fn make_token(user: &User) -> Result<String, JwtError> {
     let expire = Duration::minutes(EXPIRE_INTERVAL);
     let claims = Claims {
         sub: user.email.clone(),
-        name: user.password.clone(),
+        pass: user.password.clone(),
+        rol: user.role.clone(),
         exp: chrono::Utc::now().checked_add_signed(expire).unwrap().timestamp() as u64
     };
     let token = encode(&JwtHeader::default(), &claims, &EncodingKey::from_secret(APP_SECRET.as_ref()))?;

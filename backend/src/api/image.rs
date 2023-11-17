@@ -42,8 +42,7 @@ pub async fn put_image(
 ) -> AppResult<impl Responder> {
     let image = payload.to_vec();
     let pool = &app_state.pool;
-
-    let auth_success = auth_user(&jwt_header.to_user_auth(), pool).await?;
+    let auth_success = auth_user(&jwt_header, pool).await?;
 
     let id = uuid::Uuid::new_v4().to_string();
     match auth_success {
@@ -68,7 +67,7 @@ pub async fn delete_image(
     let id = query.into_inner().id;
     let pool = &app_state.into_inner().pool;
 
-    let auth_success = auth_admin(&jwt_header.to_user_auth(), pool).await?;
+    let auth_success = auth_admin(&jwt_header, pool).await?;
 
     match auth_success {
         true => {

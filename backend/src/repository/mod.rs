@@ -3,18 +3,18 @@
 //     pub data: Vec<u8>,
 // }
 
-use sqlx::{MySqlPool};
+use sqlx::MySqlPool;
 
-use crate::util::types::{AppError, ColumnField, UserAuth};
+use crate::{util::types::{AppError, ColumnField}, header::JwtTokenHeader};
 
 pub mod book;
 pub mod image;
 pub mod token;
 pub mod user;
+pub mod genre;
 
-pub async fn auth_user(user_auth: &UserAuth, pool: &MySqlPool) -> Result<bool, AppError> {
-    let user = sqlx::query_as!(
-        UserAuth,
+pub async fn auth_user(user_auth: &JwtTokenHeader, pool: &MySqlPool) -> Result<bool, AppError> {
+    let user = sqlx::query!(
         "select email, password from user where email = ?",
         user_auth.email
     )
@@ -24,9 +24,8 @@ pub async fn auth_user(user_auth: &UserAuth, pool: &MySqlPool) -> Result<bool, A
     Ok(user.password == user_auth.password)
 }
 
-pub async fn auth_admin(admin_auth: &UserAuth, pool: &MySqlPool) -> Result<bool, AppError> {
-    let user = sqlx::query_as!(
-        UserAuth,
+pub async fn auth_admin(admin_auth: &JwtTokenHeader, pool: &MySqlPool) -> Result<bool, AppError> {
+    let user = sqlx::query!(
         "select email, password from user where email = ? and role = \"admin\"",
         admin_auth.email
     )
@@ -55,7 +54,7 @@ pub async fn update_one_field(
 }
 
 pub async fn update_one_field_auth(
-    user_auth: &UserAuth,
+    user_auth: &JwtTokenHeader,
     table: &String,
     id_field: &ColumnField,
     value_field: &ColumnField,
@@ -77,7 +76,7 @@ pub async fn update_one_field_auth(
 }
 
 pub async fn detete_auth(
-    user_auth: &UserAuth,
+    user_auth: &JwtTokenHeader,
     table: &String,
     field: &ColumnField,
     pool: &MySqlPool,
@@ -100,7 +99,7 @@ pub async fn detete_auth(
 }
 
 // pub async fn action_auth(
-//     user_auth: &UserAuth,
+//     user_auth: &JwtTokenHeader,
 //     table: &String,
 //     id: &String,
 //     pool: &MySqlPool,

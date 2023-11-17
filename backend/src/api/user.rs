@@ -7,7 +7,7 @@ use crate::{
     },
     util::{
         to_image_url,
-        types::{AppError, AppResult, AppState, Message, UserAuth}
+        types::{AppError, AppResult, AppState, Message, UserLogin}
     },
 };
 
@@ -19,10 +19,11 @@ use actix_web::{
 };
 use tokio::join;
 use crate::update_user_field;
+use crate::update_field;
 
 #[post("/user/login")]
 pub async fn user_login(
-    data: Json<UserAuth>,
+    data: Json<UserLogin>,
     app_state: web::Data<AppState>,
 ) -> actix_web::Result<impl Responder> {
     let user_auth = data.0;
@@ -72,7 +73,7 @@ pub async fn insert_image_user(
     app_state: web::Data<AppState>,
 ) -> AppResult<Json<Message<String>>> {
     let pool = &app_state.pool;
-    let user_auth = auth_header.to_user_auth();
+    let user_auth = auth_header;
     let id = uuid::Uuid::new_v4().to_string();
     insert_image(data.to_vec(), &id, pool)
         .await
@@ -125,11 +126,6 @@ pub async fn patch_user_image(
 }
 
 
-update_user_field!(update_user_name, "/user/name/{value}", name); 
-update_user_field!(update_user_address,"/user/address/{value}", address); 
-update_user_field!(update_user_phone, "/user/phone/{value}", phone); 
-
-
 #[derive(serde::Deserialize)]
 pub struct Password {
     old: String,
@@ -162,31 +158,15 @@ pub async fn update_user_password(
     }))
 }
 
+update_user_field!(update_user_name, "/user/name/{value}", name); 
+update_user_field!(update_user_address,"/user/address/{value}", address); 
+update_user_field!(update_user_phone, "/user/phone/{value}", phone); 
 
 #[macro_export]
 macro_rules! update_user_field {
     ( $name:ident, $path:expr, $field:ident) => {
-        #[patch($path)]
-        pub async fn $name(
-            path: actix_web::web::Path<String>,
-            jwt: JwtTokenHeader,
-            app_state: web::Data<AppState>,
-            ) -> AppResult<Json<Message<()>>> {
-            let user_email = jwt.email;
-            let value = path.as_str();
-             
-            let query = format!("update user set {} = ? where email = ?", stringify!($field));
-            sqlx::query(query.as_str())
-                .bind(value)
-                .bind(user_email)
-                .execute(&app_state.pool)
-                .await
-                .map_err(|_| AppError::FailToUpdate)?;
-            Ok(Json(Message {
-                message: "update success",
-                payload: None,
-            }))
-        }
+        update_field!(user, $name, $path, $field);
     };
 }
+
 

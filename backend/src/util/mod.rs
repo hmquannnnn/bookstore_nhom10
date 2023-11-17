@@ -1,13 +1,12 @@
 use std::fmt::Display;
 
 use actix_web::web;
-use sqlx::Value;
 
 use self::types::{AppError, AppState};
 
 pub mod constant;
 pub mod types {
-    use std::iter::FlatMap;
+    use std::fmt::Display;
 
     use actix_web::{http::StatusCode, ResponseError};
     use sqlx::MySqlPool;
@@ -19,10 +18,42 @@ pub mod types {
     }
 
     pub type AppResult<T, E = AppError> = Result<T, E>;
+
+    #[derive(serde::Deserialize, serde::Serialize, Clone)]
     pub enum Role {
         User,
         Addmin,
     }
+    
+    impl TryInto<Role> for std::string::String {
+        type Error = AppError;
+        fn try_into(self) -> Result<Role, Self::Error> {
+            if self.eq("user") {
+                Ok(Role::User)
+            } else if self.eq("admin") {
+                Ok(Role::Addmin)
+            } else {
+                Err(AppError::ParseError)
+            }
+        }
+    }
+
+    impl Display for Role {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            let dis = match self {
+                Role::User => "user",
+                Role::Addmin => "admin"
+            };
+            write!(f, "{}", dis)
+        }
+    }
+
+    #[derive(serde::Serialize, serde::Deserialize)]
+    pub struct UserLogin {
+        pub email: String,
+        pub password: String,
+    }
+    
 
     #[derive(Debug, thiserror::Error)]
     pub enum AppError {
@@ -54,14 +85,6 @@ pub mod types {
         pub payload: Option<T>,
     }
 
-    // impl Responder for AppError {
-    //     type Body = MessageBody + 'static;
-
-    //     fn respond_to(self, req: &HttpRequest) -> HttpResponse<Self::Body> {
-
-    //     }
-    // }
-
     #[derive(serde::Serialize, serde::Deserialize)]
     pub struct ColumnField {
         pub key: String,
@@ -73,18 +96,6 @@ pub mod types {
             ColumnField { key, value }
         }
     }
-
-    #[derive(serde::Deserialize, serde::Serialize)]
-    pub struct UserAuth {
-        pub email: String,
-        pub password: String,
-    }
-
-    // impl UserAuth {
-    //     pub fn into_column_field(self) -> ColumnField {
-    //         ColumnField::new(self.email, )
-    //     }
-    // }
 }
 
 pub trait Converter {

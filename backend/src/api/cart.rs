@@ -29,11 +29,10 @@ pub async fn get_cart(
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
 ) -> AppResult<Json<Vec<Cart>>> {
-    // join!(auth_user(&jwt_header.to_user_auth(), &app_state.pool)).a
     let email = &query.email;
     let pool = &app_state.pool;
     let fut_all = join(
-        auth_user(&jwt_header.to_user_auth(), pool),
+        auth_user(&jwt_header, pool),
         sqlx::query_as!(Cart, "select * from cart where user_email = ?", email).fetch_all(pool),
     )
     .await;
@@ -62,7 +61,7 @@ pub async fn delete_cart(
     let cart = &data.0;
     let pool = &app_state.pool;
 
-    let auth = auth_user(&jwt_header.to_user_auth(), pool).await?;
+    let auth = auth_user(&jwt_header, pool).await?;
 
     match auth {
         true => {
@@ -92,7 +91,7 @@ pub async fn put_cart(
     let cart = &data.0;
     let pool = &app_state.pool;
 
-    let auth = auth_user(&jwt_header.to_user_auth(), pool).await?;
+    let auth = auth_user(&jwt_header, pool).await?;
 
     match auth {
         true => {
@@ -120,7 +119,7 @@ pub async fn patch_cart(
     let cart = &data.0;
     let pool = &app_state.pool;
 
-    let auth = auth_user(&jwt_header.to_user_auth(), pool).await?;
+    let auth = auth_user(&jwt_header, pool).await?;
 
     match auth {
         true => {

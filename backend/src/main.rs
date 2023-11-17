@@ -4,17 +4,18 @@ mod middleware;
 mod repository;
 mod util;
 mod body;
+mod app_macro;
 
 use actix_cors::Cors;
 use actix_web::{
     web::{self, Json}, App, HttpServer
 };
 use api::{
-    book::{get_book, list_book, patch_book_image},
+    book::{get_book, list_book, patch_book_image, update_book_title, update_book_price, update_book_descption, fetch_storted_books},
     cart::{delete_cart, get_cart, patch_cart, put_cart},
     image::{delete_image, get_image, put_image},
     index,
-    user::{register_user, user_login, get_user, insert_image_user, update_user_name, update_user_phone, update_user_address, patch_user_image, update_user_password}, update,
+    user::{register_user, user_login, get_user, insert_image_user, update_user_name, update_user_phone, update_user_address, patch_user_image, update_user_password}, update, genre::get_genres,
 };
 
 use middleware::SayHi;
@@ -93,6 +94,11 @@ async fn main() -> std::io::Result<()> {
             .service(patch_user_image)
             .service(update_user_password)
             .service(patch_book_image)
+            .service(update_book_title)
+            .service(update_book_price)
+            .service(update_book_descption)
+            .service(get_genres)
+            .service(fetch_storted_books)
     })
     .bind((domain_name.as_str(), port))?
     .workers(2)
