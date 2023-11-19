@@ -79,7 +79,7 @@ pub async fn select_book(id: &String, pool: &MySqlPool) -> sqlx::Result<Book> {
 
 pub async fn list_books(start: i32, length: i32, pool: &MySqlPool) -> sqlx::Result<Vec<Book>> {
     let book = sqlx::query_as!(Book,
-        r"select book.*, author.name as author_name from (
+        "select book.*, author.name as author_name from (
     	    select * from book limit ? offset ?
          ) book
          join author
@@ -135,7 +135,6 @@ pub async fn list_book_by_genre(start: i32, length: i32, genre_id: i32, pool: &M
         .fetch_all(pool)
         .await
 }
-
 
 
 
