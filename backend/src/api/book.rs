@@ -128,7 +128,13 @@ pub async fn fetch_sorted_books_purchse_asc(query: Query<BookListInfo>, app_stat
     let books =
         sqlx::query_as!(Book,
         "select book.*, author.name as author_name from (
-            select * from book
+            select book.*, book_genre.genres from book
+            left join (
+                select book_id, group_concat(genre_id) genres
+                from book_genre
+                group by book_id
+            ) book_genre
+            on book.id = book_genre.book_id
             order by number_of_purchases asc 
             limit ? offset ?
             ) book
@@ -150,7 +156,13 @@ pub async fn fetch_sorted_books_purchse_desc(query: Query<BookListInfo>, app_sta
     let books =
         sqlx::query_as!(Book,
         "select book.*, author.name as author_name from (
-            select * from book
+            select book.*, book_genre.genres from book
+            left join (
+                select book_id, group_concat(genre_id) genres
+                from book_genre
+                group by book_id
+            ) book_genre
+            on book.id = book_genre.book_id
             order by number_of_purchases desc
             limit ? offset ?
             ) book
@@ -190,35 +202,6 @@ pub async fn fetch_sorted_books_purchse_desc(query: Query<BookListInfo>, app_sta
 //     };
 // }
 
-// #[get("/dfdf")]
-// pub async fn ddd(query: Query<BookListInfo>, app_state: actix_web::web::Data<AppState>) -> actix_web::Result<Json<Vec<Book>>> {
-//     let start = query.start;
-//     let length = query.length;
-//     let pool = &app_state.pool;
-
-//     let books = 
-//         sqlx::query_as!(Book,
-//            "select book.*, author.name as author_name from (
-//             select * from book
-//             order by rating asc 
-//             limit ? offset ?
-//             join author
-//             where author.id = book.author_id",
-//             length, start
-//         )
-//         .fetch_all(pool)
-//         .await
-//         .map_err(|_| actix_web::error::ErrorBadRequest(AppError::WrongPassword))?;
-//     // let books = books.
-//     // let books = 
-//     //     sqlx::query!(
-//     //         "select * from book"
-//     //     )
-//     //     .fetch_all(pool)
-//     //     .await
-//     //     .map_err(|_| actix_web::error::ErrorBadRequest(AppError::WrongPassword))?;
-//     Ok(Json(books))
-// }
 
 
 // macro_rules! list_book_sorted{
