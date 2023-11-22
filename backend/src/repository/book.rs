@@ -7,13 +7,15 @@ pub struct Book {
 	pub id: String,
 	pub title: String,
 	pub author_id: i32,
-    pub author_name: String,
+    pub author_name: Option<String>,
 	pub price: f32,
 	pub publish_year: String,
     pub number_of_purchases:  Option<i32>,
     pub book_in_stocks: i32,
     pub rating: Option<f32>,
     pub desciption: Option<String>,
+    // pub genres: sqlx::types::Json<Vec<i32>>,
+    pub genres: Option<String>, 
 
 	pub back_page_url: Option<String>,
 	pub front_page_url: Option<String>
@@ -59,19 +61,22 @@ pub async fn select_book(id: &String, pool: &MySqlPool) -> sqlx::Result<Book> {
     //     sqlx::query_as!(BookGenre,
     //     "select genre.*, book_genre.book_id from genre
     //          join (
-    //          	select * from book_genre
-    //              where book_id = ?
+    //          	select * from book_genre where book_id = ?
     //          ) book_genre
     //       where book_genre.genre_id = genre.id", id)
     //     .fetch_all(pool)
     //     );
     let book = sqlx::query_as!(Book, 
-                        r"select book.*, author.name as author_name
-         from ( 
-             select * from book where id = ?
-         ) as book
-         join author
-         where author.id = book.author_id;", id)
+        "select book.*, author.name author_name, book_genre.genres from book
+        left join author
+                on book.author_id = author.id
+        left join (
+        	select book_id, group_concat(genre_id) genres 
+            from book_genre
+        	group by book_id
+        ) book_genre
+        on book_genre.book_id = book.id         
+        where book.id = ?", id)
         .fetch_one(pool)
         .await?;
     Ok(book)
@@ -79,11 +84,16 @@ pub async fn select_book(id: &String, pool: &MySqlPool) -> sqlx::Result<Book> {
 
 pub async fn list_books(start: i32, length: i32, pool: &MySqlPool) -> sqlx::Result<Vec<Book>> {
     let book = sqlx::query_as!(Book,
-        r"select book.*, author.name as author_name from (
-    	    select * from book limit ? offset ?
-         ) book
-         join author
-         where author.id = book.author_id;", length, start)
+        "select book.*, author.name author_name, book_genre.genres from book
+        left join author
+        on book.author_id = author.id
+        left join (
+            select book_id, group_concat(genre_id) genres
+            from book_genre
+            group by book_id
+        ) book_genre
+        on book_genre.book_id = book.id
+        limit ? offset ?", length, start)
         .fetch_all(pool)
         .await?;
     Ok(book)
@@ -92,7 +102,13 @@ pub async fn list_books(start: i32, length: i32, pool: &MySqlPool) -> sqlx::Resu
 pub async fn list_books_sort(start: i32, length: i32, pool: &MySqlPool) -> AppResult<Vec<Book>> {
     let books = fetch_match!(sqlx::query_as!(Book,
     "select book.*, author.name as author_name from (
-    select * from book
+    select book.*, book_genre.genres from book
+    left join (
+        select book_id, group_concat(genre_id) genres
+        from book_genre
+        group by book_id
+    ) book_genre
+    on book.id = book_genre.book_id
     order by rating desc
     limit ? offset ?
     ) book
@@ -106,13 +122,18 @@ pub async fn list_books_sort(start: i32, length: i32, pool: &MySqlPool) -> AppRe
 
 pub async fn list_books_sort_asc(start: i32, length: i32, pool: &MySqlPool) -> AppResult<Vec<Book>> {
     let books = fetch_match!(sqlx::query_as!(Book,
-    "select book.*, author.name as author_name from (
-    select * from book
+    "select book.*, author.name author_name from (
+    select book.*, book_genre.genres from book
+    left join (
+        select book_id id, group_concat(genre_id) genres from book_genre
+        group by id
+    ) book_genre
+    on book.id = book_genre.id
     order by rating asc 
     limit ? offset ?
     ) book
     join author
-    where author.id = book.author_id", length, start)
+    on author.id = book.author_id", length, start)
         .fetch_all(pool)
         .await)?;
     Ok(books)
@@ -135,7 +156,6 @@ pub async fn list_book_by_genre(start: i32, length: i32, genre_id: i32, pool: &M
         .fetch_all(pool)
         .await
 }
-
 
 
 
