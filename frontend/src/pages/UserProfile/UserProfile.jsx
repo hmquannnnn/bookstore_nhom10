@@ -4,7 +4,7 @@ import { FiSmartphone, FiLock } from "react-icons/fi"
 import { BiPencil } from "react-icons/bi"
 import { useDispatch, useSelector } from "react-redux";
 import "./UserProfile.scss"
-import { callChangeAddress, callChangeAvatar, callChangeName, callFetchAccount } from "../../services/api";
+import { callChangeAddress, callChangeAvatar, callChangeName, callFetchAccount } from "../../services/api/userAPI";
 import { useEffect, useState } from "react";
 import { doChangeNameAction, doGetAccountAction, updateAvatar } from "../../redux/counter/accountSlice";
 import { Link } from "react-router-dom";

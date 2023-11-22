@@ -3,7 +3,7 @@
 import { Button, Checkbox, Divider, Form, Input, message, notification } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import { useNavigate } from "react-router-dom";
-import { callRegister } from "../../services/api";
+import { callRegister } from "../../services/api/userAPI";
 import "./register.scss"
 
 

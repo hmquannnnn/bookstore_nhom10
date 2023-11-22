@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AccountDropDown from "./AccountDropDown/AccountDropDown";
 import { Link, useNavigate } from "react-router-dom";
-import { callFetchAccount } from "../../../services/api";
+import { callFetchAccount } from "../../../services/api/userAPI";
 import { doGetAccountAction, doLogOutAction } from "../../../redux/counter/accountSlice";
 
 

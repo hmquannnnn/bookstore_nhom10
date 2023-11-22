@@ -1,7 +1,13 @@
 import { Button, Checkbox, Col, Divider, Form, InputNumber, Rate, Row, Tabs } from "antd";
+import { useEffect } from "react";
+import { callBooksSortByRating } from "../../services/api/bookAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { hasBooksAction } from "../../redux/counter/bookSlice";
 // import {useSelector} from "react-redux"
 const Home = () => {
     // const user = useSelector(state => state.account.user);
+    const dispatch = useDispatch();
+
     const [form] = Form.useForm();
     const handleChangeFilter = (changeValues, values) => {
         console.log(">>> check handleChangeFilter", changeValues, values);
@@ -34,11 +40,22 @@ const Home = () => {
             children: <></>
         }
     ]
-
+    const initBooks = async () => {
+        const res = await callBooksSortByRating();
+        if (res) {
+            dispatch(hasBooksAction(res));
+            console.log(">>>dispatch success: ", res);
+        }
+    }
+    useEffect(() => {
+        initBooks();
+    }, [])
+    const bookList = useSelector(state => state.books.bookList);
+    console.log(">>>here is bookList: ", bookList);
     return (
         <div className="homepage-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
             <Row gutter={[20, 20]}>
-                <Col className="sidebar" md={4} sm={0} xs={0} style={{ border: "1px solid black", backgroundColor: "white"}}>
+                <Col className="sidebar" md={4} sm={0} xs={0} style={{ border: "1px solid black", backgroundColor: "white" }}>
                     <div>
                         <p>Bộ lọc tìm kiếm</p>
                     </div>
@@ -134,14 +151,42 @@ const Home = () => {
                         </Form.Item>
                     </Form>
                 </Col>
-                <Col className="content" md={20} sm={24} xs={24} style={{ border: "1px solid red"}}>
-                    <Row className="category-bar" style={{border: "1px solid green", backgroundColor: "white"}}>
+                <Col className="content" md={20} sm={24} xs={24} style={{ border: "1px solid red" }}>
+                    <Row className="category-bar" style={{ border: "1px solid green", backgroundColor: "white" }}>
                         <div>
-                            <h3 style={{margin: "5px"}}>UETHUVIENSACH</h3>
+                            <h3 style={{ margin: "5px" }}>UETHUVIENSACH</h3>
                             <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
                         </div>
                     </Row>
+                    <Row className="books" style={{ border: "1px solid orange", marginTop: "8px" }}>
+                        <Col>
+                            {
+                                bookList.map(book => (
+                                    <>
+                                        <span style={{ display: "inline" }}>
+                                            <div className="thumbnail">
+                                                <img src={book.front_page_url} alt="" />
+                                            </div>
+                                            <div className="book-title">
+                                                {book.title}
+                                            </div>
+                                            <div className="book-price">
+                                                {/* {
+                                                // new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)
+                                                // bookList[0].price
+                                                // haha
+                                            } */}
+                                                haha
+                                            </div>
+                                        </span>
 
+                                    </>
+
+                                ))
+                            }
+
+                        </Col>
+                    </Row>
                 </Col>
             </Row>
         </div>

@@ -5,7 +5,7 @@ import FormItem from "antd/es/form/FormItem";
 // import { useState } from "react";
 // import { fetchUser } from "../../../utils/api"; 
 import { useNavigate } from "react-router-dom";
-import { callLogin } from "../../services/api";
+import { callLogin } from "../../services/api/userAPI";
 import { useDispatch } from "react-redux"
 import "./login.scss"
 import { doLoginAction } from "../../redux/counter/accountSlice";

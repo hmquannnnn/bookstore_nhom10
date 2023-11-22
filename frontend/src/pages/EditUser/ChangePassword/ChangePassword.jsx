@@ -1,7 +1,8 @@
 import { Button, Form, Input } from "antd";
-import { callChangePassword } from "../../../services/api";
+
 import { useNavigate } from "react-router-dom";
 import path from "../../../routes/path";
+import { callChangePassword } from "../../../services/api/userAPI";
 
 const ChangePassword = () => {
     const navigate = useNavigate();
