@@ -3,7 +3,7 @@ const adminURL = "/admin";
 const path = {
     home: "/",
     logIn: "/dang-nhap",
-    register: "/dang-ki",
+    register: "/dang-ky",
     aboutUs: "/gioi-thieu",
     cart: "/gio-hang",
     userProfile: "/thong-tin-tai-khoan",
