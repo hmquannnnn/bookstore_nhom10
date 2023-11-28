@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AccountDropDown from "./AccountDropDown/AccountDropDown";
 import { Link, useNavigate } from "react-router-dom";
-import { callFetchAccount } from "../../../services/api";
+import { callFetchAccount } from "../../../services/api/userAPI";
 import { doGetAccountAction, doLogOutAction } from "../../../redux/counter/accountSlice";
 
 
@@ -64,15 +64,10 @@ const Header = () => {
     const navigate = useNavigate();
     const isAuthenticated = useSelector(state => state.account.isAuthenticated);
     const [items, setItems] = useState(defaultItems);
-    const handleChangeDropdown = () => {
-
-    }
-    
-   
+    const [isModalOpen, setIsModalOpen] = useState(false);
     useEffect(() => {
         isAuthenticated ? setItems( loggedInItems ) : setItems( defaultItems )
     }, [isAuthenticated])
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {
         if(isAuthenticated) {
             navigate("/gio-hang")
@@ -88,10 +83,6 @@ const Header = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-
-    
- 
-
     return (
         <>
             <div className="header-container">
@@ -124,9 +115,6 @@ const Header = () => {
                                     <AiOutlineShoppingCart className="cart-icon"  />
                                 </Badge>
                             </a>
-                            {/* <Button type="primary" onClick={showModal}>
-                                Open Modal
-                            </Button> */}
                             <Modal title="Bạn chưa đăng nhập" 
                                 open={isModalOpen} 
                                 onOk={handleOk} 
@@ -137,17 +125,6 @@ const Header = () => {
                                 <p>Đăng nhập để truy cập giỏ hàng</p>
                                 
                             </Modal>
-                            {/* <Modal
-                                title="Bạn cần đăng nhập để truy cập giỏ hàng"
-                                open={openAlert}
-                                onOk={handelOk, onClick=(navigate("/dang-nhap"))}
-                                onCancel={handleCloseAlert}
-                                okText={"Đăng nhập"}
-                                cancelText={"Tiếp tục sử dụng không cần đăng nhập"}
-                            >
-
-                            </Modal>  */}
-                            {/* <AccountDropDown style={{marginLeft: "35px"}}/>  */}
                             <Dropdown
                                 menu={{ items }}
                                 placement="bottom"

@@ -4,7 +4,7 @@ import { FiSmartphone, FiLock } from "react-icons/fi"
 import { BiPencil } from "react-icons/bi"
 import { useDispatch, useSelector } from "react-redux";
 import "./UserProfile.scss"
-import { callChangeAddress, callChangeAvatar, callChangeName, callFetchAccount } from "../../services/api";
+import { callChangeAddress, callChangeAvatar, callChangeName, callFetchAccount } from "../../services/api/userAPI";
 import { useEffect, useState } from "react";
 import { doChangeNameAction, doGetAccountAction, updateAvatar } from "../../redux/counter/accountSlice";
 import { Link } from "react-router-dom";
@@ -26,10 +26,10 @@ import path from "../../routes/path";
 const UserProfile = () => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.account.user);
-    const [ imageURL, setImageURL ] = useState(user.image_url);
+    const [imageURL, setImageURL] = useState(user.image_url);
     console.log(">>>user: ", user);
-    const [ key, setKey ] = useState(0);
-    const [ userName, setUserName ] = useState(user.name);
+    const [key, setKey] = useState(0);
+    const [userName, setUserName] = useState(user.name);
     useEffect(() => {
         setUserName(user.name);
     }, [user.name])
@@ -37,16 +37,27 @@ const UserProfile = () => {
         setImageURL(newURL);
     }
     useEffect(() => {
-        
+
         setImageURL(user.image_url)
     }, [user.image_url]);
-    const onFinish = async ({ name, address}) => {
-        const nameRes = await callChangeName(name);
-        const addressRes = await callChangeAddress(address);
-        if (addressRes.message === "update success" || nameRes.message === "update success") {
-            window.location.reload();
+    const onFinish = async ({ name, address }) => {
+        if (name !== undefined) {
+            const nameRes = await callChangeName(name);
+            if (nameRes.message === "update success") {
+                console.log(">>> call name")
+            }
         }
-    }
+
+        if (address !== undefined) {
+            const addressRes = await callChangeAddress(address);
+            if (addressRes.message === "update success") {
+                console.log(">>> call address")
+            }
+        }
+
+
+        window.location.reload();
+    };
     const handleChangeName = (e) => {
         setUserName(e.target.value);
     }
@@ -54,11 +65,11 @@ const UserProfile = () => {
         try {
             const formData = new FormData();
             formData.append("file", file);
-            const response = await callChangeAvatar(formData); 
+            const response = await callChangeAvatar(formData);
             console.log(">>>check: ", response);
-            if(response && response.payload) {
+            if (response && response.payload) {
                 console.log(">>>success");
-                const updatedUser = await callFetchAccount(); 
+                const updatedUser = await callFetchAccount();
                 if (updatedUser) {
                     console.log(">>>updated user: ", updatedUser.image_url);
                     dispatch(doGetAccountAction(updatedUser));
@@ -122,7 +133,7 @@ const UserProfile = () => {
                                             label="Tên tài khoản"
                                             labelCol={{ span: 24 }}
                                         >
-                                            <Input placeholder={userName} onChange={handleChangeName} style={{ borderRadius: "2px" }} />
+                                            <Input value={userName} placeholder={userName} onChange={handleChangeName} style={{ borderRadius: "2px" }} />
                                         </Form.Item>
                                         {/* <Form.Item
                                             name="email"
@@ -143,7 +154,7 @@ const UserProfile = () => {
                                             label="Địa chỉ"
                                             labelCol={{ span: 24 }}
                                         >
-                                            <Input placeholder={user.address} style={{ borderRadius: "2px" }} />
+                                            <Input value={user.address} placeholder={user.address} style={{ borderRadius: "2px" }} />
                                         </Form.Item>
                                         <Button type="primary" htmlType="submit">Lưu thay đổi</Button>
                                     </Form>
@@ -157,7 +168,7 @@ const UserProfile = () => {
                             <Row>
                                 <div>
                                     <h4 style={{ fontSize: "20px", color: "#64646D", fontWeight: "400", margin: "5px 0 0 0" }}>Email và Số điện thoại</h4>
-                                    <div style={{display: "flex", justifyContent: "space-between"}}>
+                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
                                         <div className="container">
                                             <AiOutlineMail className="icon" style={{ top: "14px" }} />
                                             <div className="text">
@@ -165,7 +176,7 @@ const UserProfile = () => {
                                                 <p>{user.email}</p>
                                             </div>
                                         </div>
-                                    </div> 
+                                    </div>
                                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                                         <div className="container">
                                             <FiSmartphone className="icon" style={{ top: "12px" }} />
@@ -181,7 +192,7 @@ const UserProfile = () => {
                                             </Link>
                                         </Button>
                                     </div>
-                                    
+
                                 </div>
 
                             </Row>
@@ -198,10 +209,10 @@ const UserProfile = () => {
                                             <Link to={path.changePassword}>
                                                 Cập nhật
                                             </Link>
-                                            
+
                                         </Button>
                                     </div>
-                                    
+
                                 </div>
                             </Row>
                         </Col>

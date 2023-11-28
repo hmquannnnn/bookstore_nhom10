@@ -1,10 +1,10 @@
-import instance from "../utils/axiosCustomize";
+import instance from "../../utils/axiosCustomize";
 
 export const callLogin = (email, password) => {
   const jsonData = {
     email: email,
-    password: password
-  }
+    password: password,
+  };
   return instance.post("/user/login", jsonData);
 };
 
@@ -14,8 +14,8 @@ export const callRegister = (email, name, phone, password, address) => {
     name: name,
     phone: phone,
     password: password,
-    address: address
-  }
+    address: address,
+  };
   return instance.post("/user/register", jsonData);
 };
 
@@ -32,7 +32,7 @@ export const callChangeAvatar = (formData) => {
 };
 
 export const callChangeName = (name) => {
-  console.log("call this name: ", name, " "+typeof(name));
+  console.log("call this name: ", name, " " + typeof name);
   const formattedName = String(name);
   console.log(">>>url :", `/user/name/${formattedName}`, "and ", formattedName);
   return instance.patch(`/user/name/${name}`);
@@ -49,15 +49,13 @@ export const callChangePhone = (phone) => {
 export const callChangePassword = (oldPassword, newPassword) => {
   const data = {
     old: oldPassword,
-    new: newPassword
-  }
-  console.log(">>>data: ", data)
-  const jsonData = JSON.stringify(data)
+    new: newPassword,
+  };
+  const jsonData = JSON.stringify(data);
   console.log(jsonData);
   return instance.patch("user/password", jsonData, {
-  headers: {
-    'Content-Type': 'application/json',
-  },});
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 };
-
-
