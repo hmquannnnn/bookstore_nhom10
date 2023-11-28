@@ -1,6 +1,6 @@
 use sqlx::{MySqlPool, Executor, QueryBuilder};
 
-use crate::{fetch_match, util::types::AppResult};
+use crate::{fetch_match, util::{types::AppResult, helper::GenresRaw}};
 
 #[derive(sqlx::FromRow, serde::Serialize)]
 pub struct Book {
