@@ -5,6 +5,7 @@ use actix_web::web;
 use self::types::{AppError, AppState};
 
 pub mod constant;
+pub mod helper;
 pub mod types {
     use std::fmt::Display;
 
@@ -24,7 +25,7 @@ pub mod types {
         User,
         Addmin,
     }
-    
+
     impl TryInto<Role> for std::string::String {
         type Error = AppError;
         fn try_into(self) -> Result<Role, Self::Error> {
@@ -42,7 +43,7 @@ pub mod types {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             let dis = match self {
                 Role::User => "user",
-                Role::Addmin => "admin"
+                Role::Addmin => "admin",
             };
             write!(f, "{}", dis)
         }
@@ -53,7 +54,6 @@ pub mod types {
         pub email: String,
         pub password: String,
     }
-    
 
     #[derive(Debug, thiserror::Error)]
     pub enum AppError {
@@ -77,7 +77,7 @@ pub mod types {
         fn status_code(&self) -> actix_web::http::StatusCode {
             StatusCode::BAD_REQUEST
         }
-    } 
+    }
 
     #[derive(serde::Serialize, serde::Deserialize)]
     pub struct Message<T> {
@@ -106,7 +106,6 @@ pub trait Converter {
 
 pub struct Map(pub Vec<(String, String)>);
 
-
 impl Map {
     pub fn get(&self, key: String) -> Option<&String> {
         for value in &self.0 {
@@ -127,13 +126,19 @@ impl Map {
     }
 }
 
-
 impl TryFrom<serde_json::Map<String, serde_json::Value>> for Map {
     type Error = AppError;
     fn try_from(value: serde_json::Map<String, serde_json::Value>) -> Result<Self, Self::Error> {
         let mut array = Vec::new();
         for object in value {
-            array.push((object.0, object.1.as_str().ok_or_else(|| AppError::ParseError)?.to_owned()));
+            array.push((
+                object.0,
+                object
+                    .1
+                    .as_str()
+                    .ok_or_else(|| AppError::ParseError)?
+                    .to_owned(),
+            ));
         }
         Ok(Self(array))
     }
@@ -175,14 +180,12 @@ pub fn to_image_url(app_state: &web::Data<AppState>, id: &String) -> String {
 // }
 //
 
-trait Query {
-    
-}
+trait Query {}
 
 pub struct QueryBuilder;
 
 pub struct UpdateQuerry {
-    query: String
+    query: String,
 }
 
 impl From<String> for UpdateQuerry {
@@ -193,7 +196,9 @@ impl From<String> for UpdateQuerry {
 
 impl UpdateQuerry {
     pub fn add_field<T>(&mut self, field: &T) -> &mut Self
-    where T: Display {
+    where
+        T: Display,
+    {
         self.query = format!("{} {}  = ?", self.query, field);
         self
     }
@@ -209,22 +214,23 @@ impl UpdateQuerry {
     }
 
     pub fn where_field<T>(&mut self, field: T) -> &mut Self
-    where T: Display {
+    where
+        T: Display,
+    {
         self.query = format!("{} {} = ?", self.query, field);
-        
+
         self
     }
-
 }
 
 impl QueryBuilder {
     pub fn new() -> Self {
-        QueryBuilder { }
+        QueryBuilder {}
     }
-    pub fn update<T>(self, table: T) -> UpdateQuerry 
-    where T: Display {
+    pub fn update<T>(self, table: T) -> UpdateQuerry
+    where
+        T: Display,
+    {
         UpdateQuerry::from(format!("update {} set ", table))
     }
 }
-
-
