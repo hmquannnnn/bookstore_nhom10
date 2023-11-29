@@ -1,13 +1,13 @@
 import { Button, Checkbox, Col, Divider, Form, InputNumber, Rate, Row, Tabs } from "antd";
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 import { callBooksSortByRating } from "../../services/api/bookAPI";
 import { useDispatch, useSelector } from "react-redux";
-import { hasBooksAction } from "../../redux/counter/bookSlice";
+import { getBooksAction } from "../../redux/counter/bookSlice";
 // import {useSelector} from "react-redux"
 const Home = () => {
     // const user = useSelector(state => state.account.user);
     const dispatch = useDispatch();
-
+    const [ isActive, setIsActive] = useState("1")
     const [form] = Form.useForm();
     const handleChangeFilter = (changeValues, values) => {
         console.log(">>> check handleChangeFilter", changeValues, values);
@@ -15,9 +15,13 @@ const Home = () => {
     const onFinish = () => {
 
     }
-    const onChange = (key) => {
-        console.log(key);
-    }
+    // const onChange = (key) => {
+    //     console.log(key);
+    //     setIsActive(key)
+    //     switch (key)
+    //         case "1":
+    //
+    // }
     const items = [
         {
             key: "1",
@@ -43,7 +47,7 @@ const Home = () => {
     const initBooks = async () => {
         const res = await callBooksSortByRating();
         if (res) {
-            dispatch(hasBooksAction(res));
+            dispatch(getBooksAction(res));
             console.log(">>>dispatch success: ", res);
         }
     }

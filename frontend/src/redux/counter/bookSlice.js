@@ -10,7 +10,7 @@ export const bookSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    hasBooksAction: (state, action) => {
+    getBooksAction: (state, action) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
@@ -26,6 +26,6 @@ export const bookSlice = createSlice({
   extraReducers: (builder) => {},
 });
 
-export const { hasBooksAction } = bookSlice.actions;
+export const { getBooksAction } = bookSlice.actions;
 
 export default bookSlice.reducer;
