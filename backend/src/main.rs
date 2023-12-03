@@ -1,17 +1,16 @@
 mod api;
 mod header;
 mod middleware;
-mod repository;
-mod util;
+mod repository; mod util;
 mod body;
 mod app_macro;
 
 use actix_cors::Cors;
 use actix_web::{
-    web::{self, Json}, App, HttpServer
+    web::{self, Json}, App, HttpServer, middleware::Logger
 };
 use api::{
-    book::{get_book, list_book, patch_book_image, update_book_title, update_book_price, update_book_descption, fetch_sorted_books, fetch_sorted_books_asc, fetch_sorted_books_purchse_asc, fetch_sorted_books_purchse_desc, fetch_sorted_books_price_asc, fetch_sorted_books_price_desc},
+    book::{get_book, list_book, patch_book_image, update_book_title, update_book_price, update_book_descption, fetch_sorted_books, fetch_sorted_books_asc, fetch_sorted_books_purchse_asc, fetch_sorted_books_purchse_desc, fetch_sorted_books_price_asc, fetch_sorted_books_price_desc, fetch_book_by_genre},
     cart::{delete_cart, get_cart, patch_cart, put_cart},
     image::{delete_image, get_image, put_image},
     index,
@@ -72,6 +71,7 @@ async fn main() -> std::io::Result<()> {
          App::new()
             .wrap(cors)
             .wrap(SayHi)
+            .wrap(Logger::new("%a %{User-Agent}i"))
             .app_data(web::Data::new(app_state.clone()))
             .service(index)
             .service(get_image)
@@ -104,6 +104,7 @@ async fn main() -> std::io::Result<()> {
             .service(fetch_sorted_books_purchse_desc)
             .service(fetch_sorted_books_price_asc)
             .service(fetch_sorted_books_price_desc)
+            .service(fetch_book_by_genre)
     })
     .bind((domain_name.as_str(), port))?
     .workers(2)
