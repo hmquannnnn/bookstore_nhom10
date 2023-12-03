@@ -164,34 +164,40 @@ const Home = () => {
                             />
                         </div>
                     </Row>
-                    <Row className="books" style={{ border: "1px solid orange", marginTop: "8px" }}>
-                        <Col>
+                    <Row className="books" style={{ border: "1px solid orange", marginTop: "8px", display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                        {/*<Col className="book-cell">*/}
                             {
                                 bookList.map(book => (
-                                    <>
+                                    <div className="book-cell" style={{border: "1px solid black", width: "calc(20% - 6px)"}}>
                                         <span style={{ display: "inline" }}>
                                             <div className="thumbnail">
-                                                <img src={book.front_page_url} alt="" />
+                                                <img src={book.front_page_url} alt="" style={{ maxHeight: "250px", display: "block", margin: "auto", objectFit: "contain", backgroundColor: "white"}}/>
                                             </div>
                                             <div className="book-title">
                                                 {book.title}
                                             </div>
+                                            <span>
+                                                <span className="book-rating">
+                                                {book.rating}
+                                                    <Rate value={Math.floor(book.rating)} disabled style={{fontSize: "14px"}} />
+                                                </span>
+                                                <Divider type={"vertical"} style={{ height: "20px", margin: "0 6px"}} />
+                                                <span className="book-purchased">
+                                                    Đã bán {book.number_of_purchases}
+                                                </span>
+                                            </span>
+
                                             <div className="book-price">
-                                                {/* {
-                                                // new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)
-                                                // bookList[0].price
-                                                // haha
-                                            } */}
-                                                haha
+                                                { new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(book.price) }
                                             </div>
                                         </span>
 
-                                    </>
+                                    </div>
 
                                 ))
                             }
 
-                        </Col>
+                        {/*</Col>*/}
                     </Row>
                 </Col>
             </Row>
