@@ -1,5 +1,5 @@
 import { Button, Checkbox, Col, Divider, Form, InputNumber, Rate, Row, Tabs } from "antd";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { callBooksSortByRating } from "../../services/api/bookAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { getBooksAction } from "../../redux/counter/bookSlice";
@@ -7,7 +7,7 @@ import { getBooksAction } from "../../redux/counter/bookSlice";
 const Home = () => {
     // const user = useSelector(state => state.account.user);
     const dispatch = useDispatch();
-    const [ isActive, setIsActive] = useState("1")
+    const [isActive, setIsActive] = useState("1")
     const [form] = Form.useForm();
     const handleChangeFilter = (changeValues, values) => {
         console.log(">>> check handleChangeFilter", changeValues, values);
@@ -159,7 +159,9 @@ const Home = () => {
                     <Row className="category-bar" style={{ border: "1px solid green", backgroundColor: "white" }}>
                         <div>
                             <h3 style={{ margin: "5px" }}>UETHUVIENSACH</h3>
-                            <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+                            <Tabs defaultActiveKey="1" items={items}
+                            // onChange={onChange}
+                            />
                         </div>
                     </Row>
                     <Row className="books" style={{ border: "1px solid orange", marginTop: "8px" }}>

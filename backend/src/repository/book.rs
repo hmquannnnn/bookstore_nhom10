@@ -1,15 +1,15 @@
-use sqlx::{MySqlPool, Executor, QueryBuilder};
+use sqlx::MySqlPool;
 
-use crate::{fetch_match, util::{types::AppResult, helper::GenresRaw}};
+use crate::{fetch_match, util::types::AppResult};
 
 #[derive(sqlx::FromRow, serde::Serialize)]
 pub struct Book {
-	pub id: String,
-	pub title: String,
-	pub author_id: i32,
+    pub id: String,
+    pub title: String,
+    pub author_id: i32,
     pub author_name: Option<String>,
-	pub price: f32,
-	pub publish_year: String,
+    pub price: f32,
+    pub publish_year: String,
     pub number_of_purchases:  Option<i32>,
     pub book_in_stocks: i32,
     pub rating: Option<f32>,
@@ -17,8 +17,8 @@ pub struct Book {
     // pub genres: sqlx::types::Json<Vec<i32>>,
     pub genres: Option<String>, 
 
-	pub back_page_url: Option<String>,
-	pub front_page_url: Option<String>
+    pub back_page_url: Option<String>,
+    pub front_page_url: Option<String>
 }
 //
 // pub struct BookGenre {
@@ -28,18 +28,18 @@ pub struct Book {
 // }
 //
 pub struct BookFetch {
-	pub id: String,
-	pub title: String,
-	pub author_id: i32,
-	pub price: f32,
-	pub publish_year: String,
+    pub id: String,
+    pub title: String,
+    pub author_id: i32,
+    pub price: f32,
+    pub publish_year: String,
     pub number_of_purchases:  Option<i32>,
     pub book_in_stocks: i32,
     pub rating: Option<f32>,
     pub desciption: Option<String>,
 
-	pub back_page_url: Option<String>,
-	pub front_page_url: Option<String>
+    pub back_page_url: Option<String>,
+    pub front_page_url: Option<String>
 }
 //
 // impl From<BookFetch> for Book {
@@ -67,13 +67,13 @@ pub async fn select_book(id: &String, pool: &MySqlPool) -> sqlx::Result<Book> {
     //     .fetch_all(pool)
     //     );
     let book = sqlx::query_as!(Book, 
-        "select book.*, author.name author_name, book_genre.genres from book
+                               "select book.*, author.name author_name, book_genre.genres from book
         left join author
                 on book.author_id = author.id
         left join (
-        	select book_id, group_concat(genre_id) genres 
+                select book_id, concat('[',group_concat(genre_id),']') genres 
             from book_genre
-        	group by book_id
+                group by book_id
         ) book_genre
         on book_genre.book_id = book.id         
         where book.id = ?", id)
@@ -84,11 +84,11 @@ pub async fn select_book(id: &String, pool: &MySqlPool) -> sqlx::Result<Book> {
 
 pub async fn list_books(start: i32, length: i32, pool: &MySqlPool) -> sqlx::Result<Vec<Book>> {
     let book = sqlx::query_as!(Book,
-        "select book.*, author.name author_name, book_genre.genres from book
+                               "select book.*, author.name author_name, book_genre.genres from book
         left join author
         on book.author_id = author.id
         left join (
-            select book_id, group_concat(genre_id) genres
+            select book_id,concat('[',group_concat(genre_id),']') genres
             from book_genre
             group by book_id
         ) book_genre
@@ -101,10 +101,10 @@ pub async fn list_books(start: i32, length: i32, pool: &MySqlPool) -> sqlx::Resu
 
 pub async fn list_books_sort(start: i32, length: i32, pool: &MySqlPool) -> AppResult<Vec<Book>> {
     let books = fetch_match!(sqlx::query_as!(Book,
-    "select book.*, author.name as author_name from (
+                                             "select book.*, author.name as author_name from (
     select book.*, book_genre.genres from book
     left join (
-        select book_id, group_concat(genre_id) genres
+        select book_id, concat('[',group_concat(genre_id),']') genres
         from book_genre
         group by book_id
     ) book_genre
@@ -114,18 +114,18 @@ pub async fn list_books_sort(start: i32, length: i32, pool: &MySqlPool) -> AppRe
     ) book
     join author
     where author.id = book.author_id", length, start)
-        .fetch_all(pool)
-        .await)?;
+                             .fetch_all(pool)
+                             .await)?;
     Ok(books)
 }
 
 
 pub async fn list_books_sort_asc(start: i32, length: i32, pool: &MySqlPool) -> AppResult<Vec<Book>> {
     let books = fetch_match!(sqlx::query_as!(Book,
-    "select book.*, author.name author_name from (
+                                             "select book.*, author.name author_name from (
     select book.*, book_genre.genres from book
     left join (
-        select book_id id, group_concat(genre_id) genres from book_genre
+        select book_id id, concat('[',group_concat(genre_id),']') genres from book_genre
         group by id
     ) book_genre
     on book.id = book_genre.id
@@ -134,8 +134,8 @@ pub async fn list_books_sort_asc(start: i32, length: i32, pool: &MySqlPool) -> A
     ) book
     join author
     on author.id = book.author_id", length, start)
-        .fetch_all(pool)
-        .await)?;
+                             .fetch_all(pool)
+                             .await)?;
     Ok(books)
 }
 
