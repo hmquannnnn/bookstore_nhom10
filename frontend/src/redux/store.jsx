@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from './counter/accountSlice';
-import accountSlice from './counter/accountSlice';
-import bookSlice from './counter/bookSlice';
+import counterReducer from './reducer/accountSlice';
+import accountSlice from './reducer/accountSlice';
+import bookSlice from './reducer/bookSlice';
 
 export const store = configureStore({
   reducer: {
-    // counter: counterReducer,
+    // reducer: counterReducer,
     account: accountSlice,
     books: bookSlice
   },

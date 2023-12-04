@@ -26,15 +26,12 @@ input::-webkit-inner-spin-button {
         display: flex;
         flex-wrap: wrap;
         gap: 5px;
-        .ant-divider {
-          position: relative;
-          bottom: 30px;
+        .book-cell:hover {
+
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
         }
       }
     }
   }
-}
-.book-cell {
-  border: 1px solid black;
-  color: red;
 }

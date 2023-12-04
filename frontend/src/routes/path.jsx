@@ -12,7 +12,8 @@ const path = {
     usersManagement: `${adminURL}/users`,
     ordersManagemennt: `${adminURL}/orders`,
     changePhone: "/doi-so-dien-thoai",
-    changePassword: "/doi-mat-khau"
+    changePassword: "/doi-mat-khau",
+    bookDetails: "/thong-tin-sach",
 }
 
 export default path;

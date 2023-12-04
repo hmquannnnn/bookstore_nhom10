@@ -11,7 +11,6 @@ import Admin from "../pages/admin/admin";
 import BooksManagement from "../pages/admin/managedPages/booksManagement/booksManagement";
 import UsersManagement from "../pages/admin/managedPages/usersManagement/userManagement";
 import OrdersManagemennt from "../pages/admin/managedPages/ordersManagement/ordersManagement";
-// import Test from "../pages/test/test";
 import AdminHeader from "../components/admin/AdminHeader";
 import Home from "../pages/Home/homePage";
 import ProtectedRoute from "../components/ProtectedRoute";
@@ -21,6 +20,7 @@ import { useSelector } from "react-redux";
 import ChangePhone from "../pages/EditUser/ChangePhone/ChangePhone";
 import ChangePassword from "../pages/EditUser/ChangePassword/ChangePassword";
 import path from "./path";
+import BookDetails from "../pages/BookDetails/BookDetails";
 
 const Layout = () => {
     return (
@@ -73,6 +73,10 @@ const Routes = () => {
                 {
                     path: path.changePassword,
                     element: <ChangePassword />
+                },
+                {
+                    path: path.bookDetails,
+                    element: <BookDetails/>
                 }
             ],
         },

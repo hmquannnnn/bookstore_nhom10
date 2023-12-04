@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AccountDropDown from "./AccountDropDown/AccountDropDown";
 import { Link, useNavigate } from "react-router-dom";
 import { callFetchAccount } from "../../../services/api/userAPI";
-import { doGetAccountAction, doLogOutAction } from "../../../redux/counter/accountSlice";
+import { doGetAccountAction, doLogOutAction } from "../../../redux/reducer/accountSlice";
 
 
 
@@ -85,7 +85,7 @@ const Header = () => {
     };
     return (
         <>
-            <div className="header-container">
+            <div className="header-container" style={{marginBottom: "15px"}}>
                 <div className="page-header">
                     <div className="page-header__top">
 

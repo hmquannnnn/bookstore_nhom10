@@ -5,7 +5,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const Footer = () => {
     return (
-        <div className="footer">
+        <div className="footer" style={{marginTop: "40px"}}>
             <div className="container">
                 <div className="row">
                     <div className="col-lg-3">

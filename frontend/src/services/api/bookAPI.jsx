@@ -9,3 +9,7 @@ export const callBooksSortByRating = () => {
 export const callBookSortByPurchased = () => {
     return instance.get(`${booksURL}/purchase/sort/desc?start=0&length=6`);
 }
+
+export const callGetBook = (bookId) => {
+    return instance.get(`${booksURL}?id=${bookId}`);
+}

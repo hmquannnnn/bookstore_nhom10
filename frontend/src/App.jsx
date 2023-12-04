@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import Routes from "./routes/routes";
 import { useDispatch, useSelector } from "react-redux";
 
-import { doGetAccountAction } from "./redux/counter/accountSlice";
+import { doGetAccountAction } from "./redux/reducer/accountSlice";
 import { callFetchAccount } from "./services/api/userAPI";
 
 export default function App() {

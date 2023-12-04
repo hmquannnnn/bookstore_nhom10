@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { callLogin } from "../../services/api/userAPI";
 import { useDispatch } from "react-redux"
 import "./login.scss"
-import { doLoginAction } from "../../redux/counter/accountSlice";
+import { doLoginAction } from "../../redux/reducer/accountSlice";
 import { useState } from "react";
 import { unstable_renderSubtreeIntoContainer } from "react-dom";
 

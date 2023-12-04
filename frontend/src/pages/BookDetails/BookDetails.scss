@@ -1,0 +1,14 @@
+.book-details-page {
+  border: 1px solid deeppink;
+  max-width: 1000px;
+  margin: auto;
+  .right {
+    border: 1px solid blue;
+    background-color: white;
+
+  }
+  .left {
+    border: 1px solid green;
+    background-color: white;
+  }
+}
