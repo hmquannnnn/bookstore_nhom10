@@ -14,7 +14,7 @@ pub async fn select_image(id: String, pool: &MySqlPool) -> sqlx::Result<Vec<u8>>
 
 pub async fn insert_image(image: Vec<u8>, id: &String, pool: &MySqlPool) -> sqlx::Result<()> {
     sqlx::query("insert into images(id, data) values (?, ?)")
-        .bind(&id)
+        .bind(id)
         .bind(image)
         .execute(pool)
         .await?;

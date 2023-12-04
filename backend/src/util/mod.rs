@@ -1,4 +1,4 @@
-use std::fmt::Display;
+
 
 use actix_web::web;
 
@@ -122,7 +122,7 @@ impl Map {
                 return false;
             }
         }
-        return true;
+        true
     }
 }
 
@@ -136,7 +136,7 @@ impl TryFrom<serde_json::Map<String, serde_json::Value>> for Map {
                 object
                     .1
                     .as_str()
-                    .ok_or_else(|| AppError::ParseError)?
+                    .ok_or(AppError::ParseError)?
                     .to_owned(),
             ));
         }
@@ -150,7 +150,7 @@ impl Converter for JsonMapConverter {
     type Value = Map;
     type Error = AppError;
     fn convert(self) -> Result<Self::Value, Self::Error> {
-        let map = self.0.as_object().ok_or_else(|| AppError::ParseError)?;
+        let map = self.0.as_object().ok_or(AppError::ParseError)?;
 
         Map::try_from(map.to_owned())
     }
@@ -167,7 +167,7 @@ impl Converter for JsonMapConverter {
 // }
 
 pub fn to_image_url(app_state: &web::Data<AppState>, id: &String) -> String {
-    return format!("{}/image?id={}", app_state.base_url, id);
+    format!("{}/image?id={}", app_state.base_url, id)
 }
 // type AppConverter<T> = Converter<actix_web::Result<T>>;
 //

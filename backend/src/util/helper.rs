@@ -6,7 +6,7 @@ pub struct GenresRaw(pub String);
 impl TryInto<Vec<i32>> for GenresRaw {
     type Error = ParseIntError;
     fn try_into(self) -> Result<Vec<i32>, Self::Error> {
-        let genres_raw = self.0.split(",");
+        let genres_raw = self.0.split(',');
         let mut genres = Vec::new();
 
         // let genres: Vec<Result<i32, Self::Error>> = genres_raw.map(|e| {

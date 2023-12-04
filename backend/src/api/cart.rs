@@ -1,6 +1,6 @@
 use actix_web::{
     delete, get, patch, put,
-    web::{self, Json, Query},
+    web::{self, Json},
 };
 use futures_util::future::join;
 
@@ -102,7 +102,7 @@ pub async fn put_cart(
             )
             .execute(pool)
             .await
-            .map_err(|err| actix_web::error::ErrorNotFound(err))?;
+            .map_err(actix_web::error::ErrorNotFound)?;
             Ok(Json(Message { message: "update success", payload: None }))
         }
         false => Err(actix_web::error::ErrorUnauthorized("fail to authorized"))

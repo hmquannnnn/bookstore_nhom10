@@ -74,7 +74,7 @@ pub async fn patch_book_image(
     app_state: actix_web::web::Data<AppState>,
 ) -> AppResult<Json<Message<String>>> {
     let book_id = &query.id;
-    let _ = select_book(&book_id, &app_state.pool)
+    let _ = select_book(book_id, &app_state.pool)
         .await
         .map_err(|_| AppError::NonExistBook)?;
     let id = uuid::Uuid::new_v4().to_string();
@@ -274,9 +274,9 @@ pub async fn fetch_book_by_genre(
         .await;
     
     if let Ok(books) = books {
-        return Ok(Json(books));
+        Ok(Json(books))
     } else {
-        return Err(actix_web::error::ErrorNotFound("not found"));
+        Err(actix_web::error::ErrorNotFound("not found"))
     }
 }
 

@@ -139,7 +139,7 @@ pub async fn list_books_sort_asc(start: i32, length: i32, pool: &MySqlPool) -> A
     Ok(books)
 }
 
-pub async fn list_book_by_genre(start: i32, length: i32, genre_id: i32, pool: &MySqlPool) -> sqlx::Result<Vec<BookFetch>> {
+pub async fn list_book_by_genre(_start: i32, _length: i32, genre_id: i32, pool: &MySqlPool) -> sqlx::Result<Vec<BookFetch>> {
     // let mut query_builder = sqlx::QueryBuilder::from("select book_id id from book_genre where genre_id in (");
     // let mut separeted = query_builder.separated(", ");
     // for id in genre_ids {

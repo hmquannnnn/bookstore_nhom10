@@ -2,7 +2,7 @@
 #[macro_export]
 macro_rules! fetch_match {
     ( $action:expr ) => {
-       $action.map_err(|_| crate::util::types::AppError::FailToFetch) 
+       $action.map_err(|_| $crate::util::types::AppError::FailToFetch) 
     };
 }
 

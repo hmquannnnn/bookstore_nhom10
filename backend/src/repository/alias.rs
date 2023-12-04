@@ -29,7 +29,7 @@ pub fn book_genres_filter_full<'a>(genre_ids: &Vec<i32>) -> QueryBuilder<'a, MyS
     let mut main_builder: QueryBuilder<'a, MySql> = 
         QueryBuilder::new("select id, genres from (");
 
-    let filter_query = book_genres_filter(&genre_ids);
+    let filter_query = book_genres_filter(genre_ids);
     let genre_query = book_genres();
 
     main_builder.push(filter_query.sql());
