@@ -31,7 +31,7 @@ pub async fn user_login(
 
     let user = user::select_user(&user_auth.email, pool)
         .await
-        .map_err(|error| actix_web::error::ErrorBadRequest(error))?;
+        .map_err(actix_web::error::ErrorBadRequest)?;
 
     if user.password != user_auth.password {
         return Err(actix_web::error::ErrorBadRequest(AppError::WrongPassword));
@@ -109,7 +109,7 @@ pub async fn patch_user_image(
     let id_new = uuid::Uuid::new_v4().to_string();
     let url = match id {
         Some(id) => {
-            let id = id.split("=").last().take().ok_or(AppError::ParseError)?;
+            let id = id.split('=').last().take().ok_or(AppError::ParseError)?;
             let fut_all = join!(
                 insert_image(data.to_vec(), &id_new, pool),
                 delete_image(&id, pool)

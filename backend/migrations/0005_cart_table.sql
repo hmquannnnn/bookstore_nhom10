@@ -5,7 +5,9 @@ create table cart(
 
 
     foreign key(user_email) references user(email),
-    foreign key(book_id) references book(id)
+    foreign key(book_id) references book(id),
+
+    primary key(user_email, book_id)
 );
 
 create index idx_cart_user on cart(user_email);

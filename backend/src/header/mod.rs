@@ -24,8 +24,8 @@ impl FromRequest for JwtTokenHeader {
         // combime two error
         let error_handler =
             |result_value: Result<&actix_web::http::header::HeaderValue, actix_web::Error>| {
-                let result_value = result_value?.to_str()?.to_string();
-                let token_decode = decode_token(&result_value)?;
+                let result_value = result_value?.to_str()?;
+                let token_decode = decode_token(result_value)?;
                 let jwt = JwtTokenHeader::try_from(token_decode)?; 
                 Ok(jwt)
             };

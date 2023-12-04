@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use chrono::{Duration};
 
 
-use crate::{util::{constant::{EXPIRE_INTERVAL, APP_SECRET}, types::{Role, AppError}}, header::JwtTokenHeader};
+use crate::{util::{constant::{EXPIRE_INTERVAL, APP_SECRET}, types::{AppError}}, header::JwtTokenHeader};
 
 use super::user::User;
 
@@ -67,8 +67,8 @@ pub fn make_token(user: &User) -> Result<String, JwtError> {
 }
 
 
-pub fn decode_token(token: &String) -> Result<Claims, JwtError> {
-    let token = decode::<Claims>(&token, &DecodingKey::from_secret(APP_SECRET.as_ref()), &Validation::default())?;
+pub fn decode_token(token: &str) -> Result<Claims, JwtError> {
+    let token = decode::<Claims>(token, &DecodingKey::from_secret(APP_SECRET.as_ref()), &Validation::default())?;
     Ok(token.claims)
 }
 

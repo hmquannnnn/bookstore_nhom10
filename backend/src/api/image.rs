@@ -71,7 +71,7 @@ pub async fn delete_image(
 
     match auth_success {
         true => {
-            let _ = repository::image::delete_image(&id, pool)
+            repository::image::delete_image(&id, pool)
                 .await
                 .map_err(|_| AppError::FailToFetch)?;
             Ok(Json(Message { message: "delete success", payload: None }))
