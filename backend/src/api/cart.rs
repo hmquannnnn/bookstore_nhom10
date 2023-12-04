@@ -18,21 +18,22 @@ pub struct Cart {
 }
 
 #[derive(serde::Deserialize, serde::Serialize)]
-pub struct CartQuery {
-    email: String,
+pub struct CartOrder {
+    book_id: String,
+    quantity_ordered: i64,
 }
 
 #[get("/cart")]
 pub async fn get_cart(
-    query: Query<CartQuery>,
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
 ) -> AppResult<Json<Vec<Cart>>> {
-    let email = &query.email;
+    let email = &jwt_header.email;
     let pool = &app_state.pool;
+    let var_name = sqlx::query_as!(Cart, "select * from cart where user_email = ?", email);
     let fut_all = join(
         auth_user(&jwt_header, pool),
-        sqlx::query_as!(Cart, "select * from cart where user_email = ?", email).fetch_all(pool),
+        var_name.fetch_all(pool),
     )
     .await;
 
@@ -47,7 +48,6 @@ pub async fn get_cart(
 
 #[derive(serde::Deserialize, serde::Serialize)]
 pub struct CartDeleteType {
-    user_email: String,
     book_id: String,
 }
 
@@ -66,7 +66,7 @@ pub async fn delete_cart(
         true => {
             sqlx::query!(
                 "delete from cart where user_email = ? and book_id = ?",
-                cart.user_email,
+                jwt_header.email,
                 cart.book_id,
             )
             .execute(pool)
@@ -83,35 +83,35 @@ pub async fn delete_cart(
 
 #[put("/cart")]
 pub async fn put_cart(
-    data: Json<Cart>,
+    data: Json<CartOrder>,
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
-) -> AppResult<Json<Cart>> {
+) -> actix_web::Result<Json<Message<()>>> {
     let cart = &data.0;
     let pool = &app_state.pool;
 
     let auth = auth_user(&jwt_header, pool).await?;
-
+    
     match auth {
         true => {
             sqlx::query!(
                 "insert into cart(user_email, book_id, quantity_ordered) values(?, ?, ?)",
-                cart.user_email,
+                jwt_header.email,
                 cart.book_id,
                 cart.quantity_ordered
             )
             .execute(pool)
             .await
-            .map_err(|_| AppError::FailToUpdate)?;
-            Ok(data)
+            .map_err(|err| actix_web::error::ErrorNotFound(err))?;
+            Ok(Json(Message { message: "update success", payload: None }))
         }
-        false => Err(AppError::FailAuthenticate),
+        false => Err(actix_web::error::ErrorUnauthorized("fail to authorized"))
     }
 }
 
 #[patch("/cart")]
 pub async fn patch_cart(
-    data: Json<Cart>,
+    data: Json<CartOrder>,
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
 ) -> Result<Json<Message<()>>, AppError> {
@@ -125,7 +125,7 @@ pub async fn patch_cart(
             sqlx::query!(
                 "update cart set quantity_ordered = ? where user_email = ? & book_id = ? ",
                 cart.quantity_ordered,
-                cart.user_email,
+                jwt_header.email,
                 cart.book_id
             )
             .execute(pool)

@@ -4,13 +4,13 @@ use actix_web::{
     Responder,
 };
 use futures_util::future::join;
-use sqlx::{QueryBuilder, MySql, Row, prelude::FromRow};
+use sqlx::{QueryBuilder, MySql, prelude::FromRow};
 
 use crate::{
     header::JwtTokenHeader,
     repository::{
         book::{self, list_books_sort, list_books_sort_asc, select_book, Book},
-        image::insert_image, alias::{book_genres, book_genres_filter, book_genres_filter_full, book_author},
+        image::insert_image, alias::{book_genres_filter_full},
     },
     update_field,
     util::{
