@@ -4,7 +4,6 @@ use actix_web::{
 };
 use futures_util::future::join;
 
-
 use crate::{
     header::JwtTokenHeader,
     repository::auth_user,
