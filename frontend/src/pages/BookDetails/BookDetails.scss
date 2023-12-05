@@ -1,14 +1,22 @@
 .book-details-page {
   border: 1px solid deeppink;
   max-width: 1000px;
-  margin: auto;
-  .right {
+  //display: block;
+  margin: 0 auto;
+  .left {
     border: 1px solid blue;
     background-color: white;
-
   }
-  .left {
+  .right {
     border: 1px solid green;
     background-color: white;
+    //padding-left: 10px;
+    .ant-btn {
+      background-color: rgb(255, 66, 78);
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+    }
+
   }
 }

@@ -20,9 +20,13 @@
     display: block;
     margin: auto;
     background-color: white;
+    border: none;
     .container {
+      border: none;
+      border-radius: 2px;
       .empty-cart {
         // border: solid 1px black;
+        border: none;
         padding: 20px 40px;
         border-radius: 2px;
 

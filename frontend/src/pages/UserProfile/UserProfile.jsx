@@ -100,7 +100,7 @@ const UserProfile = () => {
         <>
             <div className="profile-page" style={{ margin: "auto", width: "1440px", height: "630px" }}>
                 <h3 style={{ fontFamily: "Arial, Helvetica, sans-serif", fontSize: "22px" }}>Thông tin tài khoản</h3>
-                <div className="main" style={{ backgroundColor: "white", borderRadius: "5px", height: "400px" }}>
+                <div className="main" style={{ backgroundColor: "white", borderRadius: "5px", height: "400px", border: "none" }}>
                     <Row>
                         <Col className="info" md={14} style={{ height: "400px" }}>
                             <h4 style={{ fontSize: "20px", color: "#64646D", fontWeight: "400", margin: "5px 0 0 10px" }}>Thông tin cá nhân</h4>
