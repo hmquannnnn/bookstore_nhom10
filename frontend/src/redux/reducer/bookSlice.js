@@ -20,7 +20,7 @@ export const bookSlice = createSlice({
       //   state.isAuthenticated = true;
       console.log(">>>payload: ", action.payload);
       state.bookList = action.payload;
-      console.log(">>>check redux: ", state.book);
+      // console.log(">>>check redux: ", state.book);
     },
     getCurrentBookAction: (state, action) => {
       state.currentBook = action.payload;

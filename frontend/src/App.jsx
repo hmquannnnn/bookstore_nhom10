@@ -9,11 +9,15 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { doGetAccountAction } from "./redux/reducer/accountSlice";
 import { callFetchAccount } from "./services/api/userAPI";
+import {callGetCart} from "./services/api/cartAPI.jsx";
+import {getCartAction, initCart} from "./redux/reducer/cartSlice.jsx";
 
 export default function App() {
   const isAuthenticated = useSelector(state => state.account.isAuthenticated);
   const dispatch = useDispatch();
-
+  // if(isAuthenticated) {
+  //
+  // }
   const getAccount = async () => {
     const res = await callFetchAccount();
     // console.log(">>> check fetchAccount: ", res)
@@ -21,8 +25,17 @@ export default function App() {
       dispatch(doGetAccountAction(res));
     }
   }
+  const getCartInfo = async() =>{
+    const res = await callGetCart();
+    console.log(">>>check cart:", res, res.length);
+    if(res) {
+      dispatch(getCartAction(res));
+      console.log("success");
+    }
+  }
   useEffect(() => {
     getAccount();
+    getCartInfo();
   }, [])
 
 

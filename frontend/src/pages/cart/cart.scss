@@ -15,13 +15,13 @@
         
         
     // }
-  .main {
+  .cart-main {
     width: 1440px;
     display: block;
     margin: auto;
     background-color: white;
     border: none;
-    .container {
+    .cart-container {
       border: none;
       border-radius: 2px;
       .empty-cart {
@@ -37,26 +37,27 @@
         }
 
         p {
-            
-            text-align: center;
+
+          text-align: center;
         }
 
         a {
-            text-decoration: none;
+          text-decoration: none;
         }
         .btn-back {
-            display: block;
-            margin: auto;
-            margin-top: 30px;
-            padding: 10px 55px;
-            background-color:rgb(253, 216, 53);
-            color: rgb(75,75, 75);
-            border: none;
-            cursor: pointer;
-            border-radius: 6px;
-            font-weight: 500;
+          display: block;
+          margin: auto;
+          margin-top: 30px;
+          padding: 10px 55px;
+          background-color:rgb(253, 216, 53);
+          color: rgb(75,75, 75);
+          border: none;
+          cursor: pointer;
+          border-radius: 6px;
+          font-weight: 500;
         }
       }
     }
   }
 }
+

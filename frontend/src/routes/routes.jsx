@@ -6,7 +6,6 @@ import Header from "../components/user/Header/header";
 import Register from "../pages/register/register";
 import NotFound from "../pages/notFound/notFound";
 import AboutUs from "../pages/aboutUs/aboutUs";
-import Cart from "../pages/cart/cart";
 import Admin from "../pages/admin/admin";
 import BooksManagement from "../pages/admin/managedPages/booksManagement/booksManagement";
 import UsersManagement from "../pages/admin/managedPages/usersManagement/userManagement";
@@ -21,6 +20,7 @@ import ChangePhone from "../pages/EditUser/ChangePhone/ChangePhone";
 import ChangePassword from "../pages/EditUser/ChangePassword/ChangePassword";
 import path from "./path";
 import BookDetails from "../pages/BookDetails/BookDetails";
+import Cart from "../pages/cart/Cart.jsx";
 
 const Layout = () => {
     return (

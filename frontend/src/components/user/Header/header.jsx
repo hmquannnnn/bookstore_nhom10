@@ -9,15 +9,21 @@ import AccountDropDown from "./AccountDropDown/AccountDropDown";
 import { Link, useNavigate } from "react-router-dom";
 import { callFetchAccount } from "../../../services/api/userAPI";
 import { doGetAccountAction, doLogOutAction } from "../../../redux/reducer/accountSlice";
+import path from "../../../routes/path.jsx";
+import {initCart} from "../../../redux/reducer/cartSlice.jsx";
 
 
 
 const Header = () => {
     const dispatch = useDispatch();
+    const total = useSelector(state => state.cart.total);
+    const isAuthenticated = useSelector(state => state.account.isAuthenticated);
+    const [ booksInCart, setBooksInCart ] = useState(total);
     const handleLogOut = () => {
         console.log("logout");
         localStorage.clear();
         dispatch(doLogOutAction());
+        dispatch(initCart());
         // setIsLoggedIn(false);
         // setItems(defaultItems);
     }
@@ -27,7 +33,7 @@ const Header = () => {
             key: '1',
 
             label: (
-                <Link to="/dang-nhap">
+                <Link to={path.logIn}>
                     Đăng nhập
                 </Link>
             )
@@ -36,7 +42,7 @@ const Header = () => {
         {
             key: '2',
             label: (
-                <Link to="/dang-ky">
+                <Link to={path.register}>
                     Đăng ký
                 </Link>
             )
@@ -47,7 +53,7 @@ const Header = () => {
         {
             key: "3",
             label: (
-                <Link to="/thong-tin-tai-khoan">
+                <Link to={path.userProfile}>
                     Thông tin cá nhân
                 </Link>
             )
@@ -55,30 +61,31 @@ const Header = () => {
         {
             key: "4",
             label: (
-                <Link to="/" onClick={handleLogOut}>
+                <Link to={path.home} onClick={handleLogOut}>
                     Đăng xuất
                 </Link>
             )
         }
     ]
     const navigate = useNavigate();
-    const isAuthenticated = useSelector(state => state.account.isAuthenticated);
     const [items, setItems] = useState(defaultItems);
     const [isModalOpen, setIsModalOpen] = useState(false);
     useEffect(() => {
         isAuthenticated ? setItems( loggedInItems ) : setItems( defaultItems )
     }, [isAuthenticated])
+    useEffect(() => {
+        setBooksInCart(total)
+    }, []);
     const showModal = () => {
         if(isAuthenticated) {
-            navigate("/gio-hang")
+            navigate(path.cart)
         } else {
             setIsModalOpen(true);
         }
-        
     };
     const handleOk = () => {
         setIsModalOpen(false);
-        navigate("dang-nhap")
+        navigate(path.logIn)
     };
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -109,8 +116,8 @@ const Header = () => {
                         <div className="navigation">
                             <a  style={{ marginRight: "35px", marginLeft: "10px" }} onClick={showModal}>
                                 <Badge
-                                    count={100}
-                                    overflowCount={99}
+                                    count={booksInCart}
+                                    overflowCount={10}
                                     size={"small"}>
                                     <AiOutlineShoppingCart className="cart-icon"  />
                                 </Badge>
