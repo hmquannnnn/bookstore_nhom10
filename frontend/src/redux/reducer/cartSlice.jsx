@@ -29,8 +29,13 @@ export const cartSlice = createSlice({
             state.books = initialState.books;
         },
         getCartAction: (state, action) => {
-
-            state.total = action.payload.length;
+            const orderList = action.payload;
+            let newTotal = 0;
+            orderList.forEach((order) => {
+                newTotal += order.quantity_ordered;
+            })
+            console.log(">>>debug: ", action.payload),
+                state.total = newTotal;
             state.books = handleDuplicateBooks(action.payload);
         },
         addBookIntoCartAction: (state, action) => {
