@@ -75,7 +75,7 @@ const Header = () => {
     }, [isAuthenticated])
     useEffect(() => {
         setBooksInCart(total)
-    }, []);
+    }, [total]);
     const showModal = () => {
         if(isAuthenticated) {
             navigate(path.cart)

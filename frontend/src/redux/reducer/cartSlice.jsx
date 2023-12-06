@@ -1,9 +1,24 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {useDispatch} from "react-redux";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
 
 const initialState = {
     total: 0, books: []
 };
+
+const handleDuplicateBooks = (arr) => {
+    const resultObj = {};
+    arr.forEach((item) => {
+        const { user_email, book_id, quantity_ordered } = item;
+        if (resultObj[book_id]) {
+            resultObj[book_id].quantity_ordered += quantity_ordered;
+        } else {
+            resultObj[book_id] = item;
+        }
+    })
+    const new_arr = Object.values(resultObj);
+    console.log(new_arr, "and", resultObj);
+    return new_arr;
+}
 
 // const isAuthenticated
 export const cartSlice = createSlice({
@@ -16,10 +31,11 @@ export const cartSlice = createSlice({
         getCartAction: (state, action) => {
 
             state.total = action.payload.length;
-            state.books = action.payload;
+            state.books = handleDuplicateBooks(action.payload);
         },
         addBookIntoCartAction: (state, action) => {
-            state.total += 1;
+            console.log(">>>check now: ", action.payload);
+            state.total += action.payload.count;
             console.log(">>>check total redux: ", state.total);
         }
     }, // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -28,6 +44,6 @@ export const cartSlice = createSlice({
     },
 });
 
-export const {getCartAction, addBookIntoCartAction, initCart} = cartSlice.actions;
+export const { getCartAction, addBookIntoCartAction, initCart } = cartSlice.actions;
 
 export default cartSlice.reducer;
