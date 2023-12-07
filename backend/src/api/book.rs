@@ -141,11 +141,11 @@ pub async fn fetch_sorted_books_purchse_asc(
                 group by book_id
             ) book_genre
             on book.id = book_genre.book_id
-            order by number_of_purchases asc 
-            limit ? offset ?
             ) book
             join author
-            where author.id = book.author_id",
+            where author.id = book.author_id
+            order by number_of_purchases asc 
+            limit ? offset ?",
         length,
         start
     )
@@ -171,11 +171,11 @@ pub async fn fetch_sorted_books_purchse_desc(
                 group by book_id
             ) book_genre
             on book.id = book_genre.book_id
-            order by number_of_purchases desc
-            limit ? offset ?
             ) book
             join author
-            where author.id = book.author_id",
+            where author.id = book.author_id
+            order by number_of_purchases desc
+            limit ? offset ?",
         length,
         start
     )
@@ -195,7 +195,7 @@ pub async fn fetch_sorted_books_price_desc(
     let pool = &app_state.pool;
     let books = sqlx::query_as!(
         Book,
-        r#"select book.*, author.name as author_name from (
+        "select book.*, author.name as author_name from (
             select book.*, book_genre.genres from book
             left join (
                 select book_id, concat('[',group_concat(genre_id),']') genres
@@ -203,11 +203,11 @@ pub async fn fetch_sorted_books_price_desc(
                 group by book_id
             ) book_genre
             on book.id = book_genre.book_id
-            order by price desc
-            limit ? offset ?
             ) book
             join author
-            where author.id = book.author_id"#,
+            where author.id = book.author_id
+            order by price desc
+            limit ? offset ?",
         length,
         start
     )
@@ -235,11 +235,11 @@ pub async fn fetch_sorted_books_price_asc(
                 group by book_id
             ) book_genre
             on book.id = book_genre.book_id
-            order by price asc 
-            limit ? offset ?
             ) book
             join author
-            where author.id = book.author_id",
+            where author.id = book.author_id
+            order by price asc 
+            limit ? offset ?",
         length,
         start
     )
