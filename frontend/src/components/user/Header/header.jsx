@@ -10,7 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { callFetchAccount } from "../../../services/api/userAPI";
 import { doGetAccountAction, doLogOutAction } from "../../../redux/reducer/accountSlice";
 import path from "../../../routes/path.jsx";
-import {initCart} from "../../../redux/reducer/cartSlice.jsx";
+import { initCart } from "../../../redux/reducer/cartSlice.jsx";
 
 
 
@@ -18,7 +18,7 @@ const Header = () => {
     const dispatch = useDispatch();
     const total = useSelector(state => state.cart.total);
     const isAuthenticated = useSelector(state => state.account.isAuthenticated);
-    const [ booksInCart, setBooksInCart ] = useState(total);
+    const [booksInCart, setBooksInCart] = useState(total);
     const handleLogOut = () => {
         console.log("logout");
         localStorage.clear();
@@ -71,13 +71,13 @@ const Header = () => {
     const [items, setItems] = useState(defaultItems);
     const [isModalOpen, setIsModalOpen] = useState(false);
     useEffect(() => {
-        isAuthenticated ? setItems( loggedInItems ) : setItems( defaultItems )
+        isAuthenticated ? setItems(loggedInItems) : setItems(defaultItems)
     }, [isAuthenticated])
     useEffect(() => {
         setBooksInCart(total)
     }, [total]);
     const showModal = () => {
-        if(isAuthenticated) {
+        if (isAuthenticated) {
             navigate(path.cart)
         } else {
             setIsModalOpen(true);
@@ -92,7 +92,7 @@ const Header = () => {
     };
     return (
         <>
-            <div className="header-container" style={{marginBottom: "15px"}}>
+            <div className="header-container" style={{ marginBottom: "15px" }}>
                 <div className="page-header">
                     <div className="page-header__top">
 
@@ -114,23 +114,26 @@ const Header = () => {
                     </div>
                     <nav className="page-header__bottom">
                         <div className="navigation">
-                            <a  style={{ marginRight: "35px", marginLeft: "10px" }} onClick={showModal}>
+                            <a style={{ marginRight: "35px", marginLeft: "10px" }} onClick={showModal}>
                                 <Badge
                                     count={booksInCart}
                                     overflowCount={10}
-                                    size={"small"}>
-                                    <AiOutlineShoppingCart className="cart-icon"  />
+                                    size={"small"}
+                                    showZero="true"
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    <AiOutlineShoppingCart className="cart-icon" />
                                 </Badge>
                             </a>
-                            <Modal title="Bạn chưa đăng nhập" 
-                                open={isModalOpen} 
-                                onOk={handleOk} 
+                            <Modal title="Bạn chưa đăng nhập"
+                                open={isModalOpen}
+                                onOk={handleOk}
                                 okText="Đăng nhập"
                                 onCancel={handleCancel}
                                 cancelText="Hủy"
                             >
                                 <p>Đăng nhập để truy cập giỏ hàng</p>
-                                
+
                             </Modal>
                             <Dropdown
                                 menu={{ items }}
