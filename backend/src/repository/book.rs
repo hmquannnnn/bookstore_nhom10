@@ -85,11 +85,12 @@ pub async fn list_books_sort(start: i32, length: i32, pool: &MySqlPool) -> AppRe
     group by book_id
     ) book_genre
     on book.id = book_genre.book_id
-    order by rating desc
-    limit ? offset ?
     ) book
     join author
-    where author.id = book.author_id", length, start)
+    where author.id = book.author_id
+    order by rating desc
+    limit ? offset ?",
+    length, start)
     .fetch_all(pool)
     .await)?;
     Ok(books)
@@ -116,22 +117,22 @@ pub async fn list_books_sort_asc(start: i32, length: i32, pool: &MySqlPool) -> A
     Ok(books)
 }
 
-pub async fn list_book_by_genre(_start: i32, _length: i32, genre_id: i32, pool: &MySqlPool) -> sqlx::Result<Vec<BookFetch>> {
-    // let mut query_builder = sqlx::QueryBuilder::from("select book_id id from book_genre where genre_id in (");
-    // let mut separeted = query_builder.separated(", ");
-    // for id in genre_ids {
-    //     separeted.push_bind(id);
-    // }
-    // separeted.push_unseparated(")");
-    // let mut query = query_builder.sql();
-
-    sqlx::query_as!(
-        BookFetch,
-        "select * from book where id in (select book_id as id from book_genre where genre_id in (?))",
-        genre_id
-        )
-        .fetch_all(pool)
-        .await
-}
-
-
+// pub async fn list_book_by_genre(_start: i32, _length: i32, genre_id: i32, pool: &MySqlPool) -> sqlx::Result<Vec<BookFetch>> {
+//     // let mut query_builder = sqlx::QueryBuilder::from("select book_id id from book_genre where genre_id in (");
+//     // let mut separeted = query_builder.separated(", ");
+//     // for id in genre_ids {
+//     //     separeted.push_bind(id);
+//     // }
+//     // separeted.push_unseparated(")");
+//     // let mut query = query_builder.sql();
+//
+//     sqlx::query_as!(
+//         BookFetch,
+//         "select * from book where id in (select book_id as id from book_genre where genre_id in (?))",
+//         genre_id
+//         )
+//         .fetch_all(pool)
+//         .await
+// }
+//
+//
