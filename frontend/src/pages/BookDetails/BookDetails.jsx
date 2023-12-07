@@ -34,7 +34,7 @@ const BookDetails = () => {
         const res = await callAddBookIntoCart(bookId, count);
         // console.log(">>>add to cart: ", res);
         if (res) {
-            console.log("success");
+            // console.log("success");
             dispatch(addBookIntoCartAction({ count, bookId }));
         }
     }

@@ -25,22 +25,22 @@
     }
 
     .logo {
-        margin: 0 20px 0 20px;
-        // padding: 0 30px 0 30px;
-        display: flex;
-        flex-direction: row;
+      margin: 0 20px 0 20px;
+      // padding: 0 30px 0 30px;
+      display: flex;
+      flex-direction: row;
 
-        a {
-          text-decoration: none;
-          color:  #0B74E5;
-          font-weight: bold;
-          font-family: Arial, Helvetica, sans-serif;
-        }
+      a {
+        text-decoration: none;
+        color: #0b74e5;
+        font-weight: bold;
+        font-family: Arial, Helvetica, sans-serif;
+      }
     }
 
     input[type="text"] {
       width: 100%;
-    //   max-width: 700px;
+      //   max-width: 700px;
       padding: 12px 20px;
       margin: 10px 0;
       font-size: 14px;
@@ -49,7 +49,7 @@
     }
 
     input[type="text"]:focus {
-        outline: none;
+      outline: none;
     }
 
     .input-search {
@@ -57,7 +57,7 @@
       outline: none;
       padding: 5px 30px;
       border-radius: 10px;
-        border: 1px solid lightgray;
+      border: 1px solid lightgray;
       flex: 1;
       border: none;
     }
@@ -68,10 +68,10 @@
       font-size: 20px;
       top: 5px;
       position: relative;
+      cursor: pointer;
     }
     .dropdown {
-        margin-left: 35px;
+      margin-left: 35px;
     }
-    
   }
 }
