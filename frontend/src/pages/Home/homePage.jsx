@@ -9,11 +9,16 @@ import path from "../../routes/path.jsx";
 // import {useSelector} from "react-redux"
 const Home = () => {
     // const user = useSelector(state => state.account.user);
+    const tab = useSelector(state => state.books.tab);
+    const page = useSelector(state => state.books.page);
     const dispatch = useDispatch();
-    const [isActive, setIsActive] = useState("1");
-    const [isHovered, setIsHovered] = useState(false)
+    const [isActive, setIsActive] = useState(tab);
+    const [currentPage, setCurrentPage] = useState(page)
+    console.log("check tab now: ", tab);
+    const [isHovered, setIsHovered] = useState(false);
     const [form] = Form.useForm();
     const navigate = useNavigate();
+
     const handleChangeFilter = (changeValues, values) => {
         console.log(">>> check handleChangeFilter", changeValues, values);
     }
@@ -51,7 +56,7 @@ const Home = () => {
     ]
     const initBooksSortByPurchased = async () => {
         const res = await callBooksSortByPurchased();
-        console.log("api 1");
+        console.log("api 1", page);
         if (res) {
             dispatch(getBooksAction(res));
             // console.log(">>>dispatch success: ", res);
@@ -97,6 +102,7 @@ const Home = () => {
                 initBooksSortByPriceDesc();
                 break;
         }
+        dispatch(changeTabAction(isActive));
         // initBooks();
     }, [isActive])
     const bookList = useSelector(state => state.books.bookList);
@@ -121,23 +127,10 @@ const Home = () => {
         // console.log(key);
         setIsActive(key);
         console.log(isActive);
-        dispatch(changeTabAction(isActive));
-        // window.location.reload();
-        // switch(key) {
-        //     case 1:
-        //         setIsActive()
-        //         break;
-        //     case 2:
-
-        //         break;
-        //     case 3:
-
-        //         break;
-        //     case 4:
-
-        //         break;
-        // }
     };
+    const handleChangePage = () => {
+
+    }
     return (
         // <div className="homepage-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
         <Row className="homepage-container" gutter={[20, 20]} style={{ maxWidth: 1440, margin: '0 auto' }}>
@@ -241,7 +234,7 @@ const Home = () => {
                 <Row className="category-bar" style={{ backgroundColor: "white" }}>
                     <div>
                         <h3 style={{ margin: "5px" }}>UETHUVIENSACH</h3>
-                        <Tabs defaultActiveKey={isActive} items={items} onTabClick={() => handleTabClick()} onChange={onChange} />
+                        <Tabs defaultActiveKey={tab} items={items} onTabClick={() => handleTabClick()} onChange={onChange} />
                     </div>
                 </Row>
                 <Row className="books" style={{ marginTop: "8px", display: "flex", flexWrap: "wrap", gap: "10px" }}>
@@ -249,7 +242,7 @@ const Home = () => {
                     {
                         bookList.map(book => (
                             // <Link to="book-details">
-                            <div className="book-cell" key={book} style={{ width: "calc(20% - 9px)", backgroundColor: "white", cursor: "pointer", borderRadius: "4px" }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={() => onBookClick(book.id)}>
+                            <div className="book-cell" key={book.id} style={{ width: "calc(20% - 9px)", backgroundColor: "white", cursor: "pointer", borderRadius: "4px" }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={() => onBookClick(book.id)}>
 
                                 <span style={{ display: "inline" }}>
                                     <div className="thumbnail" >
@@ -284,12 +277,10 @@ const Home = () => {
                 </Row>
 
             </Col>
-            <Pagination defaultCurrent={1} total={50} style={{ margin: "auto" }} />
+            <Pagination defaultCurrent={1} current={page} total={50} onChange={handleChangePage} style={{ margin: "auto" }} />
         </Row>
         // </div>
     )
 }
 
 export default Home;
-
-
