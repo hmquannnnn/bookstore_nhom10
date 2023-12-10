@@ -10,7 +10,7 @@ use crate::{
     header::JwtTokenHeader,
     repository::{
         book::{self, list_books_sort, list_books_sort_asc, select_book, Book},
-        image::insert_image, alias::{book_genres_filter_full},
+        image::insert_image, alias::book_genres_filter_full,
     },
     update_field,
     util::{
