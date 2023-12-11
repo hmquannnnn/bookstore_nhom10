@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 
 const initialState = {
-  page: "",
+  page: 1,
   tab: "1",
   bookList: [],
   currentBook: {}
@@ -19,7 +19,7 @@ export const bookSlice = createSlice({
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
       //   state.isAuthenticated = true;
-      console.log(">>>payload: ", action.payload);
+      // console.log(">>>payload: ", action.payload);
       state.bookList = action.payload;
       // console.log(">>>check redux: ", state.book);
     },

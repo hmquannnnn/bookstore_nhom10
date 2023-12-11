@@ -4,7 +4,6 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 .homepage {
-  
   .main {
     background-color: #efefef;
     display: block;
@@ -14,9 +13,9 @@ input::-webkit-inner-spin-button {
     .side-bar {
       .price {
         .fast-price-filter {
-            .item {
-                background-color: red;
-            }
+          .item {
+            background-color: red;
+          }
         }
       }
     }
@@ -27,9 +26,8 @@ input::-webkit-inner-spin-button {
         flex-wrap: wrap;
         gap: 5px;
         .book-cell:hover {
-
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+          background-color: red;
         }
       }
     }
