@@ -97,7 +97,7 @@ update_book_field!(update_book_descption, "/book/price/{value}", desciption);
 #[macro_export]
 macro_rules! update_book_field {
     ( $name:ident, $path:expr, $field:ident ) => {
-        update_field!(book, $name, $path, $field);
+        update_field!(book, $name, $path, $field, "id");
     };
 }
 

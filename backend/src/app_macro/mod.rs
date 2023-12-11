@@ -8,7 +8,7 @@ macro_rules! fetch_match {
 
 #[macro_export]
 macro_rules! update_field {
-    ( $table:ident, $name:ident, $path:expr, $field:ident) => {
+    ( $table:ident, $name:ident, $path:expr, $field:ident, $id:expr) => {
         #[patch($path)]
         pub async fn $name(
             path: actix_web::web::Path<String>,
@@ -18,7 +18,7 @@ macro_rules! update_field {
             let user_email = jwt.email;
             let value = path.as_str();
 
-            let query = format!("update {} set {} = ? where id = ?", stringify!($table), stringify!($field));
+            let query = format!("update {} set {} = ? where {} = ?", stringify!($table), stringify!($field), $id);
             sqlx::query(query.as_str())
                 .bind(value)
                 .bind(user_email)

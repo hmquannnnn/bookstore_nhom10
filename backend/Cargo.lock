@@ -276,14 +276,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a4668cab20f66d8d020e1fbc0ebe47217433c1b6c8f2040faf858554e394ace6"
 
 [[package]]
-name = "app_macro"
-version = "0.1.0"
-dependencies = [
- "quote",
- "syn 2.0.39",
-]
-
-[[package]]
 name = "async-trait"
 version = "0.1.74"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -367,7 +359,6 @@ dependencies = [
  "actix-cors",
  "actix-web",
  "anyhow",
- "app_macro",
  "chrono",
  "dotenv",
  "futures-util",

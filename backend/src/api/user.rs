@@ -165,7 +165,7 @@ update_user_field!(update_user_phone, "/user/phone/{value}", phone);
 #[macro_export]
 macro_rules! update_user_field {
     ( $name:ident, $path:expr, $field:ident) => {
-        update_field!(user, $name, $path, $field);
+        update_field!(user, $name, $path, $field, "email");
     };
 }
 
