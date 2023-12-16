@@ -26,7 +26,7 @@ pub struct BookQuery {
     id: String,
 }
 
-#[get("/book")]
+#[get("/api/book")]
 pub async fn get_book(
     query: Query<BookQuery>,
     app_state: actix_web::web::Data<AppState>,
@@ -46,7 +46,7 @@ pub struct BookListInfo {
     pub length: i32,
 }
 
-#[get("/book/list")]
+#[get("/api/book/list")]
 pub async fn list_book(
     query: Query<BookListInfo>,
     app_state: actix_web::web::Data<AppState>,
@@ -66,7 +66,7 @@ pub struct BookId {
     pub id: String,
 }
 
-#[patch("/book/image")]
+#[patch("/api/book/image")]
 pub async fn patch_book_image(
     _jwt: JwtTokenHeader,
     query: Query<BookId>,
@@ -90,9 +90,9 @@ pub async fn patch_book_image(
     }))
 }
 
-update_book_field!(update_book_title, "/book/title/{value}", title);
-update_book_field!(update_book_price, "/book/price/{value}", price);
-update_book_field!(update_book_descption, "/book/price/{value}", desciption);
+update_book_field!(update_book_title, "/api/book/title/{value}", title);
+update_book_field!(update_book_price, "/api/book/price/{value}", price);
+update_book_field!(update_book_descption, "/api/book/price/{value}", desciption);
 
 #[macro_export]
 macro_rules! update_book_field {
@@ -101,7 +101,7 @@ macro_rules! update_book_field {
     };
 }
 
-#[get("/book/sort/desc")]
+#[get("/api/book/sort/desc")]
 pub async fn fetch_sorted_books(
     query: Query<BookListInfo>,
     app_state: actix_web::web::Data<AppState>,
@@ -112,7 +112,7 @@ pub async fn fetch_sorted_books(
     Ok(Json(books))
 }
 
-#[get("/book/sort/asc")]
+#[get("/api/book/sort/asc")]
 pub async fn fetch_sorted_books_asc(
     query: Query<BookListInfo>,
     app_state: actix_web::web::Data<AppState>,
@@ -123,7 +123,7 @@ pub async fn fetch_sorted_books_asc(
     Ok(Json(books))
 }
 
-#[get("/book/sort/purchase/asc")]
+#[get("/api/book/sort/purchase/asc")]
 pub async fn fetch_sorted_books_purchse_asc(
     query: Query<BookListInfo>,
     app_state: actix_web::web::Data<AppState>,
@@ -153,7 +153,7 @@ pub async fn fetch_sorted_books_purchse_asc(
     .await
     .map_err(|_| actix_web::error::ErrorBadRequest(AppError::WrongPassword))?; Ok(Json(books)) }
 
-#[get("/book/sort/purchase/desc")]
+#[get("/api/book/sort/purchase/desc")]
 pub async fn fetch_sorted_books_purchse_desc(
     query: Query<BookListInfo>,
     app_state: actix_web::web::Data<AppState>,
@@ -185,7 +185,7 @@ pub async fn fetch_sorted_books_purchse_desc(
     Ok(Json(books))
 }
 
-#[get("/book/sort/price/desc")]
+#[get("/api/book/sort/price/desc")]
 pub async fn fetch_sorted_books_price_desc(
     query: Query<BookListInfo>,
     app_state: actix_web::web::Data<AppState>,
@@ -217,7 +217,7 @@ pub async fn fetch_sorted_books_price_desc(
     Ok(Json(books))
 }
 
-#[get("/book/sort/price/asc")]
+#[get("/api/book/sort/price/asc")]
 pub async fn fetch_sorted_books_price_asc(
     query: Query<BookListInfo>,
     app_state: actix_web::web::Data<AppState>,
@@ -255,7 +255,7 @@ pub struct Genre {
     pub genres: String,
 }
 
-#[get("/book/filter/genres")]
+#[get("/api/book/filter/genres")]
 pub async fn fetch_book_by_genre(
     genre_ids: Json<Vec<i32>>,
     app_state: actix_web::web::Data<AppState>

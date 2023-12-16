@@ -23,7 +23,7 @@ pub struct CartOrder {
     quantity_ordered: i64,
 }
 
-#[get("/cart")]
+#[get("/api/cart")]
 pub async fn get_cart(
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
@@ -51,7 +51,7 @@ pub struct CartDeleteType {
     book_id: String,
 }
 
-#[delete("/cart")]
+#[delete("/api/cart")]
 pub async fn delete_cart(
     data: Json<CartDeleteType>,
     jwt_header: JwtTokenHeader,
@@ -81,7 +81,7 @@ pub async fn delete_cart(
     }
 }
 
-#[put("/cart")]
+#[put("/api/cart")]
 pub async fn put_cart(
     data: Json<CartOrder>,
     jwt_header: JwtTokenHeader,
@@ -109,7 +109,7 @@ pub async fn put_cart(
     }
 }
 
-#[patch("/cart")]
+#[patch("/api/cart")]
 pub async fn patch_cart(
     data: Json<CartOrder>,
     jwt_header: JwtTokenHeader,

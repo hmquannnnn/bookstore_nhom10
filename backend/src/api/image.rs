@@ -15,7 +15,7 @@ pub struct ImageInfo {
     pub id: String,
 }
 
-#[get("/image")]
+#[get("/api/image")]
 pub async fn get_image(
     query: web::Query<ImageInfo>,
     app_state: web::Data<AppState>,
@@ -34,7 +34,7 @@ pub struct ImageUrl {
     url: String,
 }
 
-#[put("/image")]
+#[put("/api/image")]
 pub async fn put_image(
     jwt_header: JwtTokenHeader,
     payload: Bytes,
@@ -58,7 +58,7 @@ pub async fn put_image(
     }
 }
 
-#[delete("/image")]
+#[delete("/api/image")]
 pub async fn delete_image(
     jwt_header: JwtTokenHeader,
     query: web::Query<ImageInfo>,

@@ -31,7 +31,7 @@ pub async fn index() -> Result<fs::NamedFile, Error>{
         }))
 }
 
-#[get("/{filename:.*}")]
+#[get("/home/{filename:.*}")]
 async fn content(path: Path<String>) -> Result<fs::NamedFile, Error> {
     let path = path.into_inner();
     let path: std::path::PathBuf = ["./dist/", &path].iter().collect();
@@ -63,7 +63,7 @@ pub struct UpdateType {
     value_field: ColumnField,
 }
 
-#[patch("update/{table}")]
+#[patch("/api/update/{table}")]
 pub async fn update(
     path: web::Path<String>,
     jwt_header: JwtTokenHeader,
