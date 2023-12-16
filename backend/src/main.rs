@@ -1,20 +1,33 @@
 mod api;
+mod app_macro;
+mod body;
 mod header;
 mod middleware;
-mod repository; mod util;
-mod body;
-mod app_macro;
+mod repository;
+mod util;
 
 use actix_cors::Cors;
+use actix_files as fs;
 use actix_web::{
-    web::{self, Json}, App, HttpServer, middleware::Logger
+    middleware::Logger,
+    web::{self, Json},
+    App, HttpServer,
 };
 use api::{
-    book::{get_book, list_book, patch_book_image, update_book_title, update_book_price, update_book_descption, fetch_sorted_books, fetch_sorted_books_asc, fetch_sorted_books_purchse_asc, fetch_sorted_books_purchse_desc, fetch_sorted_books_price_asc, fetch_sorted_books_price_desc, fetch_book_by_genre},
+    book::{
+        fetch_book_by_genre, fetch_sorted_books, fetch_sorted_books_asc,
+        fetch_sorted_books_price_asc, fetch_sorted_books_price_desc,
+        fetch_sorted_books_purchse_asc, fetch_sorted_books_purchse_desc, get_book, list_book,
+        patch_book_image, update_book_descption, update_book_price, update_book_title,
+    },
     cart::{delete_cart, get_cart, patch_cart, put_cart},
+    genre::get_genres,
     image::{delete_image, get_image, put_image},
-    index,
-    user::{register_user, user_login, get_user, insert_image_user, update_user_name, update_user_phone, update_user_address, patch_user_image, update_user_password}, update, genre::get_genres,
+    update,
+    user::{
+        get_user, insert_image_user, patch_user_image, register_user, update_user_address,
+        update_user_name, update_user_password, update_user_phone, user_login,
+    }, index, assets, content,
 };
 
 use middleware::SayHi;
@@ -22,9 +35,7 @@ use sqlx::mysql::MySqlPoolOptions;
 use util::types::AppState;
 
 #[actix_web::get("/any")]
-pub async fn any_type(
-    payload: Json<serde_json::Value>
-) -> Json<serde_json::Value> {
+pub async fn any_type(payload: Json<serde_json::Value>) -> Json<serde_json::Value> {
     let value = payload.0.as_object().unwrap();
     for v in value.into_iter() {
         println!("{} {}", v.0, v.1);
@@ -68,12 +79,16 @@ async fn main() -> std::io::Result<()> {
             .allow_any_method()
             .allow_any_header();
 
-         App::new()
+        App::new()
             .wrap(cors)
             .wrap(SayHi)
             .wrap(Logger::new("%a %{User-Agent}i"))
             .app_data(web::Data::new(app_state.clone()))
-            .service(index)
+            .service(fs::Files::new("/home", "./dist").prefer_utf8(true))
+            .service(web::redirect("/", "/home/index.html"))
+            // .service(index)
+            // .service(assets)
+            // .service(content)
             .service(get_image)
             .service(put_image)
             .service(delete_image)
@@ -107,7 +122,6 @@ async fn main() -> std::io::Result<()> {
             .service(fetch_book_by_genre)
     })
     .bind((domain_name.as_str(), port))?
-    .workers(2)
     .run()
     .await
 }

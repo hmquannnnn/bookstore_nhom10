@@ -43,7 +43,7 @@ pub struct BookFetch {
 
 pub async fn select_book(id: &String, pool: &MySqlPool) -> sqlx::Result<Book> {
     let book = sqlx::query_as!(Book, 
-        "select book.*, author.name author_name, book_genre.genres from book
+        r#"select book.*, author.name author_name, book_genre.genres from book
         left join author
         on book.author_id = author.id
         left join (
@@ -51,8 +51,8 @@ pub async fn select_book(id: &String, pool: &MySqlPool) -> sqlx::Result<Book> {
         from book_genre
         group by book_id
         ) book_genre
-        on book_genre.book_id = book.id         
-        where book.id = ?", id)
+        on book_genre.book_id = book.id
+        where book.id = ?"#, id)
         .fetch_one(pool)
     .await?;
     Ok(book)
@@ -60,7 +60,7 @@ pub async fn select_book(id: &String, pool: &MySqlPool) -> sqlx::Result<Book> {
 
 pub async fn list_books(start: i32, length: i32, pool: &MySqlPool) -> sqlx::Result<Vec<Book>> {
     let book = sqlx::query_as!(Book,
-    "select book.*, author.name author_name, book_genre.genres from book
+    r#"select book.*, author.name author_name, book_genre.genres from book
     left join author
     on book.author_id = author.id
     left join (
@@ -69,7 +69,7 @@ pub async fn list_books(start: i32, length: i32, pool: &MySqlPool) -> sqlx::Resu
     group by book_id
     ) book_genre
     on book_genre.book_id = book.id
-    limit ? offset ?", length, start)
+    limit ? offset ?"#, length, start)
         .fetch_all(pool)
     .await?;
     Ok(book)
@@ -77,7 +77,7 @@ pub async fn list_books(start: i32, length: i32, pool: &MySqlPool) -> sqlx::Resu
 
 pub async fn list_books_sort(start: i32, length: i32, pool: &MySqlPool) -> AppResult<Vec<Book>> {
     let books = fetch_match!(sqlx::query_as!(Book,
-    "select book.*, author.name as author_name from (
+    r#"select book.*, author.name as author_name from (
     select book.*, book_genre.genres from book
     left join (
     select book_id, concat('[',group_concat(genre_id),']') genres
@@ -89,7 +89,7 @@ pub async fn list_books_sort(start: i32, length: i32, pool: &MySqlPool) -> AppRe
     join author
     where author.id = book.author_id
     order by rating desc
-    limit ? offset ?",
+    limit ? offset ?"#,
     length, start)
     .fetch_all(pool)
     .await)?;
@@ -99,7 +99,7 @@ pub async fn list_books_sort(start: i32, length: i32, pool: &MySqlPool) -> AppRe
 
 pub async fn list_books_sort_asc(start: i32, length: i32, pool: &MySqlPool) -> AppResult<Vec<Book>> {
     let books = fetch_match!(sqlx::query_as!(Book,
-    "select book.*, author.name author_name from (
+    r#"select book.*, author.name author_name from (
     select book.*, book_genre.genres from book
     left join (
     select book_id id, concat('[',group_concat(genre_id),']') genres from book_genre
@@ -110,7 +110,7 @@ pub async fn list_books_sort_asc(start: i32, length: i32, pool: &MySqlPool) -> A
     join author
     on author.id = book.author_id
     order by rating asc 
-    limit ? offset ?",
+    limit ? offset ?"#,
     length, start)
     .fetch_all(pool)
     .await)?;
