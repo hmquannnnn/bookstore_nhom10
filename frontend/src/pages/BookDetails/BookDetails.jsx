@@ -43,23 +43,13 @@ const BookDetails = () => {
         console.log(">>>check count: ", count);
     }
     const handleDecrement = () => {
-        setCount(count - 1);
+        if(count > 0) {
+            setCount(count - 1);
+        } else {
+            setCount(0);
+        }
     }
-    // const showModal = () => {
-    //     if(isAuthenticated) {
-    //         navigate(path.cart)
-    //     } else {
-    //         setIsModalOpen(true);
-    //     }
-    //
-    // };
-    // const handleOk = () => {
-    //     setIsModalOpen(false);
-    //     navigate(path.logIn)
-    // };
-    // const handleCancel = () => {
-    //     setIsModalOpen(false);
-    // };
+
     return (
         <Row className="book-details-page" >
             <Col md={10} sm={10} xs={24} className="left">
@@ -68,30 +58,33 @@ const BookDetails = () => {
                 </div>
             </Col>
             <Col md={14} sm={14} xs={24} className="right">
-                <div className="book-info" >
-                    <div className="author">Tác giả: {currentBook.author_name}</div>
-                    <div className="title">{currentBook.title}</div>
-                    <div className="price"> {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBook.price)} </div>
-                </div>
-                <span className="order-counter">
+                <Row>
+                    <div className="book-info" >
+                        <div className="author">Tác giả: {currentBook.author_name}</div>
+                        <div className="title">{currentBook.title}</div>
+                        <div className="price"> {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBook.price)} </div>
+                    </div>
+                    <span className="order-counter">
                     <Button className="counter" type="text" onClick={() => handleDecrement()}>-</Button>
                     <Input defaultValue={1} value={count} style={{ width: "20px", height: "20px", borderRadius: "3px", padding: "0", textAlign: "center" }} />
                     <Button className="counter" type="text" onClick={() => handleIncrement()}>+</Button>
                 </span>
-                <div className="order-info">
-                    <Button className="add-btn" htmlType={"submit"} onClick={() => onClick(currentBook.id, count)}>Thêm vào giỏ hàng</Button>
-                </div>
-            </Col>
-            {/*<Modal title="Bạn chưa đăng nhập"*/}
-            {/*       open={isModalOpen}*/}
-            {/*       onOk={handleOk}*/}
-            {/*       okText="Đăng nhập"*/}
-            {/*       onCancel={handleCancel}*/}
-            {/*       cancelText="Hủy"*/}
-            {/*>*/}
-            {/*    <p>Đăng nhập để truy cập giỏ hàng</p>*/}
+                    <div className="order-info">
+                        <Button className="add-btn" htmlType={"submit"} onClick={() => onClick(currentBook.id, count)}>
+                            Thêm vào giỏ hàng
 
-            {/*</Modal>*/}
+                        </Button>
+
+                    </div>
+                </Row>
+                <Row className="description">
+                    <h4>Mô tả</h4>
+                    {currentBook.desciption};
+                </Row>
+
+
+            </Col>
+
         </Row>
     )
 }

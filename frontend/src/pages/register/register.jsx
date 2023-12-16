@@ -5,9 +5,22 @@ import FormItem from "antd/es/form/FormItem";
 import { useNavigate } from "react-router-dom";
 import { callRegister } from "../../services/api/userAPI";
 import "./register.scss"
-
+// import { CountryDropdown, RegionDropdown, CityDropdown } from "country-state-city";
+import {useEffect, useState} from "react";
 
 const Register = () => {
+    // const [selectedCountry, setSelectedCountry] = useState("Vietnam");
+    // const [selectedRegion, setSelectedRegion] = useState("");
+    // const [selectedCity, setSelectedCity] = useState("");
+    // const [vietnamStates, setVietnamStates] = useState([]);
+    //
+    // useEffect(() => {
+    //
+    // }, []);(() => {
+    //     // Lấy thông tin về các states của Việt Nam khi component mount
+    //     const statesOfVietnam = CountryDropdown.getStatesOfCountry("Vietnam");
+    //     setVietnamStates(statesOfVietnam);
+    // }, []);
     const navigate = useNavigate();
     const onFinish = async (values) => {
         const { email, name, phone, password, address } = values;
@@ -190,6 +203,40 @@ const Register = () => {
                     </div>
                 </main>
             </div>
+            {/*<div>*/}
+            {/*    <h1>Location Selector</h1>*/}
+
+            {/*    /!* Country Dropdown *!/*/}
+            {/*    <CountryDropdown*/}
+            {/*        value={selectedCountry}*/}
+            {/*        onChange={(value) => setSelectedCountry(value)}*/}
+            {/*    />*/}
+
+            {/*    /!* Region Dropdown *!/*/}
+            {/*    <RegionDropdown*/}
+            {/*        country={selectedCountry}*/}
+            {/*        value={selectedRegion}*/}
+            {/*        onChange={(value) => setSelectedRegion(value)}*/}
+            {/*    />*/}
+
+            {/*    /!* City Dropdown *!/*/}
+            {/*    <CityDropdown*/}
+            {/*        country={selectedCountry}*/}
+            {/*        region={selectedRegion}*/}
+            {/*        value={selectedCity}*/}
+            {/*        onChange={(value) => setSelectedCity(value)}*/}
+            {/*    />*/}
+
+            {/*    /!* Hiển thị thông tin về các states của Việt Nam *!/*/}
+            {/*    <div>*/}
+            {/*        <h2>States of Vietnam:</h2>*/}
+            {/*        <ul>*/}
+            {/*            {vietnamStates.map((state) => (*/}
+            {/*                <li key={state}>{state}</li>*/}
+            {/*            ))}*/}
+            {/*        </ul>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
         </>
     )
 

@@ -57,7 +57,7 @@ const Home = () => {
     ]
     const initBooksSortByPurchased = async () => {
         const res = await callBooksSortByPurchased();
-        console.log("api 1", page);
+        // console.log("api 1", page, res);
         if (res) {
             dispatch(getBooksAction(res));
             // console.log(">>>dispatch success: ", res);
@@ -65,7 +65,7 @@ const Home = () => {
     }
     const initBooksSortByRating = async () => {
         const res = await callBooksSortByRating();
-        console.log("api 2");
+        // console.log("api 2");
         if (res) {
             dispatch(getBooksAction(res));
             // console.log(">>>dispatch success: ", res);
@@ -73,7 +73,7 @@ const Home = () => {
     }
     const initBooksSortByPriceAsc = async () => {
         const res = await callBooksSortByPriceAsc();
-        console.log("api 3");
+        // console.log("api 3");
         if (res) {
             dispatch(getBooksAction(res));
             // console.log(">>>dispatch success: ", res);
@@ -81,7 +81,7 @@ const Home = () => {
     }
     const initBooksSortByPriceDesc = async () => {
         const res = await callBooksSortByPriceDesc();
-        console.log("api 4");
+        // console.log("api 4", res);
         if (res) {
             dispatch(getBooksAction(res));
             // console.log(">>>dispatch success: ", res);
