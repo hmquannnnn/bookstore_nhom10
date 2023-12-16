@@ -1,10 +1,11 @@
 use std::fmt::Display;
 
-use sqlx::{MySqlPool, Row, MySql};
+use sqlx::{MySqlPool, MySql, Row};
 
 
 pub async fn select_image(id: String, pool: &MySqlPool) -> sqlx::Result<Vec<u8>> {
-    let image = sqlx::query("select data from images where id = ?")
+    let image = 
+    sqlx::query("select data from images where id = ?")
         .bind(id)
         .fetch_one(pool)
         .await?

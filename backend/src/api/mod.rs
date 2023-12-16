@@ -1,41 +1,92 @@
+use actix_files as fs;
 use actix_web::{
-    get, Responder, web::{Json, self}, patch, error as actix_error, HttpResponse 
+    error as actix_error, get,
+    http::header::{ContentDisposition, DispositionType},
+    patch,
+    web::{self, Json, Path},
+    Error, HttpResponse, Responder,
 };
 
-use crate::{util::types::{ColumnField, AppState}, header::JwtTokenHeader, repository::update_one_field_auth};
+use crate::{
+    header::JwtTokenHeader,
+    repository::update_one_field_auth,
+    util::types::{AppState, ColumnField},
+};
 
-
-pub mod image;
 pub mod book;
-pub mod user;
 pub mod cart;
 pub mod genre;
+pub mod image;
+pub mod user;
 
 #[get("/")]
-pub async fn index() -> impl Responder {
-    Json("Server is running")
+pub async fn index() -> Result<fs::NamedFile, Error>{
+    let path: std::path::PathBuf = ["./dist/", "index.html"].iter().collect();
+    let file = fs::NamedFile::open(path)?;
+    Ok(file
+        .use_last_modified(true)
+        .set_content_disposition(ContentDisposition {
+            disposition: DispositionType::Attachment,
+            parameters: vec![],
+        }))
+}
+
+#[get("/{filename:.*}")]
+async fn content(path: Path<String>) -> Result<fs::NamedFile, Error> {
+    let path = path.into_inner();
+    let path: std::path::PathBuf = ["./dist/", &path].iter().collect();
+    let file = fs::NamedFile::open(path)?;
+    Ok(file
+        .use_last_modified(true)
+        .set_content_disposition(ContentDisposition {
+            disposition: DispositionType::Attachment,
+            parameters: vec![],
+        }))
 }
 
 
+#[get("/assets/{filename:.*}")]
+async fn assets(path: Path<String>) -> Result<fs::NamedFile, Error> {
+    let path = path.into_inner();
+    let path: std::path::PathBuf = ["./dist/assets/", &path].iter().collect();
+    let file = fs::NamedFile::open(path)?;
+    Ok(file
+        .use_last_modified(true)
+        .set_content_disposition(ContentDisposition {
+            disposition: DispositionType::Attachment,
+            parameters: vec![],
+        }))
+}
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct UpdateType {
     id_field: ColumnField,
-    value_field: ColumnField
+    value_field: ColumnField,
 }
 
-
 #[patch("update/{table}")]
-pub async fn update(path: web::Path<String>, jwt_header: JwtTokenHeader, data: Json<UpdateType>, app_state: web::Data<AppState>) -> actix_web::Result<impl Responder> {
+pub async fn update(
+    path: web::Path<String>,
+    jwt_header: JwtTokenHeader,
+    data: Json<UpdateType>,
+    app_state: web::Data<AppState>,
+) -> actix_web::Result<impl Responder> {
     let id_field = &data.0.id_field;
     let value_field = &data.0.value_field;
-    update_one_field_auth(&jwt_header, &path.into_inner(), id_field, value_field, &app_state.pool).await
+    update_one_field_auth(
+        &jwt_header,
+        &path.into_inner(),
+        id_field,
+        value_field,
+        &app_state.pool,
+    )
+    .await
     .map_err(|error| actix_error::ErrorNotAcceptable(error.to_string()))?;
     Ok(HttpResponse::Accepted().body("update success"))
 }
 
 #[derive(serde::Serialize, serde::Deserialize)]
 struct DeleteType {
-    id: String
+    id: String,
 }
 
 // #[delete("/admin/{table}")]
@@ -44,7 +95,6 @@ struct DeleteType {
 //     .map_err(|error| actix_error::ErrorNotAcceptable(error.to_string()))?;
 //     Ok(HttpResponse::Accepted().body("update success"))
 // }
-
 
 // #[macro_export]
 // macro_rules! update_field {

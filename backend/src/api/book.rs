@@ -133,7 +133,7 @@ pub async fn fetch_sorted_books_purchse_asc(
     let pool = &app_state.pool;
     let books = sqlx::query_as!(
         Book,
-        "select book.*, author.name as author_name from (
+        r#"select book.*, author.name as author_name from (
             select book.*, book_genre.genres from book
             left join (
                 select book_id, concat('[',group_concat(genre_id),']') genres
@@ -145,7 +145,7 @@ pub async fn fetch_sorted_books_purchse_asc(
             join author
             where author.id = book.author_id
             order by number_of_purchases asc 
-            limit ? offset ?",
+            limit ? offset ?"#,
         length,
         start
     )

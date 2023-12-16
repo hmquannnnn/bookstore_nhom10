@@ -22,7 +22,7 @@ pub struct UserResponse {
 }
 
 pub async fn select_user(user_email: &String, pool: &MySqlPool) -> Result<User, Box<dyn Error>> {
-    let user = sqlx::query_as!(User, "select * from user where email = ?", user_email)
+    let user = sqlx::query_as!(User, r#"select * from user where email = ?"#, user_email)
         .fetch_one(pool)
         .await?;
     // let token = insert_token(&user_auth, pool).await?;
