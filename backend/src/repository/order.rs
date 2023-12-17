@@ -1,7 +1,7 @@
 use sqlx::MySqlPool;
+use tokio::join;
 
-
-#[derive(serde::Serialize, sqlx::prelude::FromRow)]
+#[derive(serde::Serialize, sqlx::FromRow)]
 pub struct Order {
     pub id: u64,
     pub user_email: String,
@@ -26,4 +26,41 @@ pub async fn insert_order(
         .fetch_one(pool)
         .await?;
     Ok(order)
+}
+
+
+#[derive(serde::Serialize)]
+pub struct OrderPrice {
+    pub order_id: u64,
+    pub price: Option<f64>,
+}
+
+#[derive(serde::Serialize)]
+pub(self) struct UserOrder {
+    order_id: u64,
+    user_email: String,
+}
+
+pub async fn get_order_price(
+    pool: &MySqlPool,
+    order_id: u64,
+    user_email: &String,
+) -> sqlx::Result<OrderPrice> {
+    let fut_all = join!(
+    sqlx::query_as!(UserOrder,
+    "select id order_id, user_email from orders where id = ? and user_email = ?"
+    , order_id, user_email)
+        .fetch_one(pool),
+    sqlx::query_as!(OrderPrice,
+    "select order_id, sum(price_each * quantity_ordered) price from orderDetail 
+        where order_id = ?
+        group by order_id",
+        order_id)
+        .fetch_one(pool)
+    );
+
+    let _user_order = fut_all.0?;
+    let order_price = fut_all.1?;
+
+    Ok(order_price)
 }

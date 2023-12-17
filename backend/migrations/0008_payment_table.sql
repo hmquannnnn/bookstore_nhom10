@@ -3,6 +3,7 @@ create table payment(
     order_id bigint unsigned not null,
     user_email varchar(256) not null,
     amount float not null,
+    status varchar(32),
     payment_date varchar(256) not null,
     
 

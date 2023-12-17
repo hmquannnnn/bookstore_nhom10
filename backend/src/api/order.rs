@@ -50,7 +50,7 @@ pub async fn get_order(
     let orders = sqlx::query_as!(GetOrder,
     "select orders.*, orderDetail.book_id, orderDetail.price_each, orderDetail.quantity_ordered from orders join orderDetail
         on orders.id = orderDetail.order_id
-        where user_email = ?", user_email 
+        where user_email = ? and orders.status != \"cancel\"", user_email 
     ).fetch_all(pool)
     .await
     .map_err(error::ErrorNotFound)?;
