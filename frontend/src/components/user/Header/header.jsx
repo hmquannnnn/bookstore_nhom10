@@ -10,7 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { callFetchAccount } from "../../../services/api/userAPI";
 import { doGetAccountAction, doLogOutAction } from "../../../redux/reducer/accountSlice";
 import path from "../../../routes/path.jsx";
-import { initCart } from "../../../redux/reducer/cartSlice.jsx";
+import { deleteCart } from "../../../redux/reducer/cartSlice.jsx";
 
 
 
@@ -23,7 +23,8 @@ const Header = () => {
         console.log("logout");
         localStorage.clear();
         dispatch(doLogOutAction());
-        dispatch(initCart());
+        dispatch(deleteCart());
+        // dispatch(initCart());
         // setIsLoggedIn(false);
         // setItems(defaultItems);
     }

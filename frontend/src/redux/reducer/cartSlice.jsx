@@ -2,7 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 
 const initialState = {
-    total: 0, books: []
+    total: 0,
+    books: [],
 };
 
 const handleDuplicateBooks = (arr) => {
@@ -23,7 +24,7 @@ const handleDuplicateBooks = (arr) => {
 export const cartSlice = createSlice({
     name: "cart", initialState, // The `reducers` field lets us define reducers and generate associated actions
     reducers: {
-        initCart: (state, action) => {
+        deleteCart: (state, action) => {
             state.total = 0;
             state.books = initialState.books;
         },
@@ -50,6 +51,6 @@ export const cartSlice = createSlice({
     },
 });
 
-export const { getCartAction, addBookIntoCartAction, initCart } = cartSlice.actions;
+export const { getCartAction, addBookIntoCartAction, deleteCart } = cartSlice.actions;
 
 export default cartSlice.reducer;
