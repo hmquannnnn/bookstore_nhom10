@@ -13,6 +13,7 @@ pub mod token;
 pub mod user;
 pub mod genre;
 pub mod alias;
+pub mod order;
 
 pub async fn auth_user(user_auth: &JwtTokenHeader, pool: &MySqlPool) -> Result<bool, AppError> {
     let user = sqlx::query!(
@@ -76,28 +77,28 @@ pub async fn update_one_field_auth(
     }
 }
 
-pub async fn detete_auth(
-    user_auth: &JwtTokenHeader,
-    table: &String,
-    field: &ColumnField,
-    pool: &MySqlPool,
-) -> Result<(), AppError> {
-    let auth_success = auth_admin(user_auth, pool)
-        .await?;
-
-    match auth_success {
-        true => {
-            let query_str = format!("delete from {} where {} = ?", table, field.key);
-            sqlx::query(&query_str)
-                .bind(&field.value)
-                .execute(pool)
-                .await
-                .map_err(|_| AppError::FailToUpdate)?;
-            Ok(())
-        }
-        false => Err(AppError::FailAuthenticate),
-    }
-}
+// pub async fn detete_auth(
+//     user_auth: &JwtTokenHeader,
+//     table: &String,
+//     field: &ColumnField,
+//     pool: &MySqlPool,
+// ) -> Result<(), AppError> {
+//     let auth_success = auth_admin(user_auth, pool)
+//         .await?;
+//
+//     match auth_success {
+//         true => {
+//             let query_str = format!("delete from {} where {} = ?", table, field.key);
+//             sqlx::query(&query_str)
+//                 .bind(&field.value)
+//                 .execute(pool)
+//                 .await
+//                 .map_err(|_| AppError::FailToUpdate)?;
+//             Ok(())
+//         }
+//         false => Err(AppError::FailAuthenticate),
+//     }
+// }
 
 // pub async fn action_auth(
 //     user_auth: &JwtTokenHeader,

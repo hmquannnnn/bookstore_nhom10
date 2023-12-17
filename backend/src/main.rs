@@ -26,7 +26,7 @@ use api::{
     user::{
         get_user, insert_image_user, patch_user_image, register_user, update_user_address,
         update_user_name, update_user_password, update_user_phone, user_login,
-    }, assets, index
+    }, assets, index, order::{ post_order, get_order}
 };
 use api::cart::delete_cart;
 use api::book::patch_book_image;
@@ -122,6 +122,8 @@ async fn main() -> std::io::Result<()> {
             .service(fetch_sorted_books_price_desc)
             .service(fetch_book_by_genre)
             .service(order_cart)
+            .service(post_order)
+            .service(get_order)
     })
     .bind((domain_name.as_str(), port))?
     .run()

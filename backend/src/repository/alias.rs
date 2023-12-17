@@ -39,9 +39,9 @@ pub fn book_genres_filter_full<'a>(genre_ids: &Vec<i32>) -> QueryBuilder<'a, MyS
     main_builder
 }
 
-pub fn book_author<'a>() -> QueryBuilder<'a, MySql> {
-    QueryBuilder::new("select book.*, author.name author_name from book left join author on author.id = author_id")
-}
+// pub fn book_author<'a>() -> QueryBuilder<'a, MySql> {
+//     QueryBuilder::new("select book.*, author.name author_name from book left join author on author.id = author_id")
+// }
 
 // pub enum QueryJoinType {
 //     Right,

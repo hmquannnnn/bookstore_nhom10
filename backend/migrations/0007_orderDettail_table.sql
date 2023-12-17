@@ -1,5 +1,5 @@
 create table orderDetail(
-    order_id varchar(64) not null,
+    order_id bigint unsigned not null,
     book_id varchar(64) not null,
     price_each float not null,
     quantity_ordered int not null,

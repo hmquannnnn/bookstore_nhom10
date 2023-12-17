@@ -1,23 +1,19 @@
-
-
 use jsonwebtoken::{encode, Header as JwtHeader, EncodingKey, errors::Error as JwtError, decode, Validation, DecodingKey};
 use serde::{Deserialize, Serialize};
 
+use chrono::Duration;
 
-use chrono::{Duration};
-
-
-use crate::{util::{constant::{EXPIRE_INTERVAL, APP_SECRET}, types::{AppError}}, header::JwtTokenHeader};
+use crate::{util::{constant::{EXPIRE_INTERVAL, APP_SECRET}, types::AppError}, header::JwtTokenHeader};
 
 use super::user::User;
 
-pub struct Token {
-    pub token: String,
-    pub user_email: String,
-    pub issue_at: sqlx::types::time::PrimitiveDateTime,
-    pub expire_at: sqlx::types::time::PrimitiveDateTime,
-    pub is_expire: i64,
-}
+// pub struct Token {
+//     pub token: String,
+//     pub user_email: String,
+//     pub issue_at: sqlx::types::time::PrimitiveDateTime,
+//     pub expire_at: sqlx::types::time::PrimitiveDateTime,
+//     pub is_expire: i64,
+// }
 
 #[derive(Serialize, Deserialize)]
 pub struct TokenSerialize {
@@ -27,16 +23,16 @@ pub struct TokenSerialize {
     pub expire_at: String,
 }
 
-impl TokenSerialize {
-    pub fn from_token(token: Token) -> Self {
-        TokenSerialize {
-            token: token.token,
-            user_email: token.user_email,
-            issue_at: token.issue_at.to_string(),
-            expire_at: token.expire_at.to_string(),
-        }
-    }
-}
+// impl TokenSerialize {
+//     pub fn from_token(token: Token) -> Self {
+//         TokenSerialize {
+//             token: token.token,
+//             user_email: token.user_email,
+//             issue_at: token.issue_at.to_string(),
+//             expire_at: token.expire_at.to_string(),
+//         }
+//     }
+// }
 
 #[derive(Serialize, Deserialize)]
 pub struct Claims {

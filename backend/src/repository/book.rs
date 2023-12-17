@@ -1,4 +1,4 @@
-use sqlx::MySqlPool;
+use sqlx::{MySqlPool, QueryBuilder, MySql};
 
 use crate::{fetch_match, util::types::AppResult};
 
@@ -26,20 +26,19 @@ pub struct Book {
 //     pub book_id: String,
 // }
 //
-pub struct BookFetch {
-    pub id: String,
-    pub title: String,
-    pub author_id: i32,
-    pub price: f32,
-    pub publish_year: String,
-    pub number_of_purchases:  Option<i32>,
-    pub book_in_stocks: i32,
-    pub rating: Option<f32>,
-    pub desciption: Option<String>,
-
-    pub back_page_url: Option<String>,
-    pub front_page_url: Option<String>
-}
+// pub struct BookFetch {
+//     pub id: String,
+//     pub title: String,
+//     pub author_id: i32,
+//     pub price: f32,
+//     pub publish_year: String,
+//     pub number_of_purchases:  Option<i32>,
+//     pub book_in_stocks: i32,
+//     pub rating: Option<f32>,
+//     pub desciption: Option<String>,
+//
+//     pub back_page_url: Option<String>,
+//     pub front_page_url: Option<String>
 
 pub async fn select_book(id: &String, pool: &MySqlPool) -> sqlx::Result<Book> {
     let book = sqlx::query_as!(Book, 
@@ -115,6 +114,33 @@ pub async fn list_books_sort_asc(start: i32, length: i32, pool: &MySqlPool) -> A
     .fetch_all(pool)
     .await)?;
     Ok(books)
+}
+
+
+
+#[derive(serde::Serialize, serde::Deserialize, sqlx::FromRow)]
+pub struct BookPrice {
+    pub book_id: String,
+    pub price_each: f32,
+}
+
+pub async fn take_price(
+    books_id: &Vec<String>,
+    pool: &MySqlPool,
+) -> sqlx::Result<Vec<BookPrice>> {
+    let mut query: QueryBuilder<'_, MySql> = QueryBuilder::new("select id book_id, price price_each from book where id in (");
+    
+    let mut sep = query.separated(',');
+
+    for id in books_id {
+        sep.push(id);
+    }
+
+    query.push(")");
+
+    sqlx::query_as::<MySql, BookPrice>(query.sql())
+    .fetch_all(pool)
+    .await
 }
 
 // pub async fn list_book_by_genre(_start: i32, _length: i32, genre_id: i32, pool: &MySqlPool) -> sqlx::Result<Vec<BookFetch>> {

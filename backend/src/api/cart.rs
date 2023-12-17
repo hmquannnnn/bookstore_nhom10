@@ -7,7 +7,7 @@ use sqlx::MySql;
 
 use crate::{
     header::JwtTokenHeader,
-    repository::auth_user,
+    repository::{auth_user, order::{Order, insert_order}},
     util::types::{AppError, AppResult, AppState, Message},
 };
 
@@ -142,13 +142,6 @@ pub async fn patch_cart(
     }
 }
 
-#[derive(serde::Serialize, sqlx::prelude::FromRow)]
-pub struct Order {
-    pub id: String,
-    pub user_email: String,
-    pub order_date: String,
-    pub require_date: Option<String>,
-}
 
 #[patch("/api/cart/order")]
 pub async fn order_cart(
@@ -160,10 +153,6 @@ pub async fn order_cart(
     let user_email = jwt_header.email;
     let pool = &app_state.pool;
 
-    let order_id = uuid::Uuid::new_v4().to_string();
-
-    // let query = format!("insert into orders(id, user_email, order_date, require_date) values ('{order_id}', '{user_email}', now(), adddate(now(), 3));
-    // select * from orders where orders.id = last_insert_id();");
 
     let carts = sqlx::query_as!(Cart,
     r#"select * from cart where user_email = ?"#
@@ -178,16 +167,19 @@ pub async fn order_cart(
         }));
     }
 
-    sqlx::query!("insert into orders(id, user_email, order_date, require_date) values (?, ?, now(), adddate(now(), 3))", order_id, user_email)
-        .execute(pool)
+    // let books_id: Vec<String> = carts.iter().map(|cart| cart.book_id.clone()).collect();
+    //
+    // let books_price = take_price(&books_id, pool)
+    //     .await
+    //     .map_err(actix_web::error::ErrorNotFound)?;
+    
+    let new_order = insert_order(pool, &user_email)
         .await
         .map_err(actix_web::error::ErrorInternalServerError)?;
-
-    let new_order = sqlx::query_as!(Order
-        , "select * from orders where id = ?", order_id)
-        .fetch_one(pool)
-        .await
-        .map_err(actix_web::error::ErrorLocked)?;
+    // sqlx::query!("insert into orders(id, user_email, order_date, require_date) values (?, ?, now(), adddate(now(), 3))", order_id, user_email)
+    //     .execute(pool)
+    //     .await
+    //     .map_err(actix_web::error::ErrorInternalServerError)?;
 
     let order_id = &new_order.id;
 
@@ -207,11 +199,6 @@ pub async fn order_cart(
         .execute(pool)
         .await
         .map_err(actix_web::error::ErrorBadRequest)?;
-
-    // sqlx::query(query_builder.sql())
-    //     .execute(pool)
-    //     .await
-    //     .map_err(actix_web::error::ErrorBadRequest)?;
 
     Ok(Json(Message{
         message: "update success",
