@@ -3,6 +3,7 @@ use actix_web::{
     web::{self, Json},
 };
 use futures_util::future::join;
+use sqlx::MySql;
 
 use crate::{
     header::JwtTokenHeader,
@@ -14,6 +15,7 @@ use crate::{
 pub struct Cart {
     user_email: String,
     book_id: String,
+    price_each: f32,
     quantity_ordered: i64,
 }
 
@@ -139,3 +141,82 @@ pub async fn patch_cart(
         false => Err(AppError::FailAuthenticate),
     }
 }
+
+#[derive(serde::Serialize, sqlx::prelude::FromRow)]
+pub struct Order {
+    pub id: String,
+    pub user_email: String,
+    pub order_date: String,
+    pub require_date: Option<String>,
+}
+
+#[patch("/api/cart/order")]
+pub async fn order_cart(
+    jwt_header: JwtTokenHeader,
+    app_state: web::Data<AppState>,
+) 
+-> actix_web::Result<Json<Message<Order>>> {
+// -> actix_web::Result<Json<Message<String>>> {
+    let user_email = jwt_header.email;
+    let pool = &app_state.pool;
+
+    let order_id = uuid::Uuid::new_v4().to_string();
+
+    // let query = format!("insert into orders(id, user_email, order_date, require_date) values ('{order_id}', '{user_email}', now(), adddate(now(), 3));
+    // select * from orders where orders.id = last_insert_id();");
+
+    let carts = sqlx::query_as!(Cart,
+    r#"select * from cart where user_email = ?"#
+    , user_email)
+        .fetch_all(pool)
+        .await
+        .map_err(actix_web::error::ErrorGone)?;
+    if carts.len() == 0 {
+        return Ok(Json(Message{
+            message: "cart is empty",
+            payload: None,
+        }));
+    }
+
+    sqlx::query!("insert into orders(id, user_email, order_date, require_date) values (?, ?, now(), adddate(now(), 3))", order_id, user_email)
+        .execute(pool)
+        .await
+        .map_err(actix_web::error::ErrorInternalServerError)?;
+
+    let new_order = sqlx::query_as!(Order
+        , "select * from orders where id = ?", order_id)
+        .fetch_one(pool)
+        .await
+        .map_err(actix_web::error::ErrorLocked)?;
+
+    let order_id = &new_order.id;
+
+    let mut query_builder: sqlx::QueryBuilder<'_, MySql> =
+    sqlx::QueryBuilder::new("insert into orderDetail(order_id, book_id, price_each, quantity_ordered) ");
+
+    // insert card 
+    query_builder.push_values(carts, |mut q, cart| {
+        q
+        .push(order_id)
+        .push(cart.book_id)
+        .push(cart.price_each)
+        .push(cart.quantity_ordered);
+    });
+
+    query_builder.build()
+        .execute(pool)
+        .await
+        .map_err(actix_web::error::ErrorBadRequest)?;
+
+    // sqlx::query(query_builder.sql())
+    //     .execute(pool)
+    //     .await
+    //     .map_err(actix_web::error::ErrorBadRequest)?;
+
+    Ok(Json(Message{
+        message: "update success",
+        payload: Some(new_order)
+    }))
+}
+
+

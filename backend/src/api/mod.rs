@@ -18,6 +18,8 @@ pub mod cart;
 pub mod genre;
 pub mod image;
 pub mod user;
+pub mod payment;
+pub mod order;
 
 #[get("/")]
 pub async fn index() -> Result<fs::NamedFile, Error>{

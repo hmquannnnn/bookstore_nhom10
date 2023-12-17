@@ -19,7 +19,7 @@ use api::{
         fetch_sorted_books_purchse_asc, fetch_sorted_books_purchse_desc, get_book, list_book,
         update_book_descption, update_book_price, update_book_title,
     },
-    cart::{get_cart, patch_cart, put_cart},
+    cart::{get_cart, patch_cart, put_cart, order_cart},
     genre::get_genres,
     image::{delete_image, get_image, put_image},
     update,
@@ -121,6 +121,7 @@ async fn main() -> std::io::Result<()> {
             .service(fetch_sorted_books_price_asc)
             .service(fetch_sorted_books_price_desc)
             .service(fetch_book_by_genre)
+            .service(order_cart)
     })
     .bind((domain_name.as_str(), port))?
     .run()
