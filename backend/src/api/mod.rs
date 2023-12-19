@@ -21,6 +21,7 @@ pub mod user;
 pub mod payment;
 pub mod order;
 
+
 #[get("/")]
 pub async fn index() -> Result<fs::NamedFile, Error>{
     let path: std::path::PathBuf = ["./dist/", "index.html"].iter().collect();
@@ -28,7 +29,18 @@ pub async fn index() -> Result<fs::NamedFile, Error>{
     Ok(file
         .use_last_modified(true)
         .set_content_disposition(ContentDisposition {
-            disposition: DispositionType::Attachment,
+            disposition: DispositionType::Inline,
+            parameters: vec![],
+        }))
+}
+
+pub async fn handler() -> Result<fs::NamedFile, Error>{
+    let path: std::path::PathBuf = ["./dist/", "index.html"].iter().collect();
+    let file = fs::NamedFile::open(path)?;
+    Ok(file
+        .use_last_modified(true)
+        .set_content_disposition(ContentDisposition {
+            disposition: DispositionType::Inline,
             parameters: vec![],
         }))
 }
@@ -45,6 +57,9 @@ async fn content(path: Path<String>) -> Result<fs::NamedFile, Error> {
             parameters: vec![],
         }))
 }
+
+
+
 
 
 #[get("/assets/{filename:.*}")]

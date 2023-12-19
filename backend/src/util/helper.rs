@@ -17,7 +17,7 @@ impl TryInto<Vec<i32>> for GenresRaw {
             let genre = ele.parse::<i32>()?;
             genres.push(genre)
         }
-        Ok(genres) 
+        Ok(genres)
     }
 }
 
@@ -27,11 +27,16 @@ impl From<GenresRaw> for String {
     }
 }
 
-
 impl From<String> for GenresRaw {
     fn from(value: String) -> Self {
         GenresRaw(value)
     }
+}
+
+#[derive(serde::Deserialize, serde::Serialize)]
+pub struct Bound<T> {
+    pub start: T,
+    pub end: T,
 }
 
 // impl From<std::option::Option<String>> for std::option::Option<GenresRaw> {
@@ -43,6 +48,6 @@ impl From<String> for GenresRaw {
 // impl<T, K> From<Option<T>> for Option<K>
 // where T: From<K> {
 //     fn from(value: Option<T>) -> Self {
-//         Some(K::from(value?)) 
+//         Some(K::from(value?))
 //     }
 // }

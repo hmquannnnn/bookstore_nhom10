@@ -1,19 +1,21 @@
 use actix_web::{
     get, patch,
     web::{Bytes, Json, Query},
-    Responder,
+    Responder, Result as ActixResult,
 };
 use futures_util::future::join;
-use sqlx::{QueryBuilder, MySql, prelude::FromRow};
+use sqlx::{prelude::FromRow, MySql, QueryBuilder};
 
 use crate::{
     header::JwtTokenHeader,
     repository::{
+        alias::book_genres_filter_full,
         book::{self, list_books_sort, list_books_sort_asc, select_book, Book},
-        image::insert_image, alias::book_genres_filter_full,
+        image::insert_image,
     },
     update_field,
     util::{
+        helper::Bound,
         to_image_url,
         types::{AppError, AppResult, AppState, Message},
     },
@@ -151,7 +153,9 @@ pub async fn fetch_sorted_books_purchse_asc(
     )
     .fetch_all(pool)
     .await
-    .map_err(|_| actix_web::error::ErrorBadRequest(AppError::WrongPassword))?; Ok(Json(books)) }
+    .map_err(|_| actix_web::error::ErrorBadRequest(AppError::WrongPassword))?;
+    Ok(Json(books))
+}
 
 #[get("/api/book/sort/purchase/desc")]
 pub async fn fetch_sorted_books_purchse_desc(
@@ -258,40 +262,84 @@ pub struct Genre {
 #[get("/api/book/filter/genres")]
 pub async fn fetch_book_by_genre(
     genre_ids: Json<Vec<i32>>,
-    app_state: actix_web::web::Data<AppState>
-    ) -> actix_web::Result<Json<Vec<Book>>> {
-    let genre_ids = genre_ids.0;    
+    app_state: actix_web::web::Data<AppState>,
+) -> actix_web::Result<Json<Vec<Book>>> {
+    let genre_ids = genre_ids.0;
 
-    let mut main_builder: QueryBuilder<'_, MySql> =
-        QueryBuilder::new("select book.*, author.name author_name, book_genre.genres from book  
-                          left join author on author.id = author_id right join (");
+    let mut main_builder: QueryBuilder<'_, MySql> = QueryBuilder::new(
+        "select book.*, author.name author_name, book_genre.genres from book  
+                          left join author on author.id = author_id right join (",
+    );
 
     main_builder.push(book_genres_filter_full(&genre_ids).sql());
     main_builder.push(") book_genre on book.id = book_genre.id");
 
-    let books = sqlx::query_as::<MySql, Book>(main_builder.sql()) 
+    let books = sqlx::query_as::<MySql, Book>(main_builder.sql())
         .fetch_all(&app_state.pool)
-        .await;
-    
-    if let Ok(books) = books {
-        Ok(Json(books))
-    } else {
-        Err(actix_web::error::ErrorNotFound("not found"))
-    }
+        .await
+        .map_err(actix_web::error::ErrorNotFound)?;
+
+    Ok(Json(books))
 }
 
-// #[get("/book/test/sql/builder")]
-// pub async fn fetch_book_by_genre(
-//     genre_ids: Json<Vec<i32>>,
-//     // app_state: actix_web::web::Data<AppState>
-//     ) -> actix_web::Result<String> {
-//     let genre_ids = genre_ids.0;
-//     let mut main_builder: QueryBuilder<'_, MySql> =
-//         QueryBuilder::new("select book.*, author.name author_name, book_genre.genres from book  
-//                           left join author on author.id = author_id right join (");
-//
-//     main_builder.push(book_genres_filter_full(&genre_ids).sql());
-//     main_builder.push(") book_genre on book.id = book_genre.id");
-//     Ok(main_builder.sql().to_owned())
-// }
-//
+#[get("/api/book/filter/price")]
+pub async fn fetch_filter_price(
+    bound: Json<Bound<f64>>,
+    app_state: actix_web::web::Data<AppState>,
+) -> ActixResult<Json<Vec<Book>>> {
+    let pool = &app_state.pool;
+    
+    let books = sqlx::query_as!(Book,
+    r#"select book.*, book_genre.genres, author.name author_name from book
+        left join author
+        on author.id = book.author_id
+        left join (
+        select book_id id, concat('[',group_concat(genre_id),']') genres
+        from book_genre
+        group by book_id) book_genre
+        on book.id = book_genre.id
+        where price > ? and price < ?"#, bound.start, bound.end
+    ).fetch_all(pool)
+    .await
+    .map_err(actix_web::error::ErrorNotFound)?;
+    Ok(Json(books))
+}
+
+#[derive(serde::Deserialize)]
+pub struct GenrePrice {
+    pub(crate) genres_id: Vec<i32>,
+    pub(crate) bound: Bound<f64>
+}
+
+#[get("/api/book/filter/price/genre")]
+pub async fn fetch_filter_price_genre(
+    genre_price_filter: Json<GenrePrice>,
+    app_state: actix_web::web::Data<AppState>,
+) -> ActixResult<Json<Vec<Book>>> {
+    let pool = &app_state.pool;
+
+    let genre_ids = &genre_price_filter.genres_id;
+    let bound = &genre_price_filter.bound;
+
+    let mut main_builder: QueryBuilder<'_, MySql> = QueryBuilder::new(
+        "select book.*, author.name author_name, book_genre.genres from book  
+                          left join author on author.id = author_id right join (",
+    );
+
+    main_builder.push(book_genres_filter_full(&genre_ids).sql());
+    main_builder.push(") book_genre on book.id = book_genre.id");
+
+    let books = sqlx::query_as::<MySql, Book>(main_builder.sql())
+        .fetch_all(pool)
+        .await
+        .map_err(actix_web::error::ErrorNotFound)?;
+    
+    let books: Vec<Book> = books
+        .iter()
+        .filter(|book| book.price > bound.start && book.price < bound.end)
+        .map(|book| book.clone())
+        .collect();
+    Ok(Json(books))
+} 
+
+
