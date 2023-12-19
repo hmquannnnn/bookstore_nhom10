@@ -305,3 +305,41 @@ pub async fn fetch_filter_price(
     Ok(Json(books))
 }
 
+#[derive(serde::Deserialize)]
+pub struct GenrePrice {
+    pub(crate) genres_id: Vec<i32>,
+    pub(crate) bound: Bound<f64>
+}
+
+#[get("/api/book/filter/price/genre")]
+pub async fn fetch_filter_price_genre(
+    genre_price_filter: Json<GenrePrice>,
+    app_state: actix_web::web::Data<AppState>,
+) -> ActixResult<Json<Vec<Book>>> {
+    let pool = &app_state.pool;
+
+    let genre_ids = &genre_price_filter.genres_id;
+    let bound = &genre_price_filter.bound;
+
+    let mut main_builder: QueryBuilder<'_, MySql> = QueryBuilder::new(
+        "select book.*, author.name author_name, book_genre.genres from book  
+                          left join author on author.id = author_id right join (",
+    );
+
+    main_builder.push(book_genres_filter_full(&genre_ids).sql());
+    main_builder.push(") book_genre on book.id = book_genre.id");
+
+    let books = sqlx::query_as::<MySql, Book>(main_builder.sql())
+        .fetch_all(pool)
+        .await
+        .map_err(actix_web::error::ErrorNotFound)?;
+    
+    let books: Vec<Book> = books
+        .iter()
+        .filter(|book| book.price > bound.start && book.price < bound.end)
+        .map(|book| book.clone())
+        .collect();
+    Ok(Json(books))
+} 
+
+

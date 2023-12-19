@@ -2,13 +2,13 @@ use sqlx::{MySqlPool, QueryBuilder, MySql};
 
 use crate::{fetch_match, util::types::AppResult};
 
-#[derive(sqlx::FromRow, serde::Serialize)]
+#[derive(sqlx::FromRow, serde::Serialize, Clone)]
 pub struct Book {
     pub id: String,
     pub title: String,
     pub author_id: i32,
     pub author_name: Option<String>,
-    pub price: f32,
+    pub price: f64,
     pub publish_year: String,
     pub number_of_purchases:  Option<i32>,
     pub book_in_stocks: i32,

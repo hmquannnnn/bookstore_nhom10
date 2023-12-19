@@ -16,7 +16,7 @@ use api::{
         fetch_book_by_genre, fetch_sorted_books, fetch_sorted_books_asc,
         fetch_sorted_books_price_asc, fetch_sorted_books_price_desc,
         fetch_sorted_books_purchse_asc, fetch_sorted_books_purchse_desc, get_book, list_book,
-        update_book_descption, update_book_price, update_book_title, fetch_filter_price,
+        update_book_descption, update_book_price, update_book_title, fetch_filter_price, fetch_filter_price_genre,
     },
     cart::{get_cart, patch_cart, put_cart, order_cart},
     genre::get_genres,
@@ -121,6 +121,7 @@ async fn main() -> std::io::Result<()> {
             .service(fetch_sorted_books_price_desc)
             .service(fetch_filter_price)
             .service(fetch_book_by_genre)
+            .service(fetch_filter_price_genre)
             .service(order_cart)
             .service(post_order)
             .service(get_order)
