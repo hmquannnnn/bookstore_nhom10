@@ -5,7 +5,6 @@ mod header;
 mod middleware;
 mod repository;
 mod util;
-
 use actix_cors::Cors;
 use actix_files as fs;
 use actix_web::{
@@ -17,7 +16,7 @@ use api::{
         fetch_book_by_genre, fetch_sorted_books, fetch_sorted_books_asc,
         fetch_sorted_books_price_asc, fetch_sorted_books_price_desc,
         fetch_sorted_books_purchse_asc, fetch_sorted_books_purchse_desc, get_book, list_book,
-        update_book_descption, update_book_price, update_book_title,
+        update_book_descption, update_book_price, update_book_title, fetch_filter_price,
     },
     cart::{get_cart, patch_cart, put_cart, order_cart},
     genre::get_genres,
@@ -26,7 +25,7 @@ use api::{
     user::{
         get_user, insert_image_user, patch_user_image, register_user, update_user_address,
         update_user_name, update_user_password, update_user_phone, user_login,
-    }, assets, index, order::{ post_order, get_order}
+    }, assets, index, order::{ post_order, get_order, cancel_order}
 };
 use api::cart::delete_cart;
 use api::book::patch_book_image;
@@ -120,10 +119,12 @@ async fn main() -> std::io::Result<()> {
             .service(fetch_sorted_books_purchse_desc)
             .service(fetch_sorted_books_price_asc)
             .service(fetch_sorted_books_price_desc)
+            .service(fetch_filter_price)
             .service(fetch_book_by_genre)
             .service(order_cart)
             .service(post_order)
             .service(get_order)
+            .service(cancel_order)
     })
     .bind((domain_name.as_str(), port))?
     .run()

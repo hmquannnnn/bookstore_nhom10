@@ -1,5 +1,34 @@
+use std::fmt::Display;
+
 use sqlx::MySqlPool;
 use tokio::join;
+
+
+#[derive(serde::Serialize, serde::Deserialize)]
+pub enum OrderStatus {
+    Cancel,
+    OnGoing,
+    Any(String),
+}
+
+impl Display for OrderStatus {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+           OrderStatus::Cancel => {
+                write!(f, "cancel")
+            },
+            OrderStatus::OnGoing => {
+                write!(f, "on")
+            }
+            OrderStatus::Any(value) => {
+                write!(f, "{value}")
+            }
+        }
+    }
+}
+
+// #[derive(serde::Deserialize, serde::Serialize)]
+// pub struct OrderStatus(String);
 
 #[derive(serde::Serialize, sqlx::FromRow)]
 pub struct Order {
@@ -46,8 +75,7 @@ pub async fn get_order_price(
     order_id: u64,
     user_email: &String,
 ) -> sqlx::Result<OrderPrice> {
-    let fut_all = join!(
-    sqlx::query_as!(UserOrder,
+    let fut_all = join!( sqlx::query_as!(UserOrder,
     "select id order_id, user_email from orders where id = ? and user_email = ?"
     , order_id, user_email)
         .fetch_one(pool),
