@@ -109,8 +109,8 @@ pub async fn put_cart(
             sqlx::query!(
                 "insert into cart(user_email, book_id, price_each,quantity_ordered) values(?, ?, ?, ?)",
                 jwt_header.email,
-                price_each,
                 cart.book_id,
+                price_each,
                 cart.quantity_ordered
             )
             .execute(pool)
