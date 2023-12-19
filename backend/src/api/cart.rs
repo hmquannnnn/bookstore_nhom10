@@ -130,7 +130,7 @@ pub async fn patch_cart(
     data: Json<CartOrder>,
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
-) -> Result<Json<Message<()>>, AppError> {
+) -> actix_web::Result<Json<Message<()>>> {
     let cart = &data.0;
     let pool = &app_state.pool;
 
@@ -139,20 +139,20 @@ pub async fn patch_cart(
     match auth {
         true => {
             sqlx::query!(
-                "update cart set quantity_ordered = ? where user_email = ? & book_id = ? ",
+                "update cart set quantity_ordered = ? where user_email = ? and book_id = ? ",
                 cart.quantity_ordered,
                 jwt_header.email,
                 cart.book_id
             )
             .execute(pool)
             .await
-            .map_err(|_| AppError::FailToUpdate)?;
+            .map_err(actix_web::error::ErrorNotFound)?;
             Ok(Json(Message {
                 message: "update success",
                 payload: None,
             }))
         }
-        false => Err(AppError::FailAuthenticate),
+        false => Err(actix_web::error::ErrorUnauthorized(AppError::FailAuthenticate)),
     }
 }
 
