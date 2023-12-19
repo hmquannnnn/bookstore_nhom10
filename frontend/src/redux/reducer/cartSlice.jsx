@@ -3,13 +3,14 @@ import { useDispatch } from "react-redux";
 
 const initialState = {
     total: 0,
+    amount: 0,
     books: [],
 };
 
 const handleDuplicateBooks = (arr) => {
     const resultObj = {};
     arr.forEach((item) => {
-        const { user_email, book_id, quantity_ordered } = item;
+        const { user_email, book_id, price_each, quantity_ordered } = item;
         if (resultObj[book_id]) {
             resultObj[book_id].quantity_ordered += quantity_ordered;
         } else {
@@ -19,6 +20,15 @@ const handleDuplicateBooks = (arr) => {
     const new_arr = Object.values(resultObj);
     // console.log(new_arr, "and", resultObj);
     return new_arr;
+}
+
+const calcAmount = (arr) => {
+    let amount = 0;
+    arr.forEach((item) => {
+        const { user_email, book_id, price_each, quantity_ordered } = item;
+        amount += price_each * quantity_ordered;
+    })
+    return amount;
 }
 
 export const cartSlice = createSlice({
@@ -39,6 +49,7 @@ export const cartSlice = createSlice({
 
             state.total = newTotal;
             state.books = handleDuplicateBooks(action.payload);
+            state.amount = calcAmount(action.payload);
         },
         addBookIntoCartAction: (state, action) => {
             // console.log(">>>check now: ", action.payload);

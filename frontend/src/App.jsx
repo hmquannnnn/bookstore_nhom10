@@ -20,7 +20,7 @@ export default function App() {
   // }
   const getAccount = async () => {
     const res = await callFetchAccount();
-    // console.log(">>> check fetchAccount: ", res)
+    console.log(">>> check fetchAccount: ", res)
     if (res) {
       dispatch(doGetAccountAction(res));
     }

@@ -32,7 +32,7 @@ const BookDetails = () => {
     const onClick = async (bookId, count) => {
 
         const res = await callAddBookIntoCart(bookId, count);
-        // console.log(">>>add to cart: ", res);
+        console.log(">>>add to cart: ", res);
         if (res) {
             // console.log("success");
             dispatch(addBookIntoCartAction({ count, bookId }));
@@ -43,7 +43,7 @@ const BookDetails = () => {
         console.log(">>>check count: ", count);
     }
     const handleDecrement = () => {
-        if(count > 0) {
+        if (count > 0) {
             setCount(count - 1);
         } else {
             setCount(0);
@@ -65,10 +65,10 @@ const BookDetails = () => {
                         <div className="price"> {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBook.price)} </div>
                     </div>
                     <span className="order-counter">
-                    <Button className="counter" type="text" onClick={() => handleDecrement()}>-</Button>
-                    <Input defaultValue={1} value={count} style={{ width: "20px", height: "20px", borderRadius: "3px", padding: "0", textAlign: "center" }} />
-                    <Button className="counter" type="text" onClick={() => handleIncrement()}>+</Button>
-                </span>
+                        <Button className="counter" type="text" onClick={() => handleDecrement()}>-</Button>
+                        <Input defaultValue={1} value={count} style={{ width: "20px", height: "20px", borderRadius: "3px", padding: "0", textAlign: "center" }} />
+                        <Button className="counter" type="text" onClick={() => handleIncrement()}>+</Button>
+                    </span>
                     <div className="order-info">
                         <Button className="add-btn" htmlType={"submit"} onClick={() => onClick(currentBook.id, count)}>
                             Thêm vào giỏ hàng
