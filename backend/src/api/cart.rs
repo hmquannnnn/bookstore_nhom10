@@ -4,10 +4,15 @@ use actix_web::{
 };
 use futures_util::future::join;
 use sqlx::MySql;
+use tokio::join;
 
 use crate::{
     header::JwtTokenHeader,
-    repository::{auth_user, order::{Order, insert_order}},
+    repository::{
+        auth_user,
+        book::take_price,
+        order::{insert_order, Order},
+    },
     util::types::{AppError, AppResult, AppState, Message},
 };
 
@@ -33,11 +38,7 @@ pub async fn get_cart(
     let email = &jwt_header.email;
     let pool = &app_state.pool;
     let var_name = sqlx::query_as!(Cart, r#"select * from cart where user_email = ?"#, email);
-    let fut_all = join(
-        auth_user(&jwt_header, pool),
-        var_name.fetch_all(pool),
-    )
-    .await;
+    let fut_all = join(auth_user(&jwt_header, pool), var_name.fetch_all(pool)).await;
 
     let auth = fut_all.0?;
     let carts = fut_all.1.map_err(|_| AppError::FailToFetch)?;
@@ -92,22 +93,35 @@ pub async fn put_cart(
     let cart = &data.0;
     let pool = &app_state.pool;
 
-    let auth = auth_user(&jwt_header, pool).await?;
-    
+    let books_id = vec![cart.book_id.clone()];
+
+    let fut_all = join!(auth_user(&jwt_header, pool), take_price(&books_id, pool));
+    let auth = fut_all.0.map_err(actix_web::error::ErrorNotFound)?;
+    let price = fut_all.1.map_err(actix_web::error::ErrorNotFound)?;
+
+    let price_each = price
+        .get(0)
+        .ok_or(actix_web::error::ErrorNotFound("can't find book price"))?
+        .price_each;
+
     match auth {
         true => {
             sqlx::query!(
-                "insert into cart(user_email, book_id, quantity_ordered) values(?, ?, ?)",
+                "insert into cart(user_email, book_id, price_each,quantity_ordered) values(?, ?, ?, ?)",
                 jwt_header.email,
                 cart.book_id,
+                price_each,
                 cart.quantity_ordered
             )
             .execute(pool)
             .await
             .map_err(actix_web::error::ErrorNotFound)?;
-            Ok(Json(Message { message: "update success", payload: None }))
+            Ok(Json(Message {
+                message: "update success",
+                payload: None,
+            }))
         }
-        false => Err(actix_web::error::ErrorUnauthorized("fail to authorized"))
+        false => Err(actix_web::error::ErrorUnauthorized("fail to authorized")),
     }
 }
 
@@ -142,26 +156,25 @@ pub async fn patch_cart(
     }
 }
 
-
 #[patch("/api/cart/order")]
 pub async fn order_cart(
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
-) 
--> actix_web::Result<Json<Message<Order>>> {
-// -> actix_web::Result<Json<Message<String>>> {
+) -> actix_web::Result<Json<Message<Order>>> {
+    // -> actix_web::Result<Json<Message<String>>> {
     let user_email = jwt_header.email;
     let pool = &app_state.pool;
 
-
-    let carts = sqlx::query_as!(Cart,
-    r#"select * from cart where user_email = ?"#
-    , user_email)
-        .fetch_all(pool)
-        .await
-        .map_err(actix_web::error::ErrorGone)?;
+    let carts = sqlx::query_as!(
+        Cart,
+        r#"select * from cart where user_email = ?"#,
+        user_email
+    )
+    .fetch_all(pool)
+    .await
+    .map_err(actix_web::error::ErrorGone)?;
     if carts.len() == 0 {
-        return Ok(Json(Message{
+        return Ok(Json(Message {
             message: "cart is empty",
             payload: None,
         }));
@@ -172,7 +185,7 @@ pub async fn order_cart(
     // let books_price = take_price(&books_id, pool)
     //     .await
     //     .map_err(actix_web::error::ErrorNotFound)?;
-    
+
     let new_order = insert_order(pool, &user_email)
         .await
         .map_err(actix_web::error::ErrorInternalServerError)?;
@@ -183,27 +196,26 @@ pub async fn order_cart(
 
     let order_id = &new_order.id;
 
-    let mut query_builder: sqlx::QueryBuilder<'_, MySql> =
-    sqlx::QueryBuilder::new("insert into orderDetail(order_id, book_id, price_each, quantity_ordered) ");
+    let mut query_builder: sqlx::QueryBuilder<'_, MySql> = sqlx::QueryBuilder::new(
+        "insert into orderDetail(order_id, book_id, price_each, quantity_ordered) ",
+    );
 
-    // insert card 
+    // insert card
     query_builder.push_values(carts, |mut q, cart| {
-        q
-        .push(order_id)
-        .push(cart.book_id)
-        .push(cart.price_each)
-        .push(cart.quantity_ordered);
+        q.push(order_id)
+            .push(cart.book_id)
+            .push(cart.price_each)
+            .push(cart.quantity_ordered);
     });
 
-    query_builder.build()
+    query_builder
+        .build()
         .execute(pool)
         .await
         .map_err(actix_web::error::ErrorBadRequest)?;
 
-    Ok(Json(Message{
+    Ok(Json(Message {
         message: "update success",
-        payload: Some(new_order)
+        payload: Some(new_order),
     }))
 }
-
-
