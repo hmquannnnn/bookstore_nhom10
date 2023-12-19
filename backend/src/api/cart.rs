@@ -21,6 +21,8 @@ pub struct Cart {
     user_email: String,
     book_id: String,
     price_each: f32,
+    title: String,
+    front_page_url: Option<String>,
     quantity_ordered: i64,
 }
 
@@ -37,7 +39,13 @@ pub async fn get_cart(
 ) -> AppResult<Json<Vec<Cart>>> {
     let email = &jwt_header.email;
     let pool = &app_state.pool;
-    let var_name = sqlx::query_as!(Cart, r#"select * from cart where user_email = ?"#, email);
+    let var_name = sqlx::query_as!(Cart, 
+    r#"select * from cart
+        natural join (
+            select id book_id, title, front_page_url from book
+        ) book 
+        where user_email = ?"#
+    , email);
     let fut_all = join(auth_user(&jwt_header, pool), var_name.fetch_all(pool)).await;
 
     let auth = fut_all.0?;

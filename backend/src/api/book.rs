@@ -42,6 +42,20 @@ pub async fn get_book(
     Ok(Json(book))
 }
 
+#[get("/api/books")]
+pub async fn get_books(
+    query: Json<Vec<String>>,
+    app_state: actix_web::web::Data<AppState>,
+) -> AppResult<impl Responder> {
+    let book_id = &query.0;
+    let pool = &app_state.pool;
+
+    let book = book::select_books(book_id, pool)
+        .await
+        .map_err(|_| AppError::FailToFetch)?;
+    Ok(Json(book))
+}
+
 #[derive(serde::Deserialize)]
 pub struct BookListInfo {
     pub start: i32,
