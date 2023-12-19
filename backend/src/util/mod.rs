@@ -167,7 +167,7 @@ impl Converter for JsonMapConverter {
 // }
 
 pub fn to_image_url(app_state: &web::Data<AppState>, id: &String) -> String {
-    format!("{}/image?id={}", app_state.base_url, id)
+    format!("{}/api/image?id={}", app_state.base_url, id)
 }
 // type AppConverter<T> = Converter<actix_web::Result<T>>;
 //

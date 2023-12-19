@@ -6,9 +6,8 @@ mod middleware;
 mod repository;
 mod util;
 use actix_cors::Cors;
-use actix_files as fs;
 use actix_web::{web, App, HttpServer};
-use api::book::patch_book_image;
+use api::book::{patch_book_image, get_books};
 use api::cart::delete_cart;
 use api::{
     assets,
@@ -20,9 +19,8 @@ use api::{
     },
     cart::{get_cart, order_cart, patch_cart, put_cart},
     genre::get_genres,
-    handler,
-    image::{delete_image, get_image, put_image},
     index,
+    image::{delete_image, get_image, put_image},
     order::{cancel_order, get_order, post_order},
     update,
     user::{
@@ -31,7 +29,6 @@ use api::{
     },
 };
 
-use middleware::SayHi;
 use sqlx::mysql::MySqlPoolOptions;
 use util::types::AppState;
 
@@ -86,22 +83,23 @@ async fn main() -> std::io::Result<()> {
             // .wrap(Logger::new("%a %{User-Agent}i"))
             .app_data(web::Data::new(app_state.clone()))
             // .service(fs::Files::new("/static", "./dist").use_last_modified(true))
-            .service(index)
             .service(assets)
-            .service(web::resource("/dang-nhap").to(handler))
-            .service(web::resource("/dang-ky").to(handler))
-            .service(web::resource("/gioi-thieu").to(handler))
-            .service(web::resource("/gio-hang").to(handler))
-            .service(web::resource("/admin/books").to(handler))
-            .service(web::resource("/admin/users").to(handler))
-            .service(web::resource("/admin/orders").to(handler))
-            .service(web::resource("/doi-so-dien-thoai").to(handler))
-            .service(web::resource("/doi-mat-khau").to(handler))
-            .service(web::resource("/thong-tin-sach").to(handler))
+            .service(web::resource("/").to(index))
+            .service(web::resource("/dang-nhap").to(index))
+            .service(web::resource("/dang-ky").to(index))
+            .service(web::resource("/gioi-thieu").to(index))
+            .service(web::resource("/gio-hang").to(index))
+            .service(web::resource("/admin/books").to(index))
+            .service(web::resource("/admin/users").to(index))
+            .service(web::resource("/admin/orders").to(index))
+            .service(web::resource("/doi-so-dien-thoai").to(index))
+            .service(web::resource("/doi-mat-khau").to(index))
+            .service(web::resource("/thong-tin-sach").to(index))
             .service(get_image)
             .service(put_image)
             .service(delete_image)
             .service(get_book)
+            .service(get_books)
             .service(list_book)
             .service(user_login)
             .service(register_user)

@@ -40,6 +40,31 @@ pub struct Book {
 //     pub back_page_url: Option<String>,
 //     pub front_page_url: Option<String>
 
+
+pub async fn select_books(ids: &Vec<String>, pool: &MySqlPool) -> sqlx::Result<Book> {
+    let mut query_builder: QueryBuilder<'_, MySql> = QueryBuilder::new(
+        r#"select book.*, author.name author_name, book_genre.genres from book
+        left join author
+        on book.author_id = author.id
+        left join (
+        select book_id, concat('[',group_concat(genre_id),']') genres 
+        from book_genre
+        group by book_id
+        ) book_genre
+        on book_genre.book_id = book.id
+        where book.id in "#);
+   
+    query_builder.push_tuples(ids, |mut q, id| {
+        q.push(id);
+    });
+    
+
+    let book = sqlx::query_as::<_, Book>(query_builder.sql())
+        .fetch_one(pool)
+    .await?;
+    Ok(book)
+}
+
 pub async fn select_book(id: &String, pool: &MySqlPool) -> sqlx::Result<Book> {
     let book = sqlx::query_as!(Book, 
         r#"select book.*, author.name author_name, book_genre.genres from book

@@ -14,6 +14,7 @@ pub mod user;
 pub mod genre;
 pub mod alias;
 pub mod order;
+pub mod cart;
 
 pub async fn auth_user(user_auth: &JwtTokenHeader, pool: &MySqlPool) -> Result<bool, AppError> {
     let user = sqlx::query!(

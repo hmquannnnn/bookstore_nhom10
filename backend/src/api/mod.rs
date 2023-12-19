@@ -22,7 +22,18 @@ pub mod payment;
 pub mod order;
 
 
-#[get("/")]
+// #[get("/")]
+// pub async fn index() -> Result<fs::NamedFile, Error>{
+//     let path: std::path::PathBuf = ["./dist/", "index.html"].iter().collect();
+//     let file = fs::NamedFile::open(path)?;
+//     Ok(file
+//         .use_last_modified(true)
+//         .set_content_disposition(ContentDisposition {
+//             disposition: DispositionType::Inline,
+//             parameters: vec![],
+//         }))
+// }
+
 pub async fn index() -> Result<fs::NamedFile, Error>{
     let path: std::path::PathBuf = ["./dist/", "index.html"].iter().collect();
     let file = fs::NamedFile::open(path)?;
@@ -33,34 +44,6 @@ pub async fn index() -> Result<fs::NamedFile, Error>{
             parameters: vec![],
         }))
 }
-
-pub async fn handler() -> Result<fs::NamedFile, Error>{
-    let path: std::path::PathBuf = ["./dist/", "index.html"].iter().collect();
-    let file = fs::NamedFile::open(path)?;
-    Ok(file
-        .use_last_modified(true)
-        .set_content_disposition(ContentDisposition {
-            disposition: DispositionType::Inline,
-            parameters: vec![],
-        }))
-}
-
-#[get("/home/{filename:.*}")]
-async fn content(path: Path<String>) -> Result<fs::NamedFile, Error> {
-    let path = path.into_inner();
-    let path: std::path::PathBuf = ["./dist/", &path].iter().collect();
-    let file = fs::NamedFile::open(path)?;
-    Ok(file
-        .use_last_modified(true)
-        .set_content_disposition(ContentDisposition {
-            disposition: DispositionType::Attachment,
-            parameters: vec![],
-        }))
-}
-
-
-
-
 
 #[get("/assets/{filename:.*}")]
 async fn assets(path: Path<String>) -> Result<fs::NamedFile, Error> {
