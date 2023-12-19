@@ -39,13 +39,15 @@ pub async fn get_cart(
 ) -> AppResult<Json<Vec<Cart>>> {
     let email = &jwt_header.email;
     let pool = &app_state.pool;
-    let var_name = sqlx::query_as!(Cart, 
-    r#"select * from cart
+    let var_name = sqlx::query_as!(
+        Cart,
+        r#"select * from cart
         natural join (
             select id book_id, title, front_page_url from book
         ) book 
-        where user_email = ?"#
-    , email);
+        where user_email = ?"#,
+        email
+    );
     let fut_all = join(auth_user(&jwt_header, pool), var_name.fetch_all(pool)).await;
 
     let auth = fut_all.0?;
@@ -160,7 +162,9 @@ pub async fn patch_cart(
                 payload: None,
             }))
         }
-        false => Err(actix_web::error::ErrorUnauthorized(AppError::FailAuthenticate)),
+        false => Err(actix_web::error::ErrorUnauthorized(
+            AppError::FailAuthenticate,
+        )),
     }
 }
 
@@ -173,14 +177,10 @@ pub async fn order_cart(
     let user_email = jwt_header.email;
     let pool = &app_state.pool;
 
-    let carts = sqlx::query_as!(
-        Cart,
-        r#"select * from cart where user_email = ?"#,
-        user_email
-    )
-    .fetch_all(pool)
-    .await
-    .map_err(actix_web::error::ErrorGone)?;
+    let carts = sqlx::query!(r#"select * from cart where user_email = ?"#, user_email)
+        .fetch_all(pool)
+        .await
+        .map_err(actix_web::error::ErrorGone)?;
     if carts.len() == 0 {
         return Ok(Json(Message {
             message: "cart is empty",
