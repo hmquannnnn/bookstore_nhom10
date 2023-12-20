@@ -3,12 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { callGetCart } from "../../../services/api/cartAPI";
 import { getCartAction } from "../../../redux/reducer/cartSlice";
 import { Col, Row } from "antd";
-// import { Row, Column } from "antd";
+import { useNavigate } from "react-router-dom";
+import path from "../../../routes/path";
+import "./FilledCart.scss"
 
 
 
 const FilledCart = () => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const user = useSelector(state => state.account.user);
 
     const initFilledCart = async () => {
@@ -56,7 +59,7 @@ const FilledCart = () => {
                     <Row className="order-info">
                         <h4>Tổng tiền</h4>
                         <p className="amount">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(cart.amount)}</p>
-                        <button type="submit" style={{ padding: "5px 30px" }}>Thanh toán</button>
+                        <button className="order-btn" type="submit" onClick={() => navigate(path.payment)} >Mua hàng</button>
                     </Row>
                 </Col>
             </Row>

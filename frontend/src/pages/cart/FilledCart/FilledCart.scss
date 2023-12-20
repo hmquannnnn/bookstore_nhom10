@@ -1,0 +1,18 @@
+$red-btn-color: rgb(255, 66, 78);
+
+.filled-cart-container {
+  background-color: #efefef;
+  .right {
+    .order-info {
+      .order-btn {
+        width: 100%;
+        background-color: $red-btn-color;
+        border: none;
+        border-radius: 4px;
+        font-size: 18px;
+        color: white;
+        padding: 10px 0;
+      }
+    }
+  }
+}

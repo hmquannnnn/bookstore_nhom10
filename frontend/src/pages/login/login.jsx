@@ -11,6 +11,8 @@ import "./login.scss"
 import { doLoginAction } from "../../redux/reducer/accountSlice";
 import { useState } from "react";
 import { unstable_renderSubtreeIntoContainer } from "react-dom";
+import { callGetCart } from "../../services/api/cartAPI";
+import { getCartAction } from "../../redux/reducer/cartSlice";
 
 
 
@@ -20,21 +22,27 @@ const Login = () => {
     const navigate = useNavigate();
     const onFinish = async (values) => {
         const { email, password } = values;
-         const res = await callLogin(email, password);
+        const res = await callLogin(email, password);
         // console.log(">>>res: ",res);
         //  console.log(res.access_token);
-         if (res?.user?.email) {
+        if (res?.user?.email) {
             console.log(">>>res: ", res);
+
             dispatch(doLoginAction(res));
             localStorage.setItem("token", res.token);
+            // const cartRes = await callGetCart();
+            // if (cartRes) {
+            //     dispatch(getCartAction(cartRes));
             const role = res.user.role;
-            if(role === "admin") {
+            if (role === "admin") {
                 navigate("/admin");
             } else {
                 navigate('/')
             }
             message.success('Đăng nhập thành công!');
-            
+
+
+
         } else {
             notification.error({
                 message: "Sai email hoặc mật khẩu",
