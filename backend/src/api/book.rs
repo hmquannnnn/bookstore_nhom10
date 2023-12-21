@@ -56,12 +56,17 @@ pub async fn get_books(
     Ok(Json(book))
 }
 
+#[derive(serde::Deserialize)]
+pub struct SearchTitle {
+    pub value: String,
+}
+
 #[get("/api/search/book")]
 pub async fn search_book(
-    query: Query<String>,
+    query: Query<SearchTitle>,
     app_state: web::Data<AppState>,
 ) -> actix_web::Result<Json<Vec<BookSearch>>> {
-    let books = book::search_book(&query.0, &app_state.pool) 
+    let books = book::search_book(&query.value, &app_state.pool) 
         .await
         .map_err(actix_web::error::ErrorNotFound)?;
     Ok(Json(books))
