@@ -43,10 +43,10 @@ const BookDetails = () => {
         console.log(">>>check count: ", count);
     }
     const handleDecrement = () => {
-        if (count > 0) {
+        if (count > 1) {
             setCount(count - 1);
         } else {
-            setCount(0);
+            setCount(1);
         }
     }
 
