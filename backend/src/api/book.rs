@@ -1,6 +1,6 @@
 use actix_web::{
     get, patch,
-    web::{Bytes, Json, Query},
+    web::{Bytes, Json, Query, self},
     Responder, Result as ActixResult,
 };
 use futures_util::future::join;
@@ -10,7 +10,7 @@ use crate::{
     header::JwtTokenHeader,
     repository::{
         alias::book_genres_filter_full,
-        book::{self, list_books_sort, list_books_sort_asc, select_book, Book},
+        book::{self, list_books_sort, list_books_sort_asc, select_book, Book, BookSearch},
         image::insert_image,
     },
     update_field,
@@ -54,6 +54,17 @@ pub async fn get_books(
         .await
         .map_err(|_| AppError::FailToFetch)?;
     Ok(Json(book))
+}
+
+#[get("/api/search/book")]
+pub async fn search_book(
+    query: Query<String>,
+    app_state: web::Data<AppState>,
+) -> actix_web::Result<Json<Vec<BookSearch>>> {
+    let books = book::search_book(&query.0, &app_state.pool) 
+        .await
+        .map_err(actix_web::error::ErrorNotFound)?;
+    Ok(Json(books))
 }
 
 #[derive(serde::Deserialize)]

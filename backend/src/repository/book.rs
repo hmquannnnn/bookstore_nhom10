@@ -82,6 +82,23 @@ pub async fn select_book(id: &String, pool: &MySqlPool) -> sqlx::Result<Book> {
     Ok(book)
 }
 
+#[derive(serde::Serialize)]
+pub struct BookSearch {
+    pub id: String,
+    pub title: String,
+    pub back_page_url: Option<String>,
+    pub front_page_url: Option<String>
+}
+
+pub async fn search_book(title: &String, pool: &MySqlPool) -> sqlx::Result<Vec<BookSearch>> {
+    let title = format!("%{title}%");
+    let book = sqlx::query_as!(BookSearch, 
+        r#"select id, title, back_page_url, front_page_url from book
+            where match(title) against (? in boolean mode)"#, title)
+        .fetch_all(pool)
+    .await?;
+    Ok(book)
+}
 pub async fn list_books(start: i32, length: i32, pool: &MySqlPool) -> sqlx::Result<Vec<Book>> {
     let book = sqlx::query_as!(Book,
     r#"select book.*, author.name author_name, book_genre.genres from book
