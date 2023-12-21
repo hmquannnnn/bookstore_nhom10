@@ -7,7 +7,7 @@ mod repository;
 mod util;
 use actix_cors::Cors;
 use actix_web::{web, App, HttpServer};
-use api::book::{patch_book_image, get_books, search_book};
+use api::book::{patch_book_image, get_books, search_book, search_book_by_author};
 use api::cart::delete_cart;
 use api::{
     assets,
@@ -101,6 +101,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_book)
             .service(get_books)
             .service(search_book)
+            .service(search_book_by_author)
             .service(list_book)
             .service(user_login)
             .service(register_user)

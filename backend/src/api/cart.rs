@@ -1,6 +1,6 @@
 use actix_web::{
     delete, get, patch, put,
-    web::{self, Json},
+    web::{self, Json, Query},
 };
 use futures_util::future::join;
 use sqlx::MySql;
@@ -59,14 +59,14 @@ pub async fn get_cart(
     }
 }
 
-#[derive(serde::Deserialize, serde::Serialize)]
+#[derive(serde::Deserialize)]
 pub struct CartDeleteType {
     book_id: String,
 }
 
 #[delete("/api/cart")]
 pub async fn delete_cart(
-    data: Json<CartDeleteType>,
+    data: Query<CartDeleteType>,
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
 ) -> AppResult<Json<Message<()>>> {

@@ -10,7 +10,7 @@ use crate::{
     header::JwtTokenHeader,
     repository::{
         alias::book_genres_filter_full,
-        book::{self, list_books_sort, list_books_sort_asc, select_book, Book, BookSearch},
+        book::{self, list_books_sort, list_books_sort_asc, select_book, Book, BookSearch, BookSearchAuthor},
         image::insert_image,
     },
     update_field,
@@ -57,16 +57,28 @@ pub async fn get_books(
 }
 
 #[derive(serde::Deserialize)]
-pub struct SearchTitle {
+pub struct SearchValue {
     pub value: String,
 }
 
 #[get("/api/search/book")]
 pub async fn search_book(
-    query: Query<SearchTitle>,
+    query: Query<SearchValue>,
     app_state: web::Data<AppState>,
 ) -> actix_web::Result<Json<Vec<BookSearch>>> {
     let books = book::search_book(&query.value, &app_state.pool) 
+        .await
+        .map_err(actix_web::error::ErrorNotFound)?;
+    Ok(Json(books))
+}
+
+
+#[get("/api/search/author/book")]
+pub async fn search_book_by_author(
+    query: Query<SearchValue>,
+    app_state: web::Data<AppState>,
+) -> actix_web::Result<Json<Vec<BookSearchAuthor>>> {
+    let books = book::search_author_book(&query.value, &app_state.pool)
         .await
         .map_err(actix_web::error::ErrorNotFound)?;
     Ok(Json(books))
