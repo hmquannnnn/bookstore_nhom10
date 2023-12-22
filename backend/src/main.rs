@@ -7,7 +7,7 @@ mod repository;
 mod util;
 use actix_cors::Cors;
 use actix_web::{web, App, HttpServer};
-use api::book::{patch_book_image, get_books, search_book, search_book_by_author};
+use api::book::{get_books, patch_book_image, search_book, search_book_by_author};
 use api::cart::delete_cart;
 use api::{
     assets,
@@ -19,8 +19,8 @@ use api::{
     },
     cart::{get_cart, order_cart, patch_cart, put_cart},
     genre::get_genres,
-    index,
     image::{delete_image, get_image, put_image},
+    index,
     order::{cancel_order, get_order, post_order},
     update,
     user::{

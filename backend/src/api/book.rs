@@ -1,6 +1,6 @@
 use actix_web::{
     get, patch,
-    web::{Bytes, Json, Query, self},
+    web::{self, Bytes, Json, Query},
     Responder, Result as ActixResult,
 };
 use futures_util::future::join;
@@ -10,7 +10,10 @@ use crate::{
     header::JwtTokenHeader,
     repository::{
         alias::book_genres_filter_full,
-        book::{self, list_books_sort, list_books_sort_asc, select_book, Book, BookSearch, BookSearchAuthor},
+        book::{
+            self, list_books_sort, list_books_sort_asc, select_book, Book, BookSearch,
+            BookSearchAuthor,
+        },
         image::insert_image,
     },
     update_field,
@@ -66,12 +69,11 @@ pub async fn search_book(
     query: Query<SearchValue>,
     app_state: web::Data<AppState>,
 ) -> actix_web::Result<Json<Vec<BookSearch>>> {
-    let books = book::search_book(&query.value, &app_state.pool) 
+    let books = book::search_book(&query.value, &app_state.pool)
         .await
         .map_err(actix_web::error::ErrorNotFound)?;
     Ok(Json(books))
 }
-
 
 #[get("/api/search/author/book")]
 pub async fn search_book_by_author(
@@ -330,9 +332,10 @@ pub async fn fetch_filter_price(
     app_state: actix_web::web::Data<AppState>,
 ) -> ActixResult<Json<Vec<Book>>> {
     let pool = &app_state.pool;
-    
-    let books = sqlx::query_as!(Book,
-    r#"select book.*, book_genre.genres, author.name author_name from book
+
+    let books = sqlx::query_as!(
+        Book,
+        r#"select book.*, book_genre.genres, author.name author_name from book
         left join author
         on author.id = book.author_id
         left join (
@@ -340,8 +343,11 @@ pub async fn fetch_filter_price(
         from book_genre
         group by book_id) book_genre
         on book.id = book_genre.id
-        where price > ? and price < ?"#, bound.start, bound.end
-    ).fetch_all(pool)
+        where price > ? and price < ?"#,
+        bound.start,
+        bound.end
+    )
+    .fetch_all(pool)
     .await
     .map_err(actix_web::error::ErrorNotFound)?;
     Ok(Json(books))
@@ -350,7 +356,7 @@ pub async fn fetch_filter_price(
 #[derive(serde::Deserialize)]
 pub struct GenrePrice {
     pub(crate) genres_id: Vec<i32>,
-    pub(crate) bound: Bound<f64>
+    pub(crate) bound: Bound<f64>,
 }
 
 #[get("/api/book/filter/price/genre")]
@@ -375,13 +381,11 @@ pub async fn fetch_filter_price_genre(
         .fetch_all(pool)
         .await
         .map_err(actix_web::error::ErrorNotFound)?;
-    
+
     let books: Vec<Book> = books
         .iter()
         .filter(|book| book.price > bound.start && book.price < bound.end)
         .map(|book| book.clone())
         .collect();
     Ok(Json(books))
-} 
-
-
+}
