@@ -2,15 +2,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { callGetBook } from "../../services/api/bookAPI.jsx";
 // import {getCurrentBookAction} from "../../redux/reducer/bookSlice.js";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import "./BookDetails.scss"
-import { Button, Col, Input, Modal, Row } from "antd";
+import { Button, Col, Divider, Input, Modal, Rate, Row } from "antd";
 import { callAddBookIntoCart } from "../../services/api/cartAPI.jsx";
 import path from "../../routes/path.jsx";
 import { addBookIntoCartAction } from "../../redux/reducer/cartSlice.jsx";
 import { getCurrentBookAction } from "../../redux/reducer/bookSlice.jsx";
 
 const BookDetails = () => {
+    const navigate = useNavigate();
     const [count, setCount] = useState(1);
     const dispatch = useDispatch();
     const [searchParams] = useSearchParams();
@@ -19,9 +20,7 @@ const BookDetails = () => {
     const isAuthenticated = useSelector(state => state.account.isAuthenticated)
     const getBook = async () => {
         const res = await callGetBook(id);
-        // console.log(">>> response: ", res);
         if (res) {
-            // console.log(">>>call success", res);
             dispatch(getCurrentBookAction(res));
         }
     }
@@ -30,12 +29,15 @@ const BookDetails = () => {
     }, []);
     const currentBook = useSelector(state => state.books.currentBook);
     const onClick = async (bookId, count) => {
-
-        const res = await callAddBookIntoCart(bookId, count);
-        console.log(">>>add to cart: ", res);
-        if (res) {
-            // console.log("success");
-            dispatch(addBookIntoCartAction({ count, bookId }));
+        if (!isAuthenticated) {
+            showModal();
+        } else {
+            const res = await callAddBookIntoCart(bookId, count);
+            console.log(">>>add to cart: ", res);
+            if (res) {
+                // console.log("success");
+                dispatch(addBookIntoCartAction({ count, bookId }));
+            }
         }
     }
     const handleIncrement = () => {
@@ -49,7 +51,17 @@ const BookDetails = () => {
             setCount(1);
         }
     }
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    const handleOk = () => {
+        setIsModalOpen(false);
+        navigate(path.logIn);
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
     return (
         <>
             <div className="book-details-container">
@@ -64,6 +76,17 @@ const BookDetails = () => {
                         <div className="book-info" >
                             <div className="author">Tác giả: {currentBook.author_name}</div>
                             <div className="title">{currentBook.title}</div>
+                            <Row style={{ height: "20px" }}>
+                                <Row className="rating">
+                                    <p>{currentBook.rating}</p>
+                                    <Rate className="star" value={Math.floor(currentBook.rating)} disabled style={{ fontSize: "12px", position: "relative", left: "5px" }} />
+                                </Row>
+                                <Divider type="vertical" />
+                                <Row className="purchased">
+                                    <p>Đã bán: {currentBook.number_of_purchases}</p>
+
+                                </Row>
+                            </Row>
                             <div className="price"> {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBook.price)} </div>
                         </div>
 
@@ -72,7 +95,7 @@ const BookDetails = () => {
                                 <h5>Số lượng</h5>
                                 <span className="order-counter">
                                     <Button className="counter" type="text" onClick={() => handleDecrement()}>-</Button>
-                                    <Input defaultValue={1} value={count} style={{ width: "20px", height: "20px", borderRadius: "3px", padding: "0", textAlign: "center" }} />
+                                    <Input defaultValue={1} value={count} style={{ borderRadius: "3px", padding: "0", textAlign: "center" }} />
                                     <Button className="counter" type="text" onClick={() => handleIncrement()}>+</Button>
                                 </span>
                             </div>
@@ -80,6 +103,9 @@ const BookDetails = () => {
                             <Button className="add-btn" htmlType={"submit"} onClick={() => onClick(currentBook.id, count)}>
                                 Thêm vào giỏ hàng
                             </Button>
+                            <Modal title="Bạn chưa đăng nhập" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText={"Đăng nhập"} cancelText={"Hủy"}>
+                                <p>Vui lòng đăng nhập để thêm sách vào giỏ hàng</p>
+                            </Modal>
                         </div>
                     </Col>
                     <div className="description">

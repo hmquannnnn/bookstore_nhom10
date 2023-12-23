@@ -260,7 +260,7 @@ const Home = () => {
                                     <span style={{ fontSize: "12px" }}>
                                         <span className="book-rating">
                                             {book.rating}
-                                            <Rate value={Math.floor(book.rating)} disabled style={{ fontSize: "12px" }} />
+                                            <Rate value={Math.floor(book.rating)} disabled style={{ fontSize: "12px", position: "relative", left: "5px" }} />
                                         </span>
                                         <Divider type={"vertical"} style={{ height: "20px", margin: "0 6px" }} />
                                         <span className="book-purchased" style={{ fontSize: "12px" }}>
