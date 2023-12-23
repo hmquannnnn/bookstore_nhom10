@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { callDeleteBook, callGetCart } from "../../../services/api/cartAPI";
-import { getCartAction } from "../../../redux/reducer/cartSlice";
+import { callChangeQuantity, callDeleteBook, callGetCart } from "../../../services/api/cartAPI";
+import { decreaseQuantityOrderedAction, deleteBookAction, getCartAction, increaseQuantityOrderedAction } from "../../../redux/reducer/cartSlice";
 import { Col, Divider, Modal, Row } from "antd";
 import { useNavigate } from "react-router-dom";
 import path from "../../../routes/path";
@@ -38,21 +38,41 @@ const FilledCart = () => {
         }
     }
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const showModal = () => {
+    const [selectedBookId, setSelectedBookId] = useState(null);
+
+    const showModal = (bookId) => {
+        setSelectedBookId(bookId);
         setIsModalOpen(true);
+    };
+
+    const handleCancel = async () => {
+        setIsModalOpen(false);
+        if (selectedBookId) {
+            const res = await callDeleteBook(selectedBookId);
+            if (res) {
+                console.log("ok", res);
+                dispatch(deleteBookAction(selectedBookId));
+            }
+        }
     };
     const handleOk = () => {
         setIsModalOpen(false);
     };
-    const handleCancel = async (bookId) => {
-        setIsModalOpen(false);
-        console.log(typeof (bookId));
-        const res = await callDeleteBook(bookId);
-        console.log(">>>check fetch: ", res, bookId);
+    const handleDecrement = async (bookId, quantityOrdered) => {
+        if (quantityOrdered == 1) return;
+        const res = await callChangeQuantity(bookId, quantityOrdered - 1);
+        console.log(">>>check api: ", res, bookId);
         if (res) {
-            console.log("ok");
+            dispatch(decreaseQuantityOrderedAction(bookId));
         }
-    };
+    }
+    const handleIncrement = async (bookId, quantityOrdered) => {
+        const res = await callChangeQuantity(bookId, quantityOrdered + 1);
+        console.log(">>>check api: ", res, bookId);
+        if (res) {
+            dispatch(increaseQuantityOrderedAction(bookId));
+        }
+    }
     return (
         <>
 
@@ -80,17 +100,17 @@ const FilledCart = () => {
                                 </Col>
                                 <Col md={4}>
                                     <Row className="quantity-ordered center">
-                                        <span className="fluctuation minus">-</span>
+                                        <span className="fluctuation minus" onClick={() => handleDecrement(book.book_id, book.quantity_ordered)}>-</span>
                                         <Divider type="vertical" style={{ marginRight: "13px" }} />
                                         {book.quantity_ordered}
                                         <Divider type="vertical" style={{ marginLeft: "13px" }} />
-                                        <span className="fluctuation">+</span>
+                                        <span className="fluctuation" onClick={() => handleIncrement(book.book_id, book.quantity_ordered)}>+</span>
                                     </Row>
                                 </Col>
                                 <Col md={4}>
                                     <div className="amount center">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(book.price_each * book.quantity_ordered)}</div>
                                 </Col>
-                                <Col md={1} className="delete" onClick={showModal}><FaRegTrashAlt /></Col>
+                                <Col md={1} className="delete" onClick={() => showModal(book.book_id)}><FaRegTrashAlt /></Col>
                                 <Modal title="Xóa sản phẩm" open={isModalOpen} onOk={handleOk} onCancel={() => handleCancel(book.book_id)} cancelText={"Xác Nhận"} okText={"Hủy"}>
                                     <p>Bạn có chắc chắn muốn xóa sản phẩm đang chọn?</p>
                                 </Modal>

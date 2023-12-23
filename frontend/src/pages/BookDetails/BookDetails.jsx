@@ -51,41 +51,47 @@ const BookDetails = () => {
     }
 
     return (
-        <Row className="book-details-page" >
-            <Col md={10} sm={10} xs={24} className="left">
-                <div className="book-image">
-                    <img src={currentBook.front_page_url} alt="" />
-                </div>
-            </Col>
-            <Col md={14} sm={14} xs={24} className="right">
-                <Row>
-                    <div className="book-info" >
-                        <div className="author">Tác giả: {currentBook.author_name}</div>
-                        <div className="title">{currentBook.title}</div>
-                        <div className="price"> {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBook.price)} </div>
-                    </div>
-                    <span className="order-counter">
-                        <Button className="counter" type="text" onClick={() => handleDecrement()}>-</Button>
-                        <Input defaultValue={1} value={count} style={{ width: "20px", height: "20px", borderRadius: "3px", padding: "0", textAlign: "center" }} />
-                        <Button className="counter" type="text" onClick={() => handleIncrement()}>+</Button>
-                    </span>
-                    <div className="order-info">
-                        <Button className="add-btn" htmlType={"submit"} onClick={() => onClick(currentBook.id, count)}>
-                            Thêm vào giỏ hàng
+        <>
+            <div className="book-details-container">
+                <h4 style={{ width: "100%", margin: "0 0 5px 0", fontSize: "20px" }}>Thông tin sách</h4>
+                <Row className="book-details-page" >
+                    <Col md={10} sm={10} xs={24} className="left">
+                        <div className="book-image">
+                            <img src={currentBook.front_page_url} alt="" />
+                        </div>
+                    </Col>
+                    <Col md={13} sm={13} xs={24} className="right">
+                        <div className="book-info" >
+                            <div className="author">Tác giả: {currentBook.author_name}</div>
+                            <div className="title">{currentBook.title}</div>
+                            <div className="price"> {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBook.price)} </div>
+                        </div>
 
-                        </Button>
+                        <div className="order-info">
+                            <div className="quantity-ordered">
+                                <h5>Số lượng</h5>
+                                <span className="order-counter">
+                                    <Button className="counter" type="text" onClick={() => handleDecrement()}>-</Button>
+                                    <Input defaultValue={1} value={count} style={{ width: "20px", height: "20px", borderRadius: "3px", padding: "0", textAlign: "center" }} />
+                                    <Button className="counter" type="text" onClick={() => handleIncrement()}>+</Button>
+                                </span>
+                            </div>
+
+                            <Button className="add-btn" htmlType={"submit"} onClick={() => onClick(currentBook.id, count)}>
+                                Thêm vào giỏ hàng
+                            </Button>
+                        </div>
+                    </Col>
+                    <div className="description">
+                        <h5>Mô tả</h5>
+                        <p>{currentBook.desciption}</p>
 
                     </div>
                 </Row>
-                <Row className="description">
-                    <h4>Mô tả</h4>
-                    {currentBook.desciption};
-                </Row>
+            </div>
 
+        </>
 
-            </Col>
-
-        </Row>
     )
 }
 

@@ -14,15 +14,7 @@ export const callGetCart = () => {
     return instance.get(`${cartURL}`);
 }
 
-export const callQuantityIncrease = (bookId, quantityOrdered) => {
-    const req = {
-        book_id: bookId,
-        quantity_ordered: quantityOrdered,
-    }
-    return instance.patch(`${cartURL}`, req)
-}
-
-export const callQuantityDecrease = (bookId, quantityOrdered) => {
+export const callChangeQuantity = (bookId, quantityOrdered) => {
     const req = {
         book_id: bookId,
         quantity_ordered: quantityOrdered,
@@ -31,11 +23,6 @@ export const callQuantityDecrease = (bookId, quantityOrdered) => {
 }
 
 export const callDeleteBook = (bookId) => {
-    const req = {
-        "user_email": "user@gmail.com",
-        "book_id": bookId
-    }
-    // const req2 = JSON.stringify(req);
-    console.log(req);
-    return instance.delete(`${cartURL}`, req);
+    console.log("check api: ", bookId);
+    return instance.delete(`${cartURL}?book_id=${bookId}`);
 }

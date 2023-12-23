@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { callBooksSortByPriceAsc, callBooksSortByPriceDesc, callBooksSortByPurchased, callBooksSortByRating, callGetBook } from "../../services/api/bookAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { changeTabAction, getBooksAction, getCurrentBookAction } from "../../redux/reducer/bookSlice";
-import "./home.scss";
 import { Link, useNavigate } from "react-router-dom";
 import path from "../../routes/path.jsx";
 
@@ -260,6 +259,7 @@ const Home = () => {
                                     </div>
                                     <span style={{ fontSize: "12px" }}>
                                         <span className="book-rating">
+                                            {book.rating}
                                             <Rate value={Math.floor(book.rating)} disabled style={{ fontSize: "12px" }} />
                                         </span>
                                         <Divider type={"vertical"} style={{ height: "20px", margin: "0 6px" }} />
