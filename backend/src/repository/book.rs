@@ -94,7 +94,6 @@ pub struct BookSearch {
 }
 
 pub async fn search_book(title: &String, pool: &MySqlPool) -> sqlx::Result<Vec<BookSearch>> {
-    let title = format!("+{title}+");
     let book = sqlx::query_as!(
         BookSearch,
         r#"select id, title, desciption, back_page_url, front_page_url from book
