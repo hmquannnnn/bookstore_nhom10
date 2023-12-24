@@ -1,3 +1,4 @@
+import "./Payment.scss"
 const Payment = () => {
     return (
         <>

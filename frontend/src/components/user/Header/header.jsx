@@ -1,6 +1,4 @@
-// import { AiOutlineShoppingCart } from "react-icons/ai";
 import "./header.scss"
-// import { useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai"
 import { Badge, Button, Dropdown, Modal } from "antd"
 import { useEffect, useState } from "react";
@@ -24,9 +22,7 @@ const Header = () => {
         localStorage.clear();
         dispatch(doLogOutAction());
         dispatch(deleteCart());
-        // dispatch(initCart());
-        // setIsLoggedIn(false);
-        // setItems(defaultItems);
+
     }
 
     const defaultItems = [
@@ -96,21 +92,17 @@ const Header = () => {
             <div className="header-container" style={{ marginBottom: "15px" }}>
                 <div className="page-header">
                     <div className="page-header__top">
-
-
                         <div className="page-header__logo">
                             <span className="logo">
                                 <a href="/" >
                                     <p className="brand-name">UETHUVIENSACH</p>
                                 </a>
-
                             </span>
                             <input
                                 className="input-seacrh"
-                                type="text"
+                                type="search"
                                 placeholder="Bạn đọc gì hôm nay"
                             />
-
                         </div>
                     </div>
                     <nav className="page-header__bottom">
@@ -134,7 +126,6 @@ const Header = () => {
                                 cancelText="Hủy"
                             >
                                 <p>Đăng nhập để truy cập giỏ hàng</p>
-
                             </Modal>
                             <Dropdown
                                 menu={{ items }}

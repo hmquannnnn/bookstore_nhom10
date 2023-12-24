@@ -5,8 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeTabAction, getBooksAction, getCurrentBookAction } from "../../redux/reducer/bookSlice";
 import { Link, useNavigate } from "react-router-dom";
 import path from "../../routes/path.jsx";
-
-// import {useSelector} from "react-redux"
 const Home = () => {
     // const user = useSelector(state => state.account.user);
     const tab = useSelector(state => state.books.tab);
