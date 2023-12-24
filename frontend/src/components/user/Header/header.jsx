@@ -99,7 +99,7 @@ const Header = () => {
                                 </a>
                             </span>
                             <input
-                                className="input-seacrh"
+                                className="input-search"
                                 type="search"
                                 placeholder="Bạn đọc gì hôm nay"
                             />
