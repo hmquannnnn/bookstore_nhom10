@@ -15,12 +15,9 @@ import { getCartAction } from "./redux/reducer/cartSlice.jsx";
 export default function App() {
   const isAuthenticated = useSelector(state => state.account.isAuthenticated);
   const dispatch = useDispatch();
-  // if(isAuthenticated) {
-  //
-  // }
   const getAccount = async () => {
     const res = await callFetchAccount();
-    // console.log(">>> check fetchAccount: ", res)
+    console.log(">>> check fetchAccount: ", res)
     if (res) {
       dispatch(doGetAccountAction(res));
     }
@@ -37,13 +34,7 @@ export default function App() {
     getAccount();
     getCartInfo();
   }, [])
-
-
-
-
-
   return (
-
     <Routes />
   )
 }

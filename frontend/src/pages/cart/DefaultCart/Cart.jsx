@@ -1,8 +1,8 @@
-import {useDispatch, useSelector} from "react-redux";
-import FilledCart from "./FilledCart.jsx";
-import EmptyCart from "./EmptyCart.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import FilledCart from "../FilledCart/FilledCart.jsx";
+import EmptyCart from "../EmptyCart.jsx";
 import "./cart.scss"
-import {getCartAction} from "../../redux/reducer/cartSlice.jsx";
+import { getCartAction } from "../../../redux/reducer/cartSlice.jsx";
 
 const Cart = () => {
     const dispatch = useDispatch();
@@ -16,7 +16,7 @@ const Cart = () => {
                 </div>
                 <main className="cart-main">
                     <div className="cart-container">
-                        {total ? <FilledCart/> : <EmptyCart/>}
+                        {total ? <FilledCart /> : <EmptyCart />}
 
                     </div>
                 </main>

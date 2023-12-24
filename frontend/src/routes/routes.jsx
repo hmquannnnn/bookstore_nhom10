@@ -20,7 +20,8 @@ import ChangePhone from "../pages/EditUser/ChangePhone/ChangePhone";
 import ChangePassword from "../pages/EditUser/ChangePassword/ChangePassword";
 import path from "./path";
 import BookDetails from "../pages/BookDetails/BookDetails";
-import Cart from "../pages/cart/Cart.jsx";
+import Cart from "../pages/cart/DefaultCart/Cart.jsx";
+import Payment from "../pages/payment/Payment.jsx";
 
 const Layout = () => {
     return (
@@ -76,7 +77,11 @@ const Routes = () => {
                 },
                 {
                     path: path.bookDetails,
-                    element: <BookDetails/>
+                    element: <BookDetails />
+                },
+                {
+                    path: path.payment,
+                    element: <Payment />
                 }
             ],
         },

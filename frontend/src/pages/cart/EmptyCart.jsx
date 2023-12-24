@@ -1,5 +1,5 @@
-import "./cart.scss"
-import {useSelector} from "react-redux";
+import "./DefaultCart/cart.scss"
+import { useSelector } from "react-redux";
 
 const EmptyCart = () => {
     return (

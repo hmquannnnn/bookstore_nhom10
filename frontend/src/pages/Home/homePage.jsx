@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { callBooksSortByPriceAsc, callBooksSortByPriceDesc, callBooksSortByPurchased, callBooksSortByRating, callGetBook } from "../../services/api/bookAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { changeTabAction, getBooksAction, getCurrentBookAction } from "../../redux/reducer/bookSlice";
-import "./home.scss";
 import { Link, useNavigate } from "react-router-dom";
 import path from "../../routes/path.jsx";
 
@@ -14,9 +13,10 @@ const Home = () => {
     const page = useSelector(state => state.books.page);
     const dispatch = useDispatch();
     const [isActive, setIsActive] = useState(tab);
-    const [currentPage, setCurrentPage] = useState(page)
+    // const [currentPage, setCurrentPage] = useState(page)
     console.log("check tab now: ", tab);
     const [isHovered, setIsHovered] = useState(false);
+    const [hoveredBookId, setHoveredBookId] = useState(null);
     const [form] = Form.useForm();
     const navigate = useNavigate();
 
@@ -108,11 +108,14 @@ const Home = () => {
     }, [isActive])
     const bookList = useSelector(state => state.books.bookList);
     // console.log(">>>here is bookList: ", bookList);
-    const handleMouseEnter = () => {
-        setIsHovered(true)
+    const handleMouseEnter = (bookId) => {
+        // setIsHovered(true);
+        setHoveredBookId(bookId);
+        console.log(">>>check hover: ", bookId, hoveredBookId);
     }
     const handleMouseLeave = () => {
-        setIsHovered(false)
+        setHoveredBookId(null);
+        // setIsHovered(false);
     }
     const onBookClick = async (bookId) => {
         const res = await callGetBook(bookId);
@@ -243,18 +246,21 @@ const Home = () => {
                     {
                         bookList.map(book => (
                             // <Link to="book-details">
-                            <div className="book-cell" key={book.id} style={{ width: "calc(20% - 9px)", backgroundColor: "white", cursor: "pointer", borderRadius: "4px" }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={() => onBookClick(book.id)}>
+                            <div className="book-cell" key={book.id} style={hoveredBookId === book.id ? { boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)", width: "calc(20% - 9px)", backgroundColor: "white", cursor: "pointer", borderRadius: "4px" } : { width: "calc(20% - 9px)", backgroundColor: "white", cursor: "pointer", borderRadius: "4px" }}
+                                onMouseEnter={() => handleMouseEnter(book.id)} onMouseLeave={handleMouseLeave}
+                                onClick={() => onBookClick(book.id)}>
 
                                 <span style={{ display: "inline" }}>
                                     <div className="thumbnail" >
-                                        <img src={book.front_page_url} alt="" style={{ maxHeight: "250px", display: "block", margin: "auto", objectFit: "contain", backgroundColor: "white", border: "1px solid black" }} />
+                                        <img src={book.front_page_url} alt="" style={{ height: "250px", display: "block", margin: "auto", objectFit: "contain", backgroundColor: "white", border: "1px solid black" }} />
                                     </div>
                                     <div className="book-title" style={{ fontSize: "16px", marginTop: "5px" }}>
                                         {book.title}
                                     </div>
                                     <span style={{ fontSize: "12px" }}>
                                         <span className="book-rating">
-                                            <Rate value={Math.floor(book.rating)} disabled style={{ fontSize: "12px" }} />
+                                            {book.rating}
+                                            <Rate value={Math.floor(book.rating)} disabled style={{ fontSize: "12px", position: "relative", left: "5px" }} />
                                         </span>
                                         <Divider type={"vertical"} style={{ height: "20px", margin: "0 6px" }} />
                                         <span className="book-purchased" style={{ fontSize: "12px" }}>
