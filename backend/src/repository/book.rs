@@ -90,15 +90,15 @@ pub struct BookSearch {
     pub title: String,
     pub back_page_url: Option<String>,
     pub front_page_url: Option<String>,
+    pub desciption: Option<String>,
 }
 
 pub async fn search_book(title: &String, pool: &MySqlPool) -> sqlx::Result<Vec<BookSearch>> {
-    let title = format!("+{title}*");
     let book = sqlx::query_as!(
         BookSearch,
-        r#"select id, title, back_page_url, front_page_url from book
+        r#"select id, title, desciption, back_page_url, front_page_url from book
             where match(title) against (? in boolean mode)"#,
-        title
+        format!("+{title}*")
     )
     .fetch_all(pool)
     .await?;

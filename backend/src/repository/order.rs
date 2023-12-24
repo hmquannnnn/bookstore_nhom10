@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
+use futures_util::future::join;
 use sqlx::MySqlPool;
-use tokio::join;
 
 #[derive(serde::Serialize, serde::Deserialize)]
 pub enum OrderStatus {
@@ -68,7 +68,7 @@ pub async fn get_order_price(
     order_id: u64,
     user_email: &String,
 ) -> sqlx::Result<OrderPrice> {
-    let fut_all = join!(
+    let fut_all = join(
         sqlx::query_as!(
             UserOrder,
             "select id order_id, user_email from orders where id = ? and user_email = ?",
@@ -84,7 +84,7 @@ pub async fn get_order_price(
             order_id
         )
         .fetch_one(pool)
-    );
+    ).await;
 
     let _user_order = fut_all.0?;
     let order_price = fut_all.1?;
