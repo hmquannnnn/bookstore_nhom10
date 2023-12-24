@@ -17,7 +17,7 @@ use actix_web::{
     web::{self, Bytes, Json},
     HttpResponse, Responder, Result as ActixResult,
 };
-use tokio::join;
+use futures_util::future::join;
 use crate::update_user_field;
 use crate::update_field;
 
@@ -110,10 +110,10 @@ pub async fn patch_user_image(
     let url = match id {
         Some(id) => {
             let id = id.split('=').last().take().ok_or(AppError::ParseError)?;
-            let fut_all = join!(
+            let fut_all = join(
                 insert_image(data.to_vec(), &id_new, pool),
                 delete_image(&id, pool)
-                );
+                ).await;
             fut_all.0.map_err(|_| AppError::FailToUpdate)?; 
             Some(to_image_url(&app_state, &id_new))
         },

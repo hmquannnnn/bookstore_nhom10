@@ -4,7 +4,6 @@ use actix_web::{
 };
 use futures_util::future::join;
 use sqlx::MySql;
-use tokio::join;
 
 use crate::{
     header::JwtTokenHeader,
@@ -105,7 +104,7 @@ pub async fn put_cart(
 
     let books_id = vec![cart.book_id.clone()];
 
-    let fut_all = join!(auth_user(&jwt_header, pool), take_price(&books_id, pool));
+    let fut_all = join(auth_user(&jwt_header, pool), take_price(&books_id, pool)).await;
     let auth = fut_all.0.map_err(actix_web::error::ErrorNotFound)?;
     let price = fut_all.1.map_err(actix_web::error::ErrorNotFound)?;
 
