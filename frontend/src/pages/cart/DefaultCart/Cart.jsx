@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import FilledCart from "../FilledCart/FilledCart.jsx";
 import EmptyCart from "../EmptyCart.jsx";
 import "./cart.scss"
-import { getCartAction } from "../../../redux/reducer/cartSlice.jsx";
+import { getCartAction } from "../../../redux/slice/cartSlice.jsx";
 
 const Cart = () => {
     const dispatch = useDispatch();

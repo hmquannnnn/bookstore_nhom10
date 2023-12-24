@@ -21,7 +21,8 @@ import ChangePassword from "../pages/EditUser/ChangePassword/ChangePassword";
 import path from "./path";
 import BookDetails from "../pages/BookDetails/BookDetails";
 import Cart from "../pages/cart/DefaultCart/Cart.jsx";
-import Payment from "../pages/payment/Payment.jsx";
+import Purchase from "../pages/purchased/Purchase.jsx";
+import SearchBook from "../pages/searchBook/searchBook.jsx";
 
 const Layout = () => {
     return (
@@ -80,8 +81,12 @@ const Routes = () => {
                     element: <BookDetails />
                 },
                 {
-                    path: path.payment,
-                    element: <Payment />
+                    path: path.purchase,
+                    element: <Purchase />
+                },
+                {
+                    path: path.search,
+                    element: <SearchBook />
                 }
             ],
         },

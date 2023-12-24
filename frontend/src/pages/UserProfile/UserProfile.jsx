@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./UserProfile.scss"
 import { callChangeAddress, callChangeAvatar, callChangeName, callFetchAccount } from "../../services/api/userAPI";
 import { useEffect, useState } from "react";
-import { doChangeNameAction, doGetAccountAction, updateAvatar } from "../../redux/reducer/accountSlice";
+import { doChangeNameAction, doGetAccountAction, updateAvatar } from "../../redux/slice/accountSlice";
 import { Link } from "react-router-dom";
 import path from "../../routes/path";
 

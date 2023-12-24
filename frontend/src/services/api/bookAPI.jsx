@@ -32,11 +32,11 @@ export const callGetBook = (bookId) => {
 }
 
 export const callSearchBook = (value) => {
-    return instance.get(`/search/${booksURL}?value=${value}`);
+    return instance.get(`/search${booksURL}?value=${value}`);
 }
 
 export const callSearchBookByAuthor = (value) => {
-    return instance.get(`/search/author/${booksURL}?value=${value}`);
+    return instance.get(`/search/author${booksURL}?value=${value}`);
 }
 
 export const filterBookByPrice = (start, end) => {

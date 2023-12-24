@@ -7,10 +7,10 @@ import { useEffect, useState } from "react";
 import Routes from "./routes/routes";
 import { useDispatch, useSelector } from "react-redux";
 
-import { doGetAccountAction } from "./redux/reducer/accountSlice";
+import { doGetAccountAction } from "./redux/slice/accountSlice";
 import { callFetchAccount } from "./services/api/userAPI";
 import { callGetCart } from "./services/api/cartAPI.jsx";
-import { getCartAction } from "./redux/reducer/cartSlice.jsx";
+import { getCartAction } from "./redux/slice/cartSlice.jsx";
 
 export default function App() {
   const isAuthenticated = useSelector(state => state.account.isAuthenticated);

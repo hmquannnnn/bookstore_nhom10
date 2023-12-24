@@ -38,28 +38,27 @@
       }
     }
 
-    input[type="text"] {
-      width: 100%;
-      //   max-width: 700px;
-      padding: 12px 20px;
-      margin: 10px 0;
-      font-size: 14px;
-      box-sizing: border-box;
-      line-height: 15px;
-    }
+    // input[type="search"] {
+    //   width: 100%;
+    //   //   max-width: 700px;
+    //   padding: 12px 20px;
+    //   margin: 10px 0;
+    //   font-size: 14px;
+    //   box-sizing: border-box;
+    //   line-height: 15px;
+    // }
 
-    input[type="text"]:focus {
-      outline: none;
-    }
+    // input[type="search"]:focus {
+    //   outline: none;
+    // }
 
     .input-search {
-      height: 25px;
+      height: 30px;
       outline: none;
       padding: 5px 30px;
-      border-radius: 10px;
-      border: 1px solid lightgray;
+      border-radius: 5px;
+      border: 1px solid grey;
       flex: 1;
-      border: none;
     }
   }
 

@@ -8,11 +8,11 @@ import { useNavigate } from "react-router-dom";
 import { callLogin } from "../../services/api/userAPI";
 import { useDispatch } from "react-redux"
 import "./login.scss"
-import { doLoginAction } from "../../redux/reducer/accountSlice";
+import { doLoginAction } from "../../redux/slice/accountSlice";
 import { useState } from "react";
 import { unstable_renderSubtreeIntoContainer } from "react-dom";
 import { callGetCart } from "../../services/api/cartAPI";
-import { getCartAction } from "../../redux/reducer/cartSlice";
+import { getCartAction } from "../../redux/slice/cartSlice";
 
 
 

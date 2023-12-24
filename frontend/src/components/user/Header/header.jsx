@@ -6,10 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import AccountDropDown from "./AccountDropDown/AccountDropDown";
 import { Link, useNavigate } from "react-router-dom";
 import { callFetchAccount } from "../../../services/api/userAPI";
-import { doGetAccountAction, doLogOutAction } from "../../../redux/reducer/accountSlice";
+import { doGetAccountAction, doLogOutAction } from "../../../redux/slice/accountSlice.jsx";
 import path from "../../../routes/path.jsx";
-import { deleteCart } from "../../../redux/reducer/cartSlice.jsx";
-
+import { deleteCart } from "../../../redux/slice/cartSlice.jsx";
+import { IoSearch } from "react-icons/io5";
+import { callSearchBook } from "../../../services/api/bookAPI.jsx";
+import { getSearchResultAction } from "../../../redux/slice/searchSlice.jsx";
 
 
 const Header = () => {
@@ -28,13 +30,11 @@ const Header = () => {
     const defaultItems = [
         {
             key: '1',
-
             label: (
                 <Link to={path.logIn}>
                     Đăng nhập
                 </Link>
             )
-
         },
         {
             key: '2',
@@ -43,7 +43,6 @@ const Header = () => {
                     Đăng ký
                 </Link>
             )
-
         },
     ]
     const loggedInItems = [
@@ -87,6 +86,21 @@ const Header = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
+    const handleSearchInputChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const [searchQuery, setSearchQuery] = useState('');
+    const handleSearch = async () => {
+        if (searchQuery.trim() !== '') {
+            const res = await callSearchBook(searchQuery);
+            console.log(res);
+            if (res) {
+                dispatch(getSearchResultAction(res));
+                navigate(`${path.search}?q=${searchQuery}`);
+            }
+        }
+    };
     return (
         <>
             <div className="header-container" style={{ marginBottom: "15px" }}>
@@ -98,10 +112,15 @@ const Header = () => {
                                     <p className="brand-name">UETHUVIENSACH</p>
                                 </a>
                             </span>
+                            <IoSearch style={{ position: "relative", left: "38px" }} />
                             <input
                                 className="input-search"
                                 type="search"
                                 placeholder="Bạn đọc gì hôm nay"
+                                value={searchQuery}
+                                onChange={handleSearchInputChange}
+                                onBlur={handleSearch}
+                                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                             />
                         </div>
                     </div>

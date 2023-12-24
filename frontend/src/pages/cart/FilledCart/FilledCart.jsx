@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { callChangeQuantity, callDeleteBook, callGetCart } from "../../../services/api/cartAPI";
-import { decreaseQuantityOrderedAction, deleteBookAction, getCartAction, increaseQuantityOrderedAction } from "../../../redux/reducer/cartSlice";
+import { decreaseQuantityOrderedAction, deleteBookAction, getCartAction, increaseQuantityOrderedAction } from "../../../redux/slice/cartSlice";
 import { Col, Divider, Modal, Row } from "antd";
 import { useNavigate } from "react-router-dom";
 import path from "../../../routes/path";
 import "./FilledCart.scss"
 import { callGetBook } from "../../../services/api/bookAPI";
-import { getCurrentBookAction } from "../../../redux/reducer/bookSlice";
+import { getCurrentBookAction } from "../../../redux/slice/bookSlice";
 import { FaRegTrashAlt } from "react-icons/fa";
 
 
@@ -137,7 +137,7 @@ const FilledCart = () => {
                     <Row className="order-info">
                         <h4 style={{ paddingLeft: "30px" }}>Tổng tiền</h4>
                         <p className="amount">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(cart.amount)}</p>
-                        <button className="order-btn" type="submit" onClick={() => navigate(path.payment)} >Mua hàng ({cart.total})</button>
+                        <button className="order-btn" type="submit" onClick={() => navigate(path.purchase)} >Mua hàng ({cart.total})</button>
                     </Row>
                 </Col>
             </Row>

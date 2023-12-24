@@ -1,14 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from './reducer/accountSlice';
-import accountSlice from './reducer/accountSlice';
-import bookSlice from './reducer/bookSlice';
-import cartSlice from "./reducer/cartSlice.jsx";
+import accountSlice from './slice/accountSlice';
+import bookSlice from './slice/bookSlice';
+import cartSlice from "./slice/cartSlice.jsx";
+import searchSlice from './slice/searchSlice.jsx';
 
 export const store = configureStore({
   reducer: {
     // reducer: counterReducer,
     account: accountSlice,
     books: bookSlice,
-    cart: cartSlice
+    cart: cartSlice,
+    search: searchSlice
   },
 });
