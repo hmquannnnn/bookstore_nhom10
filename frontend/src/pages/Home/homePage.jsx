@@ -2,11 +2,9 @@ import { Button, Checkbox, Col, Divider, Form, InputNumber, Pagination, Rate, Ro
 import { useEffect, useState } from "react";
 import { callBooksSortByPriceAsc, callBooksSortByPriceDesc, callBooksSortByPurchased, callBooksSortByRating, callGetBook } from "../../services/api/bookAPI";
 import { useDispatch, useSelector } from "react-redux";
-import { changeTabAction, getBooksAction, getCurrentBookAction } from "../../redux/reducer/bookSlice";
+import { changeTabAction, getBooksAction, getCurrentBookAction } from "../../redux/slice/bookSlice.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import path from "../../routes/path.jsx";
-
-// import {useSelector} from "react-redux"
 const Home = () => {
     // const user = useSelector(state => state.account.user);
     const tab = useSelector(state => state.books.tab);
@@ -180,9 +178,9 @@ const Home = () => {
                         labelCol={{ span: 24 }}
                     >
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 0 }}>
-                            <Form.Item name={["range", "form"]}>
+                            <Form.Item name={["range", "start"]}>
                                 <InputNumber
-                                    name="from"
+                                    name="start"
                                     min={0}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                 />
@@ -190,9 +188,9 @@ const Home = () => {
 
                             </Form.Item>
                             <span>-</span>
-                            <Form.Item name={["range", "to"]}>
+                            <Form.Item name={["range", "end"]}>
                                 <InputNumber
-                                    name="to"
+                                    name="end"
                                     min={0}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                 />
@@ -204,13 +202,6 @@ const Home = () => {
                             <button onClick={() => form.submit()} style={{ width: "100%", backgroundColor: "white", border: "1px solid #0B74E5", color: "#0B74E5", borderRadius: "4px", padding: "7px 0" }} type="primary">
                                 Áp dụng
                             </button>
-                            {/* <Button 
-                                    onClick={() => form.submit()}
-                                    style={{ width: "100%" }} 
-                                    type='primary'
-                                >
-                                    Áp dụng
-                                </Button> */}
                         </div>
                     </Form.Item>
                     <Divider />

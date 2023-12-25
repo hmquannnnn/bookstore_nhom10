@@ -1,6 +1,4 @@
-// import { AiOutlineShoppingCart } from "react-icons/ai";
 import "./header.scss"
-// import { useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai"
 import { Badge, Button, Dropdown, Modal } from "antd"
 import { useEffect, useState } from "react";
@@ -8,10 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import AccountDropDown from "./AccountDropDown/AccountDropDown";
 import { Link, useNavigate } from "react-router-dom";
 import { callFetchAccount } from "../../../services/api/userAPI";
-import { doGetAccountAction, doLogOutAction } from "../../../redux/reducer/accountSlice";
+import { doGetAccountAction, doLogOutAction } from "../../../redux/slice/accountSlice.jsx";
 import path from "../../../routes/path.jsx";
-import { deleteCart } from "../../../redux/reducer/cartSlice.jsx";
-
+import { deleteCart } from "../../../redux/slice/cartSlice.jsx";
+import { IoSearch } from "react-icons/io5";
+import { callSearchBook } from "../../../services/api/bookAPI.jsx";
+import { getSearchResultAction } from "../../../redux/slice/searchSlice.jsx";
 
 
 const Header = () => {
@@ -24,21 +24,17 @@ const Header = () => {
         localStorage.clear();
         dispatch(doLogOutAction());
         dispatch(deleteCart());
-        // dispatch(initCart());
-        // setIsLoggedIn(false);
-        // setItems(defaultItems);
+
     }
 
     const defaultItems = [
         {
             key: '1',
-
             label: (
                 <Link to={path.logIn}>
                     Đăng nhập
                 </Link>
             )
-
         },
         {
             key: '2',
@@ -47,7 +43,6 @@ const Header = () => {
                     Đăng ký
                 </Link>
             )
-
         },
     ]
     const loggedInItems = [
@@ -91,26 +86,42 @@ const Header = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
+    const handleSearchInputChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const [searchQuery, setSearchQuery] = useState('');
+    const handleSearch = async () => {
+        if (searchQuery.trim() !== '') {
+            const res = await callSearchBook(searchQuery);
+            console.log(res);
+            if (res) {
+                dispatch(getSearchResultAction(res));
+                navigate(`${path.search}?q=${searchQuery}`);
+            }
+        }
+    };
     return (
         <>
             <div className="header-container" style={{ marginBottom: "15px" }}>
                 <div className="page-header">
                     <div className="page-header__top">
-
-
                         <div className="page-header__logo">
                             <span className="logo">
                                 <a href="/" >
                                     <p className="brand-name">UETHUVIENSACH</p>
                                 </a>
-
                             </span>
+                            <IoSearch style={{ position: "relative", left: "38px" }} />
                             <input
-                                className="input-seacrh"
-                                type="text"
+                                className="input-search"
+                                type="search"
                                 placeholder="Bạn đọc gì hôm nay"
+                                value={searchQuery}
+                                onChange={handleSearchInputChange}
+                                onBlur={handleSearch}
+                                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                             />
-
                         </div>
                     </div>
                     <nav className="page-header__bottom">
@@ -134,7 +145,6 @@ const Header = () => {
                                 cancelText="Hủy"
                             >
                                 <p>Đăng nhập để truy cập giỏ hàng</p>
-
                             </Modal>
                             <Dropdown
                                 menu={{ items }}

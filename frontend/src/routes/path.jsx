@@ -14,7 +14,8 @@ const path = {
     changePhone: "/doi-so-dien-thoai",
     changePassword: "/doi-mat-khau",
     bookDetails: "/thong-tin-sach",
-    payment: "/thanh-toan"
+    purchase: "/thanh-toan",
+    search: "/tim-kiem"
 }
 
 export default path;

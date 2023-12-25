@@ -1,14 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { callGetBook } from "../../services/api/bookAPI.jsx";
-// import {getCurrentBookAction} from "../../redux/reducer/bookSlice.js";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "./BookDetails.scss"
 import { Button, Col, Divider, Input, Modal, Rate, Row } from "antd";
 import { callAddBookIntoCart } from "../../services/api/cartAPI.jsx";
 import path from "../../routes/path.jsx";
-import { addBookIntoCartAction } from "../../redux/reducer/cartSlice.jsx";
-import { getCurrentBookAction } from "../../redux/reducer/bookSlice.jsx";
+import { addBookIntoCartAction } from "../../redux/slice/cartSlice.jsx";
+import { getCurrentBookAction } from "../../redux/slice/bookSlice.jsx";
 
 const BookDetails = () => {
     const navigate = useNavigate();
