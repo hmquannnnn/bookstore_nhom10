@@ -1,6 +1,6 @@
 import { Button, Checkbox, Col, Divider, Form, InputNumber, Pagination, Rate, Row, Tabs } from "antd";
 import { useEffect, useState } from "react";
-import { callBooksSortByPriceAsc, callBooksSortByPriceDesc, callBooksSortByPurchased, callBooksSortByRating, callGetBook } from "../../services/api/bookAPI";
+import { callBooksSortByPriceAsc, callBooksSortByPriceDesc, callBooksSortByPurchased, callBooksSortByRating, callFilterBookByPrice, callGetBook } from "../../services/api/bookAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { changeTabAction, getBooksAction, getCurrentBookAction } from "../../redux/slice/bookSlice.jsx";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,24 +13,36 @@ const Home = () => {
     const [isActive, setIsActive] = useState(tab);
     // const [currentPage, setCurrentPage] = useState(page)
     console.log("check tab now: ", tab);
-    const [isHovered, setIsHovered] = useState(false);
     const [hoveredBookId, setHoveredBookId] = useState(null);
     const [form] = Form.useForm();
     const navigate = useNavigate();
 
-    const handleChangeFilter = (changeValues, values) => {
+    const handleChangeFilter = async (changeValues, values) => {
         console.log(">>> check handleChangeFilter", changeValues, values);
+        const queryParams = [];
+        if (values.category) {
+            queryParams.push(`genres=${values.category.join(',')}`);
+        }
+        if (values.range && values.range.start !== undefined && values.range.end !== undefined) {
+            queryParams.push(`start=${values.range.start}&end=${values.range.end}`);
+            const res = await callFilterBookByPrice(values.range.start, values.range.end);
+            console.log(">>>check filter: ", res, values.range.start, " ", typeof (values.range.end));
+        }
+
+        // // Thực hiện filter sách dựa trên các query parameters
+        // try {
+        //     const res = await callFilteredBooks(queryParams.join('&'));
+        //     if (res) {
+        //         dispatch(getBooksAction(res));
+        //     }
+        // } catch (error) {
+        //     console.error('Error filtering books:', error);
+        // }
+
     }
     const onFinish = () => {
 
     }
-    // const onChange = (key) => {
-    //     console.log(key);
-    //     setIsActive(key)
-    //     switch (key)
-    //         case "1":
-    //
-    // }
     const items = [
         {
             key: "1",
@@ -102,7 +114,6 @@ const Home = () => {
                 break;
         }
         dispatch(changeTabAction(isActive));
-        // initBooks();
     }, [isActive])
     const bookList = useSelector(state => state.books.bookList);
     // console.log(">>>here is bookList: ", bookList);

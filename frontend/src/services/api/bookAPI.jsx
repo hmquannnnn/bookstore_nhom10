@@ -39,14 +39,19 @@ export const callSearchBookByAuthor = (value) => {
     return instance.get(`/search/author${booksURL}?value=${value}`);
 }
 
-export const filterBookByPrice = (start, end) => {
+export const callFilterBookByPrice = (start, end) => {
     const priceRange = {
         "start": start,
         "end": end
     }
-    return instance.get(`${booksURL}/filter/price`, priceRange)
+    console.log(">>>req: ", priceRange);
+    return instance.get(`${booksURL}/filter/price`, priceRange, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
 }
 
-export const filterBookByGenres = (genres) => {
+export const callFilterBookByGenres = (genres) => {
 
 }

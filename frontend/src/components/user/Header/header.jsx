@@ -1,6 +1,6 @@
 import "./header.scss"
 import { AiOutlineShoppingCart } from "react-icons/ai"
-import { Badge, Button, Dropdown, Modal } from "antd"
+import { AutoComplete, Badge, Button, Dropdown, Modal } from "antd"
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AccountDropDown from "./AccountDropDown/AccountDropDown";
@@ -12,7 +12,9 @@ import { deleteCart } from "../../../redux/slice/cartSlice.jsx";
 import { IoSearch } from "react-icons/io5";
 import { callSearchBook } from "../../../services/api/bookAPI.jsx";
 import { getSearchResultAction } from "../../../redux/slice/searchSlice.jsx";
-
+const mockVal = (str, repeat = 1) => ({
+    value: str.repeat(repeat),
+});
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -86,8 +88,16 @@ const Header = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-    const handleSearchInputChange = (e) => {
+    // const [searchResults, setSearchResults] = useState([]);
+    // const onSelect = (value) => {
+    //     setSearchQuery(value);
+    //     // Xử lý khi một kết quả gợi ý được chọn
+    // };
+    const handleSearchInputChange = async (e) => {
         setSearchQuery(e.target.value);
+        // console.log(e.target.value);
+        const res = await callSearchBook(e.target.value);
+        console.log("search hint: ", res);
     };
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -101,6 +111,17 @@ const Header = () => {
             }
         }
     };
+    // // const [value, setValue] = useState('');
+    // const [options, setOptions] = useState([]);
+    // const [anotherOptions, setAnotherOptions] = useState([]);
+    // const getPanelValue = (searchText) =>
+    //     !searchText ? [] : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)];
+    // const onSelect = (data) => {
+    //     console.log('onSelect', data);
+    // };
+    // // const onChange = (data) => {
+    // //     setValue(data);
+    // // };
     return (
         <>
             <div className="header-container" style={{ marginBottom: "15px" }}>
@@ -119,9 +140,32 @@ const Header = () => {
                                 placeholder="Bạn đọc gì hôm nay"
                                 value={searchQuery}
                                 onChange={handleSearchInputChange}
-                                onBlur={handleSearch}
+                                // onBlur={handleSearch}
+                                // onValuesChange
                                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                             />
+
+                            {/* <AutoComplete
+                                value={searchQuery}
+                                dataSource={searchResults}
+                                style={{ width: 200 }}
+                                onSelect={onSelect}
+                                onSearch={handleSearchInputChange}
+                                placeholder="Bạn đọc gì hôm nay"
+                            /> */}
+                            {/* 
+                            <AutoComplete
+                                options={options}
+                                style={{
+                                    width: 200,
+                                }}
+                                onSelect={onSelect}
+                                onSearch={(text) => setOptions(getPanelValue(text))}
+                                placeholder="input here"
+                                value={searchQuery}
+                                onChange={handleSearchInputChange}
+                                onBlur={handleSearch}
+                            /> */}
                         </div>
                     </div>
                     <nav className="page-header__bottom">
