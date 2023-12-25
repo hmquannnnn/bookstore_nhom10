@@ -2,7 +2,7 @@ import { Button, Checkbox, Col, Divider, Form, InputNumber, Pagination, Rate, Ro
 import { useEffect, useState } from "react";
 import { callBooksSortByPriceAsc, callBooksSortByPriceDesc, callBooksSortByPurchased, callBooksSortByRating, callFilterBookByPrice, callGetBook } from "../../services/api/bookAPI";
 import { useDispatch, useSelector } from "react-redux";
-import { changeTabAction, getBooksAction, getCurrentBookAction } from "../../redux/slice/bookSlice.jsx";
+import { changePageAction, changeTabAction, getBooksAction, getCurrentBookAction } from "../../redux/slice/bookSlice.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import path from "../../routes/path.jsx";
 const Home = () => {
@@ -12,7 +12,7 @@ const Home = () => {
     const dispatch = useDispatch();
     const [isActive, setIsActive] = useState(tab);
     // const [currentPage, setCurrentPage] = useState(page)
-    console.log("check tab now: ", tab);
+    // console.log("check tab now: ", tab);
     const [hoveredBookId, setHoveredBookId] = useState(null);
     const [form] = Form.useForm();
     const navigate = useNavigate();
@@ -25,11 +25,14 @@ const Home = () => {
         }
         if (values.range && values.range.start !== undefined && values.range.end !== undefined) {
             queryParams.push(`start=${values.range.start}&end=${values.range.end}`);
-            const res = await callFilterBookByPrice(values.range.start, values.range.end);
+            const req = {
+                "start": values.range.start,
+                "end": values.range.end
+            }
+            const res = await callFilterBookByPrice(req);
             console.log(">>>check filter: ", res, values.range.start, " ", typeof (values.range.end));
         }
 
-        // // Thực hiện filter sách dựa trên các query parameters
         // try {
         //     const res = await callFilteredBooks(queryParams.join('&'));
         //     if (res) {
@@ -66,7 +69,8 @@ const Home = () => {
         }
     ]
     const initBooksSortByPurchased = async () => {
-        const res = await callBooksSortByPurchased();
+        console.log(">>>check page: ", page);
+        const res = await callBooksSortByPurchased(page);
         // console.log("api 1", page, res);
         if (res) {
             dispatch(getBooksAction(res));
@@ -74,7 +78,7 @@ const Home = () => {
         }
     }
     const initBooksSortByRating = async () => {
-        const res = await callBooksSortByRating();
+        const res = await callBooksSortByRating(page);
         // console.log("api 2");
         if (res) {
             dispatch(getBooksAction(res));
@@ -82,7 +86,7 @@ const Home = () => {
         }
     }
     const initBooksSortByPriceAsc = async () => {
-        const res = await callBooksSortByPriceAsc();
+        const res = await callBooksSortByPriceAsc(page);
         // console.log("api 3");
         if (res) {
             dispatch(getBooksAction(res));
@@ -90,7 +94,7 @@ const Home = () => {
         }
     }
     const initBooksSortByPriceDesc = async () => {
-        const res = await callBooksSortByPriceDesc();
+        const res = await callBooksSortByPriceDesc(page);
         // console.log("api 4", res);
         if (res) {
             dispatch(getBooksAction(res));
@@ -98,7 +102,7 @@ const Home = () => {
         }
     }
     useEffect(() => {
-        console.log(">>> useEffect is triggered. isActive =", isActive);
+        // console.log(">>> useEffect is triggered. isActive =", isActive);
         switch (isActive) {
             case "1":
                 initBooksSortByPurchased();
@@ -114,13 +118,13 @@ const Home = () => {
                 break;
         }
         dispatch(changeTabAction(isActive));
-    }, [isActive])
+    }, [isActive, page])
     const bookList = useSelector(state => state.books.bookList);
     // console.log(">>>here is bookList: ", bookList);
     const handleMouseEnter = (bookId) => {
         // setIsHovered(true);
         setHoveredBookId(bookId);
-        console.log(">>>check hover: ", bookId, hoveredBookId);
+        // console.log(">>>check hover: ", bookId, hoveredBookId);
     }
     const handleMouseLeave = () => {
         setHoveredBookId(null);
@@ -141,12 +145,19 @@ const Home = () => {
         setIsActive(key);
         console.log(isActive);
     };
-    const handleChangePage = () => {
+    const handleChangePage = (newPage) => {
+        console.log(newPage);
+        dispatch(changePageAction(newPage));
+        if (newPage === 1) {
+            navigate(path.home);
+        } else {
+            navigate(`${path.home}?page=${newPage}`);
+        }
 
     }
     return (
         // <div className="homepage-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
-        <Row className="homepage-container" gutter={[20, 20]} style={{ maxWidth: 1440, margin: '0 auto' }}>
+        <Row className="homepage-container" gutter={[20, 20]} style={{ maxWidth: 1440, margin: '0 auto', minHeight: "70vh" }}>
             <Col className="sidebar" md={4} sm={0} xs={0} style={{ backgroundColor: "white", height: "515px" }}>
                 <div>
                     <p>Bộ lọc tìm kiếm</p>

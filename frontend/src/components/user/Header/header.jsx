@@ -97,7 +97,7 @@ const Header = () => {
         setSearchQuery(e.target.value);
         // console.log(e.target.value);
         const res = await callSearchBook(e.target.value);
-        console.log("search hint: ", res);
+        console.log("search suggest: ", res);
     };
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -173,7 +173,7 @@ const Header = () => {
                             <a style={{ marginRight: "35px", marginLeft: "10px" }} onClick={showModal}>
                                 <Badge
                                     count={booksInCart}
-                                    overflowCount={10}
+                                    // overflowCount={10}
                                     size={"small"}
                                     showZero="true"
                                     style={{ cursor: "pointer" }}

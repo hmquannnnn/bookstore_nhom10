@@ -9,6 +9,7 @@ import "./FilledCart.scss"
 import { callGetBook } from "../../../services/api/bookAPI";
 import { getCurrentBookAction } from "../../../redux/slice/bookSlice";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { callCreateOrder } from "../../../services/api/orderAPI";
 
 
 
@@ -73,6 +74,24 @@ const FilledCart = () => {
             dispatch(increaseQuantityOrderedAction(bookId));
         }
     }
+    const handleSelectBook = (bookId, checked) => {
+
+    }
+    const handleOrder = async () => {
+        const orderList = booksInCart.map(book => ({
+            book_id: book.book_id,
+            quantity_ordered: book.quantity_ordered
+        }));
+        orderList.map(async (book) => {
+            const res = await callDeleteBook(book.book_id);
+        })
+        // console.log(orderList);
+        const res = await callCreateOrder(orderList);
+        console.log(res);
+        if (res) {
+            navigate(path.purchase);
+        }
+    }
     return (
         <>
 
@@ -91,7 +110,9 @@ const FilledCart = () => {
                             <Row key={book.book_id} className="book-in-cart" style={{ marginBottom: "10px" }}>
                                 {/* <div className={"book-image"}>{book.front_page_url}</div> */}
                                 <Col md={1}>
-                                    <Checkbox style={{ position: "relative", top: "50px", left: "25px" }} />
+                                    <Checkbox
+                                        // onChange={() => handleSelectBook(book.book_id, e.target.value)}
+                                        style={{ position: "relative", top: "50px", left: "25px" }} />
                                 </Col>
                                 <Col md={10}>
                                     <Row>
@@ -141,7 +162,7 @@ const FilledCart = () => {
                     <Row className="order-info">
                         <h4 style={{ paddingLeft: "30px" }}>Tổng tiền</h4>
                         <p className="amount">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(cart.amount)}</p>
-                        <button className="order-btn" type="submit" onClick={() => navigate(path.purchase)} >Mua hàng ({cart.total})</button>
+                        <button className="order-btn" type="submit" onClick={() => handleOrder()} >Mua hàng ({cart.total})</button>
                     </Row>
                 </Col>
             </Row>

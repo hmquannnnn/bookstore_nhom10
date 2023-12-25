@@ -7,24 +7,25 @@ import instance from "../../utils/axiosCustomize";
 // }
 const booksURL = "/book"
 
-const start = 0;
 const length = 10;
+const start = 0;
 
-export const callBooksSortByRating = () => {
-    return instance.get(`${booksURL}/sort/desc?start=${start}&length=${length}`);
+export const callBooksSortByRating = (page) => {
+    return instance.get(`${booksURL}/sort/desc?start=${length * (page - 1)}&length=${length}`);
 }
 
-export const callBooksSortByPurchased = () => {
-    return instance.get(`${booksURL}/sort/purchase/desc?start=${start}&length=${length}`);
+export const callBooksSortByPurchased = (page) => {
+    // console.log(`${booksURL}/sort/purchase/desc?start=${length * (page - 1)}&length=${length}`, "   ", page)
+    return instance.get(`${booksURL}/sort/purchase/desc?start=${length * (page - 1)}&length=${length}`);
 }
 
-export const callBooksSortByPriceAsc = () => {
+export const callBooksSortByPriceAsc = (page) => {
 
-    return instance.get(`${booksURL}/sort/price/asc?start=${start}&length=${length}`);
+    return instance.get(`${booksURL}/sort/price/asc?start=${length * (page - 1)}&length=${length}`);
 }
 
-export const callBooksSortByPriceDesc = () => {
-    return instance.get(`${booksURL}/sort/price/desc?start=${start}&length=${length}`);
+export const callBooksSortByPriceDesc = (page) => {
+    return instance.get(`${booksURL}/sort/price/desc?start=${length * (page - 1)}&length=${length}`);
 }
 
 export const callGetBook = (bookId) => {
@@ -39,17 +40,9 @@ export const callSearchBookByAuthor = (value) => {
     return instance.get(`/search/author${booksURL}?value=${value}`);
 }
 
-export const callFilterBookByPrice = (start, end) => {
-    const priceRange = {
-        "start": start,
-        "end": end
-    }
-    console.log(">>>req: ", priceRange);
-    return instance.get(`${booksURL}/filter/price`, priceRange, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-    })
+export const callFilterBookByPrice = (priceRange) => {
+    console.log(">>>range: ", priceRange);
+    return instance.get(`${booksURL}/filter/price`, { data: priceRange });
 }
 
 export const callFilterBookByGenres = (genres) => {
