@@ -88,15 +88,22 @@ pub async fn select_book(id: &String, pool: &MySqlPool) -> sqlx::Result<Book> {
 pub struct BookSearch {
     pub id: String,
     pub title: String,
+    pub author_id: i32,
+    pub price: f64,
+    pub publish_year: String,
+    pub number_of_purchases: Option<i32>,
+    pub book_in_stocks: i32,
+    pub rating: Option<f32>,
+    pub desciption: Option<String>,
+
     pub back_page_url: Option<String>,
     pub front_page_url: Option<String>,
-    pub desciption: Option<String>,
 }
 
 pub async fn search_book(title: &String, pool: &MySqlPool) -> sqlx::Result<Vec<BookSearch>> {
     let book = sqlx::query_as!(
         BookSearch,
-        r#"select id, title, desciption, back_page_url, front_page_url from book
+        r#"select * from book
             where match(title) against (? in boolean mode)"#,
         format!("+{title}*")
     )
