@@ -415,7 +415,7 @@ pub async fn filter_ratting_higher(
         group by book_id) book_genre
         on book.id = book_genre.id
         where rating >= ?
-        order by rating desc
+        order by rating asc 
         limit ? offset ?
         "#,
         rating_filter.rating,
