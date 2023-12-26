@@ -394,7 +394,7 @@ pub async fn fetch_filter_price_genre(
 struct RattingHigher {
     rating: f32,
     start: i32,
-    end: i32,
+    limit: i32,
 }
 
 #[get("/api/book/filter/ratting/higher")]
@@ -419,8 +419,8 @@ pub async fn filter_ratting_higher(
         limit ? offset ?
         "#,
         rating_filter.rating,
-        rating_filter.start,
-        rating_filter.end
+        rating_filter.limit,
+        rating_filter.start
     )
     .fetch_all(pool)
     .await
