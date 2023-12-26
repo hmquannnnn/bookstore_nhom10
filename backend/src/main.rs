@@ -58,8 +58,14 @@ async fn main() -> std::io::Result<()> {
     let pool = MySqlPoolOptions::new()
         .max_connections(10)
         .connect(url.as_str())
-        .await
-        .unwrap();
+        .await;
+    let pool = match pool {
+        Ok(pool) => pool,
+        Err(err) => {
+            println!("mysql: {url}, domain: {domain_name}:{port}");
+            panic!("{err}");
+        }
+    };
 
     // migate database
     match sqlx::migrate!().run(&pool).await {

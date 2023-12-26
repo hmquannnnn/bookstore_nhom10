@@ -328,7 +328,7 @@ pub async fn fetch_book_by_genre(
 
 #[get("/api/book/filter/price")]
 pub async fn fetch_filter_price(
-    bound: Json<Bound<f64>>,
+    bound: Query<Bound<f64>>,
     app_state: actix_web::web::Data<AppState>,
 ) -> ActixResult<Json<Vec<Book>>> {
     let pool = &app_state.pool;
@@ -361,7 +361,7 @@ pub struct GenrePrice {
 
 #[get("/api/book/filter/price/genre")]
 pub async fn fetch_filter_price_genre(
-    genre_price_filter: Json<GenrePrice>,
+    genre_price_filter: Query<GenrePrice>,
     app_state: actix_web::web::Data<AppState>,
 ) -> ActixResult<Json<Vec<Book>>> {
     let pool = &app_state.pool;
