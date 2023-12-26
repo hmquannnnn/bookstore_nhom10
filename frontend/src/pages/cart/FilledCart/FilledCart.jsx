@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { callChangeQuantity, callDeleteBook, callGetCart } from "../../../services/api/cartAPI";
 import { decreaseQuantityOrderedAction, deleteBookAction, getCartAction, increaseQuantityOrderedAction } from "../../../redux/slice/cartSlice";
-import { Col, Divider, Modal, Row } from "antd";
+import { Checkbox, Col, Divider, Modal, Row } from "antd";
 import { useNavigate } from "react-router-dom";
 import path from "../../../routes/path";
 import "./FilledCart.scss"
 import { callGetBook } from "../../../services/api/bookAPI";
 import { getCurrentBookAction } from "../../../redux/slice/bookSlice";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { callCreateOrder } from "../../../services/api/orderAPI";
 
 
 
@@ -73,13 +74,32 @@ const FilledCart = () => {
             dispatch(increaseQuantityOrderedAction(bookId));
         }
     }
+    const handleSelectBook = (bookId, checked) => {
+
+    }
+    const handleOrder = async () => {
+        const orderList = booksInCart.map(book => ({
+            book_id: book.book_id,
+            quantity_ordered: book.quantity_ordered
+        }));
+        orderList.map(async (book) => {
+            const res = await callDeleteBook(book.book_id);
+        })
+        // console.log(orderList);
+        const res = await callCreateOrder(orderList);
+        console.log(res);
+        if (res) {
+            navigate(path.purchase);
+        }
+    }
     return (
         <>
 
             <Row className="filled-cart-container" style={{ width: "1440px", margin: "auto" }}>
                 <Col className="left" md={17} style={{ margin: "0 20px", height: "fit-content" }}>
                     <Row className="high-row">
-                        <Col className="row-name" md={10} style={{ marginLeft: "40px" }}>Sản phẩm</Col>
+                        <Col md={1}></Col>
+                        <Col className="row-name" md={9} style={{ marginLeft: "40px" }}>Sản phẩm</Col>
                         <Col className="row-name" md={4} >Đơn giá</Col>
                         <Col className="row-name" md={4} >Số lượng</Col>
                         <Col className="row-name" md={4} >Thành tiền</Col>
@@ -89,7 +109,12 @@ const FilledCart = () => {
                         booksInCart.map(book => (
                             <Row key={book.book_id} className="book-in-cart" style={{ marginBottom: "10px" }}>
                                 {/* <div className={"book-image"}>{book.front_page_url}</div> */}
-                                <Col md={11}>
+                                <Col md={1}>
+                                    <Checkbox
+                                        // onChange={() => handleSelectBook(book.book_id, e.target.value)}
+                                        style={{ position: "relative", top: "50px", left: "25px" }} />
+                                </Col>
+                                <Col md={10}>
                                     <Row>
                                         <img className="book-image" src={book.front_page_url} alt="image" onClick={() => onClickBook(book.book_id)} />
                                         <div className="book-title" onClick={() => onClickBook(book.book_id)}>{book.title}</div>
@@ -137,7 +162,7 @@ const FilledCart = () => {
                     <Row className="order-info">
                         <h4 style={{ paddingLeft: "30px" }}>Tổng tiền</h4>
                         <p className="amount">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(cart.amount)}</p>
-                        <button className="order-btn" type="submit" onClick={() => navigate(path.purchase)} >Mua hàng ({cart.total})</button>
+                        <button className="order-btn" type="submit" onClick={() => handleOrder()} >Mua hàng ({cart.total})</button>
                     </Row>
                 </Col>
             </Row>

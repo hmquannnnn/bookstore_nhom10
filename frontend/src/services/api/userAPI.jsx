@@ -1,22 +1,22 @@
 import instance from "../../utils/axiosCustomize";
 
 export const callLogin = (email, password) => {
-  const jsonData = {
+  const req = {
     email: email,
     password: password,
   };
-  return instance.post("/user/login", jsonData);
+  return instance.post("/user/login", req);
 };
 
 export const callRegister = (email, name, phone, password, address) => {
-  const jsonData = {
+  const req = {
     email: email,
     name: name,
     phone: phone,
     password: password,
     address: address,
   };
-  return instance.post("/user/register", jsonData);
+  return instance.post("/user/register", req);
 };
 
 export const callFetchAccount = () => {
@@ -26,7 +26,7 @@ export const callFetchAccount = () => {
 export const callChangeAvatar = (formData) => {
   return instance.patch("/user/image", formData, {
     headers: {
-      "Content-Type": "multipart/form-data", // Đặt kiểu dữ liệu thành multipart/form-data
+      "Content-Type": "multipart/form-data",
     },
   });
 };

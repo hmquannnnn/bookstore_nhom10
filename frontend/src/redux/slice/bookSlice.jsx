@@ -30,6 +30,9 @@ export const bookSlice = createSlice({
     changeTabAction: (state, action) => {
       console.log(">>>check redux: ", action.payload);
       state.tab = action.payload;
+    },
+    changePageAction: (state, action) => {
+      state.page = action.payload;
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -37,6 +40,6 @@ export const bookSlice = createSlice({
   extraReducers: (builder) => { },
 });
 
-export const { getBooksAction, getCurrentBookAction, changeTabAction } = bookSlice.actions;
+export const { getBooksAction, getCurrentBookAction, changeTabAction, changePageAction } = bookSlice.actions;
 
 export default bookSlice.reducer;
