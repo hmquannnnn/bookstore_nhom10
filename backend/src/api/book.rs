@@ -1,7 +1,7 @@
 use actix_web::{
     get, patch,
     web::{self, Bytes, Json, Query},
-    Responder, Result as ActixResult,
+    Responder, Result as ActixResult, post,
 };
 use futures_util::future::join;
 use sqlx::{prelude::FromRow, MySql, QueryBuilder};
@@ -359,9 +359,9 @@ pub struct GenrePrice {
     pub(crate) bound: Bound<f64>,
 }
 
-#[get("/api/book/filter/price/genre")]
+#[post("/api/book/filter/price/genre")]
 pub async fn fetch_filter_price_genre(
-    genre_price_filter: Query<GenrePrice>,
+    genre_price_filter: Json<GenrePrice>,
     app_state: actix_web::web::Data<AppState>,
 ) -> ActixResult<Json<Vec<Book>>> {
     let pool = &app_state.pool;
