@@ -34,7 +34,7 @@ pub mod order;
 //         }))
 // }
 
-pub async fn index() -> Result<fs::NamedFile, Error>{
+pub async fn index() ->  actix_web::Result<fs::NamedFile>{
     let path: std::path::PathBuf = ["./dist/", "index.html"].iter().collect();
     let file = fs::NamedFile::open(path)?;
     Ok(file
@@ -46,7 +46,7 @@ pub async fn index() -> Result<fs::NamedFile, Error>{
 }
 
 #[get("/assets/{filename:.*}")]
-async fn assets(path: Path<String>) -> Result<fs::NamedFile, Error> {
+async fn assets(path: Path<String>) -> actix_web::Result<fs::NamedFile> {
     let path = path.into_inner();
     let path: std::path::PathBuf = ["./dist/assets/", &path].iter().collect();
     let file = fs::NamedFile::open(path)?;
@@ -57,6 +57,7 @@ async fn assets(path: Path<String>) -> Result<fs::NamedFile, Error> {
             parameters: vec![],
         }))
 }
+
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct UpdateType {
     id_field: ColumnField,
