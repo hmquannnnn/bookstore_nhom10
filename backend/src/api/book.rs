@@ -1,7 +1,7 @@
 use actix_web::{
-    get, patch,
+    get, patch, post,
     web::{self, Bytes, Json, Query},
-    Responder, Result as ActixResult, post,
+    Responder, Result as ActixResult,
 };
 use futures_util::future::join;
 use sqlx::{prelude::FromRow, MySql, QueryBuilder};
@@ -387,5 +387,43 @@ pub async fn fetch_filter_price_genre(
         .filter(|book| book.price > bound.start && book.price < bound.end)
         .map(|book| book.clone())
         .collect();
+    Ok(Json(books))
+}
+
+#[derive(serde::Deserialize)]
+struct RattingHigher {
+    rating: f32,
+    start: i32,
+    end: i32,
+}
+
+#[get("/api/book/filter/ratting/higher")]
+pub async fn filter_ratting_higher(
+    rating_filter: Query<RattingHigher>,
+    app_state: actix_web::web::Data<AppState>,
+) -> ActixResult<Json<Vec<Book>>> {
+    let pool = &app_state.pool;
+
+    let books = sqlx::query_as!(
+        Book,
+        r#"select book.*, book_genre.genres, author.name author_name from book
+        left join author
+        on author.id = book.author_id
+        left join (
+        select book_id id, concat('[',group_concat(genre_id),']') genres
+        from book_genre
+        group by book_id) book_genre
+        on book.id = book_genre.id
+        where rating >= ?
+        order by rating desc
+        limit ? offset ?
+        "#,
+        rating_filter.rating,
+        rating_filter.start,
+        rating_filter.end
+    )
+    .fetch_all(pool)
+    .await
+    .map_err(actix_web::error::ErrorNotFound)?;
     Ok(Json(books))
 }
