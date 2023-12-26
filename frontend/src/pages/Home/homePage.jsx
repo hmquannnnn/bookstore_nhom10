@@ -11,11 +11,11 @@ const Home = () => {
     const page = useSelector(state => state.books.page);
     const dispatch = useDispatch();
     const [isActive, setIsActive] = useState(tab);
-    // const [currentPage, setCurrentPage] = useState(page)
-    // console.log("check tab now: ", tab);
     const [hoveredBookId, setHoveredBookId] = useState(null);
     const [form] = Form.useForm();
     const navigate = useNavigate();
+    const [startPrice, setStartPrice] = useState(0);
+    const [endPrice, setEndPrice] = useState(0);
 
     const handleChangeFilter = async (changeValues, values) => {
         console.log(">>> check handleChangeFilter", changeValues, values);
@@ -25,12 +25,14 @@ const Home = () => {
         }
         if (values.range && values.range.start !== undefined && values.range.end !== undefined) {
             queryParams.push(`start=${values.range.start}&end=${values.range.end}`);
-            const req = {
-                "start": values.range.start,
-                "end": values.range.end
-            }
-            const res = await callFilterBookByPrice(req);
-            console.log(">>>check filter: ", res, values.range.start, " ", typeof (values.range.end));
+            // const req = {
+            //     "start": values.range.start,
+            //     "end": values.range.end
+            // }
+            setStartPrice(values.range.start);
+            setEndPrice(values.range.end);
+            // const res = await callFilterBookByPrice(values.range.start, values.range.end);
+            // console.log(">>>check filter: ", res);
         }
 
         // try {
@@ -42,6 +44,14 @@ const Home = () => {
         //     console.error('Error filtering books:', error);
         // }
 
+    }
+    const handlePriceFilter = async () => {
+        const res = await callFilterBookByPrice(startPrice, endPrice);
+        console.log(">>>check filter: ", res, " ", startPrice, " ", endPrice);
+        if (res) {
+            navigate(`?start=${startPrice}&end=${endPrice}`);
+            dispatch(getBooksAction(res));
+        }
     }
     const onFinish = () => {
 
@@ -101,6 +111,7 @@ const Home = () => {
             // console.log(">>>dispatch success: ", res);
         }
     }
+
     useEffect(() => {
         // console.log(">>> useEffect is triggered. isActive =", isActive);
         switch (isActive) {
@@ -155,6 +166,7 @@ const Home = () => {
         }
 
     }
+
     return (
         // <div className="homepage-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
         <Row className="homepage-container" gutter={[20, 20]} style={{ maxWidth: 1440, margin: '0 auto', minHeight: "70vh" }}>
@@ -221,7 +233,7 @@ const Home = () => {
                             </Form.Item>
                         </div>
                         <div>
-                            <button onClick={() => form.submit()} style={{ width: "100%", backgroundColor: "white", border: "1px solid #0B74E5", color: "#0B74E5", borderRadius: "4px", padding: "7px 0" }} type="primary">
+                            <button onClick={handlePriceFilter} style={{ width: "100%", backgroundColor: "white", border: "1px solid #0B74E5", color: "#0B74E5", borderRadius: "4px", padding: "7px 0" }} type="primary">
                                 Áp dụng
                             </button>
                         </div>

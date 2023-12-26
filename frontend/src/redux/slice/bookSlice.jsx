@@ -8,6 +8,21 @@ const initialState = {
   currentBook: {}
 };
 
+const sortBooks = (books, tab) => {
+  switch (tab) {
+    case "1": // Sort by number_of_purchases
+      return [...books].sort((a, b) => b.number_of_purchases - a.number_of_purchases);
+    case "2": // Sort by rating
+      return [...books].sort((a, b) => b.rating - a.rating);
+    case "3": // Sort by price asc
+      return [...books].sort((a, b) => a.price - b.price);
+    case "4": // Sort by price desc
+      return [...books].sort((a, b) => b.price - a.price);
+    default:
+      return books;
+  }
+};
+
 export const bookSlice = createSlice({
   name: "book",
   initialState,
@@ -21,6 +36,7 @@ export const bookSlice = createSlice({
       //   state.isAuthenticated = true;
       // console.log(">>>payload: ", action.payload);
       state.bookList = action.payload;
+      state.bookList = sortBooks(state.bookList, state.tab);
       // console.log(">>>check redux: ", state.book);
     },
     getCurrentBookAction: (state, action) => {
