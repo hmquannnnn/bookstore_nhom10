@@ -1,73 +1,53 @@
-import "./footer.scss"
-// import React from "react";
-import '@fortawesome/fontawesome-free/css/all.min.css';
-
+import { Col, Row } from "antd";
+import "./footer.scss";
+import { FaInstagram, FaFacebook, FaPhone } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
+import { IoMdMail } from "react-icons/io";
 
 const Footer = () => {
     return (
-        <div className="footer" style={{marginTop: "40px"}}>
-            <div className="container">
-                <div className="row">
-                    <div className="col-lg-3">
-                        <a href="/" className="logo">
-                            <img src="/vite.svg" alt="nhom11"></img>
-                            <p className="slogan">Bởi vì sách là thế giới</p>
-                        </a>
-                        <a href="https://www.google.com/maps/place/2QQM%2B83,+C%E1%BA%A7u+Gi%E1%BA%A5y,+H%C3%A0+N%E1%BB%99i,+Vi%E1%BB%87t+Nam/@21.038315,105.7814,18z/data=!3m1!4b1!4m5!3m4!1s0x3135ab5756f91033:0x25a23c2769744ae!8m2!3d21.0383125!4d105.7826875?hl=vi-VN&entry=ttu">
-                            <i className="fa-solid fa-location-dot"></i>
-                            E3, 144 Xuân Thủy, Cầu Giấy, Hà Nội
-                        </a>
-                        <a href="mailto:minhquanhoang040103@gmail.com">
-                            <i className="fa-solid fa-envelope"></i>
-                            uet@vnu.edu.vn
-                            </a>
-                        <a href="tel:+84936014112">
-                            <i className="fa-solid fa-phone"></i>
-                            0987654321
-                        </a>
-                    </div>
-                    <div className="col-lg-3">
-                        <h4>Giới thiệu</h4>
-                        <a href="/gioi-thieu">Về chúng tôi</a>
-                        <a href="/he-thong-cua-hang">Hệ thống cửa hàng</a>
-                    </div>
-                    <div className="col-lg-3">
-                        <h4>Chính sách</h4>
-                        <a href="/chinh-sach-su-dung">Chính sách sử dụng</a>
-                        <a href="/chinh-sach-bao-mat">Chính sách bảo mật</a>
-                        <a href="/chinh-sach-doi/tra-hang">Chính sách đổi/trả hàng</a>
-                    </div>
-                    {/* <div className="col-lg-3">
-                        <h4>Phương thức thanh toán</h4>
-                        <div className="payment">
-                            <img src="https://bizweb.dktcdn.net/100/363/455/themes/918830/assets/payment_method.png?1695376539935"></img>
-                        </div>
-                    </div> */}
-                    <div className="col-lg-3">
-                        <h4>mạng xã hội</h4>
-                        
-
-                        <a href="https://www.facebook.com/profile.php?id=61552075941822" target="_blank" rel="noopener noreferrer">
-                            {/* <i className="fa-brands fa-facebook" style={{ color: "black" }}></i> */}
-                            <p>Facebook</p>
-                        </a>
-                        {/* <a href="https://www.facebook.com/profile.php?id=100010515218862" target="_blank" rel="noopener noreferrer">
-                            <FontAwesomeIcon icon={['fab', 'facebook']} style={{ color: "black" }} />
-                            <p>Facebook</p>
-                        </a> */}
-
-
-                        <a href="https://www.instagram.com/uethuviensach/?igshid=NzZlODBkYWE4Ng%3D%3D&fbclid=IwAR2PgwiCyo3fwBW0lBXKFqIhISfRTyC1dSOvaA4nMMZRpU5ecwjmAAfiqfY" target="_blank" rel="noopener noreferrer">
-                            {/* <i className="fa-brands fa-instagram" style={{ color: "black" }}></i> */}
-                            <p>Instagram</p>
-                        </a>
-
-                    </div> 
-                </div>
-            </div>
-        </div>
-    )
-}
+        <Row className="footer">
+            <Row className="content">
+                <Col md={10} className="brand-description">
+                    <Row className="logo">
+                        <img src="public\vite.svg" alt="" />
+                        <p>Bởi vì sách là thế giới</p>
+                    </Row>
+                    <p className="description">
+                        UEThuviensach là điểm đến lý tưởng cho những đam mê sách, nơi mang đến cho độc giả
+                        trải nghiệm mua sắm sách trực tuyến độc đáo. Với bộ sưu tập đa dạng và chất lượng,
+                        chúng tôi cam kết tạo ra môi trường đọc sách phong phú và thuận tiện cho mọi người.
+                    </p>
+                </Col>
+                <Col className="info" md={7}>
+                    <h5>Mạng xã hội</h5>
+                    <Row>
+                        <FaFacebook className="icon" />
+                        <p>Facebook</p>
+                    </Row>
+                    <Row>
+                        <FaInstagram className="icon" />
+                        <p>Instagram</p>
+                    </Row>
+                </Col>
+                <Col className="info" md={7}>
+                    <h5>Thông tin liên hệ</h5>
+                    <Row>
+                        <FaLocationDot className="icon" />
+                        <p>E3, 144 Xuân Thủy, Cầu Giấy, Hà Nội</p>
+                    </Row>
+                    <Row>
+                        <IoMdMail className="icon" />
+                        <p>uet@vnu.edu.vn</p>
+                    </Row>
+                    <Row>
+                        <FaPhone className="icon" />
+                        <p>0987654321</p>
+                    </Row>
+                </Col>
+            </Row>
+        </Row>
+    );
+};
 
 export default Footer;
-

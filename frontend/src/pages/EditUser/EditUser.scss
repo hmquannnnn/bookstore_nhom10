@@ -1,0 +1,38 @@
+.ant-form-item-explain {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.ant-form-item-has-error {
+  margin-bottom: 16px;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.edit-page {
+  .main {
+    position: relative;
+    top: 10vh;
+    border-radius: 4px;
+    width: 600px;
+    margin: auto;
+    background-color: white;
+    padding-top: 5px;
+    padding: 5px 20px 10px 30px;
+    h3 {
+      font-family: sans-serif;
+      text-align: center;
+    }
+    .ant-form-item {
+      margin: 0;
+    }
+    .ant-btn {
+      margin: 20px 0 10px 0;
+      width: 100%;
+    }
+  }
+}

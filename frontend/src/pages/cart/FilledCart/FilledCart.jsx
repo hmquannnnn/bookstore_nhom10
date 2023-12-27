@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { callChangeQuantity, callDeleteBook, callGetCart } from "../../../services/api/cartAPI";
-import { decreaseQuantityOrderedAction, deleteBookAction, getCartAction, increaseQuantityOrderedAction, selectBookAction } from "../../../redux/slice/cartSlice";
+import { decreaseQuantityOrderedAction, deleteBookAction, deleteSelectedAction, getCartAction, increaseQuantityOrderedAction, selectBookAction } from "../../../redux/slice/cartSlice";
 import { Checkbox, Col, Divider, Modal, Row } from "antd";
 import { useNavigate } from "react-router-dom";
 import path from "../../../routes/path";
@@ -101,8 +101,12 @@ const FilledCart = () => {
                 orderId: orderId,
                 orderList: selectedBook
             }
+            let amount = 0;
+            selectedBook.forEach(book => amount += book.quantity_ordered * book.price_each);
+            localStorage.setItem("amount", amount);
             localStorage.setItem("orderId", orderId);
             dispatch(getOrderAction(orderInfo));
+            dispatch(deleteSelectedAction());
             navigate(path.purchase);
         }
     }

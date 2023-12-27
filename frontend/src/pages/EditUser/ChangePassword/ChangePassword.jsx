@@ -1,12 +1,12 @@
 import { Button, Form, Input } from "antd";
-
 import { useNavigate } from "react-router-dom";
 import path from "../../../routes/path";
 import { callChangePassword } from "../../../services/api/userAPI";
+import "../EditUser.scss"
 
 const ChangePassword = () => {
     const navigate = useNavigate();
-    const onFinish = async (values ) => {
+    const onFinish = async (values) => {
         const { oldPassword, newPassword } = values;
         console.log(">>>input: ", values.old, "  ", values.new);
         const res = await callChangePassword(values.old, values.new);
@@ -18,7 +18,7 @@ const ChangePassword = () => {
     }
     return (
         <>
-            <div className="container">
+            <div className="edit-page" style={{ minHeight: "66vh" }}>
                 <div className="main">
                     <h3>Đổi mật khẩu</h3>
                     <Form
@@ -47,7 +47,7 @@ const ChangePassword = () => {
                                 [
                                     {
                                         required: true,
-                                        
+
                                         message: "Vui lòng điền số điện thoại hợp lệ"
                                     }
                                 ]
