@@ -10,6 +10,7 @@ import { callGetBook } from "../../../services/api/bookAPI";
 import { getCurrentBookAction } from "../../../redux/slice/bookSlice";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { callCreateOrder } from "../../../services/api/orderAPI";
+import { getOrderAction } from "../../../redux/slice/orderSlice";
 
 
 
@@ -82,18 +83,26 @@ const FilledCart = () => {
         }
         dispatch(selectBookAction(selectInfo));
     }
+    const selectedBook = useSelector(state => state.cart.selected);
+    console.log(selectedBook);
     const handleOrder = async () => {
-        const orderList = booksInCart.map(book => ({
+        const orderList = selectedBook.map(book => ({
             book_id: book.book_id,
             quantity_ordered: book.quantity_ordered
         }));
         orderList.map(async (book) => {
             const res = await callDeleteBook(book.book_id);
         })
-        // console.log(orderList);
         const res = await callCreateOrder(orderList);
         console.log(res);
         if (res) {
+            const orderId = res.payload.id;
+            const orderInfo = {
+                orderId: orderId,
+                orderList: selectedBook
+            }
+            localStorage.setItem("orderId", orderId);
+            dispatch(getOrderAction(orderInfo));
             navigate(path.purchase);
         }
     }
