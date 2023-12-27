@@ -1,8 +1,6 @@
-
-
 use actix_web::web;
 
-use self::types::{AppError, AppState};
+use self::types::AppState;
 
 pub mod constant;
 pub mod helper;
@@ -91,70 +89,70 @@ pub mod types {
         pub value: String,
     }
 
-    impl ColumnField {
-        pub fn new(key: String, value: String) -> Self {
-            ColumnField { key, value }
-        }
-    }
+    // impl ColumnField {
+    //     pub fn new(key: String, value: String) -> Self {
+    //         ColumnField { key, value }
+    //     }
+    // }
 }
 
-pub trait Converter {
-    type Value;
-    type Error;
-    fn convert(self) -> Result<Self::Value, Self::Error>;
-}
-
-pub struct Map(pub Vec<(String, String)>);
-
-impl Map {
-    pub fn get(&self, key: String) -> Option<&String> {
-        for value in &self.0 {
-            if value.0 == key {
-                return Some(&value.0);
-            }
-        }
-        None
-    }
-
-    pub fn is_valid(&self) -> bool {
-        for value in &self.0 {
-            if value.0.eq(&String::from("password")) {
-                return false;
-            }
-        }
-        true
-    }
-}
-
-impl TryFrom<serde_json::Map<String, serde_json::Value>> for Map {
-    type Error = AppError;
-    fn try_from(value: serde_json::Map<String, serde_json::Value>) -> Result<Self, Self::Error> {
-        let mut array = Vec::new();
-        for object in value {
-            array.push((
-                object.0,
-                object
-                    .1
-                    .as_str()
-                    .ok_or(AppError::ParseError)?
-                    .to_owned(),
-            ));
-        }
-        Ok(Self(array))
-    }
-}
-
-pub struct JsonMapConverter(pub serde_json::Value);
-
-impl Converter for JsonMapConverter {
-    type Value = Map;
-    type Error = AppError;
-    fn convert(self) -> Result<Self::Value, Self::Error> {
-        let map = self.0.as_object().ok_or(AppError::ParseError)?;
-
-        Map::try_from(map.to_owned())
-    }
-}
+// pub trait Converter {
+//     type Value;
+//     type Error;
+//     fn convert(self) -> Result<Self::Value, Self::Error>;
+// }
+//
+// pub struct Map(pub Vec<(String, String)>);
+//
+// impl Map {
+//     pub fn get(&self, key: String) -> Option<&String> {
+//         for value in &self.0 {
+//             if value.0 == key {
+//                 return Some(&value.0);
+//             }
+//         }
+//         None
+//     }
+//
+//     pub fn is_valid(&self) -> bool {
+//         for value in &self.0 {
+//             if value.0.eq(&String::from("password")) {
+//                 return false;
+//             }
+//         }
+//         true
+//     }
+// }
+//
+// impl TryFrom<serde_json::Map<String, serde_json::Value>> for Map {
+//     type Error = AppError;
+//     fn try_from(value: serde_json::Map<String, serde_json::Value>) -> Result<Self, Self::Error> {
+//         let mut array = Vec::new();
+//         for object in value {
+//             array.push((
+//                 object.0,
+//                 object
+//                     .1
+//                     .as_str()
+//                     .ok_or(AppError::ParseError)?
+//                     .to_owned(),
+//             ));
+//         }
+//         Ok(Self(array))
+//     }
+// }
+//
+// pub struct JsonMapConverter(pub serde_json::Value);
+//
+// impl Converter for JsonMapConverter {
+//     type Value = Map;
+//     type Error = AppError;
+//     fn convert(self) -> Result<Self::Value, Self::Error> {
+//         let map = self.0.as_object().ok_or(AppError::ParseError)?;
+//
+//         Map::try_from(map.to_owned())
+//     }
+// }
 
 // type SqlxConverter<T> = Converter<sqlx::Result<T>>;
 

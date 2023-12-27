@@ -1,5 +1,4 @@
 use actix_web::{post, get, web::{self, Json}, error};
-use sqlx::query_builder;
 
 use crate::{header::JwtTokenHeader, util::types::{AppState, Message}, repository::{order::{Order, insert_order}, book::take_price}};
 

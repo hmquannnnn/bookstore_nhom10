@@ -1,5 +1,5 @@
 use actix_web::{
-    error::{self, ErrorNotFound},
+    error::ErrorNotFound,
     post,
     web::Json,
     Result as AcitxResult,
