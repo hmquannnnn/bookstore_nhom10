@@ -5,6 +5,8 @@ mod header;
 mod middleware;
 mod repository;
 mod util;
+use std::path;
+
 use actix_cors::Cors;
 use actix_web::{web, App, HttpServer};
 use api::book::{get_books, patch_book_image, search_book, search_book_by_author};
@@ -30,15 +32,6 @@ use actix_files as fs;
 use sqlx::mysql::MySqlPoolOptions;
 use util::types::AppState;
 
-// #[actix_web::get("/any")]
-// pub async fn any_type(payload: Json<serde_json::Value>) -> Json<serde_json::Value> {
-//     let value = payload.0.as_object().unwrap();
-//     for v in value.into_iter() {
-//         println!("{} {}", v.0, v.1);
-//     }
-//     Json(payload.0)
-// }
-
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
@@ -52,6 +45,12 @@ async fn main() -> std::io::Result<()> {
         Ok(value) => value.parse::<u16>().unwrap(),
         Err(_) => 8000,
     };
+
+    let static_dist: String = match dotenv::var("STATIC_LOCATION") {
+        Ok(value) => value,
+        Err(_) => "./dist".to_owned()
+    };
+
     // connect to database
     let pool = MySqlPoolOptions::new()
         .max_connections(10)
@@ -71,7 +70,7 @@ async fn main() -> std::io::Result<()> {
         Err(_) => println!("migrate fail"),
     };
 
-    let base_url = format!("{}{}:{}", "http://", domain_name, port);
+    let base_url = format!("{}", domain_name);
     let app_state = AppState { pool, base_url };
 
     // init server
@@ -83,16 +82,16 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .wrap(cors)
-            .service(fs::Files::new("/dang-nhap", "./dist").use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/dang-ky", "./dist").use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/gioi-thieu", "./dist").use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/gio-hang", "./dist").use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/admin/books", "./dist").use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/admin/users", "./dist").use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/admin/orders", "./dist").use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/doi-so-dien-thoai", "./dist").use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/doi-mat-khau", "./dist").use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/thong-tin-sach", "./dist").use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/dang-nhap", &static_dist).use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/dang-ky", &static_dist).use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/gioi-thieu", &static_dist).use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/gio-hang", &static_dist).use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/admin/books", &static_dist).use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/admin/users", &static_dist).use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/admin/orders", &static_dist).use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/doi-so-dien-thoai", &static_dist).use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/doi-mat-khau", &static_dist).use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/thong-tin-sach", &static_dist).use_last_modified(true).index_file("index.html"))
             .app_data(web::Data::new(app_state.clone()))
             .service(
                 web::scope("/api")
@@ -139,7 +138,7 @@ async fn main() -> std::io::Result<()> {
             )
             .service(fs::Files::new("/", "./dist").use_last_modified(true).index_file("index.html"))
     })
-    .bind((domain_name.as_str(), port))?
+    .bind(("127.0.0.1", port))?
     .run()
     .await
 }
