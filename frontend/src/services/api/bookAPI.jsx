@@ -40,9 +40,10 @@ export const callSearchBookByAuthor = (value) => {
     return instance.get(`/search/author${booksURL}?value=${value}`);
 }
 
-export const callFilterBookByPrice = (priceRange) => {
-    console.log(">>>range: ", priceRange);
-    return instance.get(`${booksURL}/filter/price`, { data: priceRange });
+export const callFilterBookByPrice = (start, end) => {
+    // console.log(">>>range: ", priceRange);
+    console.log("check range: ", start, " ", end);
+    return instance.get(`${booksURL}/filter/price?start=${start}&end=${end}`);
 }
 
 export const callFilterBookByGenres = (genres) => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { callChangeQuantity, callDeleteBook, callGetCart } from "../../../services/api/cartAPI";
-import { decreaseQuantityOrderedAction, deleteBookAction, getCartAction, increaseQuantityOrderedAction } from "../../../redux/slice/cartSlice";
+import { decreaseQuantityOrderedAction, deleteBookAction, getCartAction, increaseQuantityOrderedAction, selectBookAction } from "../../../redux/slice/cartSlice";
 import { Checkbox, Col, Divider, Modal, Row } from "antd";
 import { useNavigate } from "react-router-dom";
 import path from "../../../routes/path";
@@ -75,7 +75,12 @@ const FilledCart = () => {
         }
     }
     const handleSelectBook = (bookId, checked) => {
-
+        console.log("check select: ", bookId, checked);
+        const selectInfo = {
+            bookId: bookId,
+            checked: checked
+        }
+        dispatch(selectBookAction(selectInfo));
     }
     const handleOrder = async () => {
         const orderList = booksInCart.map(book => ({
@@ -111,7 +116,7 @@ const FilledCart = () => {
                                 {/* <div className={"book-image"}>{book.front_page_url}</div> */}
                                 <Col md={1}>
                                     <Checkbox
-                                        // onChange={() => handleSelectBook(book.book_id, e.target.value)}
+                                        onChange={(e) => handleSelectBook(book.book_id, e.target.checked)}
                                         style={{ position: "relative", top: "50px", left: "25px" }} />
                                 </Col>
                                 <Col md={10}>
@@ -162,7 +167,7 @@ const FilledCart = () => {
                     <Row className="order-info">
                         <h4 style={{ paddingLeft: "30px" }}>Tổng tiền</h4>
                         <p className="amount">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(cart.amount)}</p>
-                        <button className="order-btn" type="submit" onClick={() => handleOrder()} >Mua hàng ({cart.total})</button>
+                        <button className="order-btn" type="submit" onClick={() => handleOrder()} >Mua hàng ({cart.totalSelected})</button>
                     </Row>
                 </Col>
             </Row>
