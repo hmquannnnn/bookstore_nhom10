@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "delete from cart where user_email = ? and book_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "b499366d62ddf460694aa483049013cd6e0d751acb015a4edeb66a3fce9d3462"
+}

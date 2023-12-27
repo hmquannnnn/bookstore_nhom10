@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "update user set image_url = ? where email = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "2491a5ee1de9fca0a757de0d33451245c4afb6bcd6e44bc09ae0d5d87d8d3723"
+}

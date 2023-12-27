@@ -1,10 +1,8 @@
-use actix_files as fs;
 use actix_web::{
-    error as actix_error, get,
-    http::header::{ContentDisposition, DispositionType},
+    error as actix_error,
     patch,
-    web::{self, Json, Path},
-    Error, HttpResponse, Responder,
+    web::{self, Json},
+    HttpResponse, Responder,
 };
 
 use crate::{
@@ -34,29 +32,29 @@ pub mod order;
 //         }))
 // }
 
-pub async fn index() ->  actix_web::Result<fs::NamedFile>{
-    let path: std::path::PathBuf = ["./dist/", "index.html"].iter().collect();
-    let file = fs::NamedFile::open(path)?;
-    Ok(file
-        .use_last_modified(true)
-        .set_content_disposition(ContentDisposition {
-            disposition: DispositionType::Inline,
-            parameters: vec![],
-        }))
-}
+// pub async fn index() ->  actix_web::Result<fs::NamedFile>{
+//     let path: std::path::PathBuf = ["./dist/", "index.html"].iter().collect();
+//     let file = fs::NamedFile::open(path)?;
+//     Ok(file
+//         .use_last_modified(true)
+//         .set_content_disposition(ContentDisposition {
+//             disposition: DispositionType::Inline,
+//             parameters: vec![],
+//         }))
+// }
 
-#[get("/assets/{filename:.*}")]
-async fn assets(path: Path<String>) -> actix_web::Result<fs::NamedFile> {
-    let path = path.into_inner();
-    let path: std::path::PathBuf = ["./dist/assets/", &path].iter().collect();
-    let file = fs::NamedFile::open(path)?;
-    Ok(file
-        .use_last_modified(true)
-        .set_content_disposition(ContentDisposition {
-            disposition: DispositionType::Attachment,
-            parameters: vec![],
-        }))
-}
+// #[get("/assets/{filename:.*}")]
+// async fn assets(path: Path<String>) -> actix_web::Result<fs::NamedFile> {
+//     let path = path.into_inner();
+//     let path: std::path::PathBuf = ["./dist/assets/", &path].iter().collect();
+//     let file = fs::NamedFile::open(path)?;
+//     Ok(file
+//         .use_last_modified(true)
+//         .set_content_disposition(ContentDisposition {
+//             disposition: DispositionType::Attachment,
+//             parameters: vec![],
+//         }))
+// }
 
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct UpdateType {
@@ -64,7 +62,7 @@ pub struct UpdateType {
     value_field: ColumnField,
 }
 
-#[patch("/api/update/{table}")]
+#[patch("/update/{table}")]
 pub async fn update(
     path: web::Path<String>,
     jwt_header: JwtTokenHeader,

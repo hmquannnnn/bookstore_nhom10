@@ -1,5 +1,4 @@
 use actix_web::{post, get, web::{self, Json}, error};
-use sqlx::query_builder;
 
 use crate::{header::JwtTokenHeader, util::types::{AppState, Message}, repository::{order::{Order, insert_order}, book::take_price}};
 
@@ -29,6 +28,9 @@ struct OrderInsert {
 #[derive(serde::Deserialize, serde::Serialize)]
 pub struct GetOrder {
     pub id: u64,
+    pub title: String,
+    pub back_page_url: Option<String>,
+    pub front_page_url: Option<String>,
     pub user_email: String,
     pub book_id: String,
     pub quantity_ordered: i32,
@@ -40,7 +42,7 @@ pub struct GetOrder {
 
 type MyResult<T> = actix_web::Result<Json<Message<T>>>;
 
-#[get("/api/order")]
+#[get("/order")]
 pub async fn get_order(
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
@@ -48,9 +50,15 @@ pub async fn get_order(
     let user_email = jwt_header.email;
     let pool = &app_state.pool;
     let orders = sqlx::query_as!(GetOrder,
-    "select orders.*, orderDetail.book_id, orderDetail.price_each, orderDetail.quantity_ordered from orders join orderDetail
+    "select book.title, book.back_page_url, book.front_page_url, orders.* from book
+    join (
+        select orders.*, orderDetail.book_id, orderDetail.price_each, orderDetail.quantity_ordered 
+        from orders 
+        join orderDetail
         on orders.id = orderDetail.order_id
-        where user_email = ? and orders.status != \"cancel\"", user_email 
+        where user_email = ? and orders.status != \"cancel\"
+    ) orders
+    on book.id = orders.book_id", user_email 
     ).fetch_all(pool)
     .await
     .map_err(error::ErrorNotFound)?;
@@ -60,7 +68,7 @@ pub async fn get_order(
     }))
 }
 
-#[post["/api/order"]]
+#[post["/order"]]
 pub async fn post_order(
     jwt_header: JwtTokenHeader,
     details: Json<Vec<OrderDetail>>,
@@ -107,7 +115,7 @@ pub async fn post_order(
     }))
 }
 
-#[post("/api/order/cancel")]
+#[post("/order/cancel")]
 pub async fn cancel_order(
     jwt_header: JwtTokenHeader,
     order_id: Json<String>,

@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "update orders set status = \"cancel\" where id = ? and user_email = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "04cdc9d8a8b053a547bc1e37c169b1fcec12eed16d903f4ff2ece0418930239f"
+}
