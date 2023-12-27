@@ -40,8 +40,7 @@ async fn main() -> std::io::Result<()> {
     let domain_name = match dotenv::var("DOMAIN_NAME") {
         Ok(value) => value,
         Err(_) => "localhost".to_owned(),
-    };
-    let port = match dotenv::var("PORT") {
+    }; let port = match dotenv::var("PORT") {
         Ok(value) => value.parse::<u16>().unwrap(),
         Err(_) => 8000,
     };
