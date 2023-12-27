@@ -1,0 +1,157 @@
+{
+  "db_name": "MySQL",
+  "query": "select book.*, author.name author_name from (\n    select book.*, book_genre.genres from book\n    left join (\n    select book_id id, concat('[',group_concat(genre_id),']') genres from book_genre\n    group by id\n    ) book_genre\n    on book.id = book_genre.id\n    ) book\n    join author\n    on author.id = book.author_id\n    order by rating asc \n    limit ? offset ?",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | PRIMARY_KEY | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 256
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "author_id",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL | MULTIPLE_KEY | NO_DEFAULT_VALUE",
+          "char_set": 63,
+          "max_size": 11
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "title",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | MULTIPLE_KEY | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 1024
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "price",
+        "type_info": {
+          "type": "Float",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 63,
+          "max_size": 12
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "publish_year",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 1024
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "number_of_purchases",
+        "type_info": {
+          "type": "Long",
+          "flags": "",
+          "char_set": 63,
+          "max_size": 11
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "book_in_stocks",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 63,
+          "max_size": 11
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "rating",
+        "type_info": {
+          "type": "Float",
+          "flags": "",
+          "char_set": 63,
+          "max_size": 12
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "desciption",
+        "type_info": {
+          "type": "Blob",
+          "flags": "BLOB",
+          "char_set": 224,
+          "max_size": 262140
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "front_page_url",
+        "type_info": {
+          "type": "VarString",
+          "flags": "",
+          "char_set": 224,
+          "max_size": 1024
+        }
+      },
+      {
+        "ordinal": 10,
+        "name": "back_page_url",
+        "type_info": {
+          "type": "VarString",
+          "flags": "",
+          "char_set": 224,
+          "max_size": 1024
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "genres",
+        "type_info": {
+          "type": "Blob",
+          "flags": "BLOB",
+          "char_set": 224,
+          "max_size": 16416
+        }
+      },
+      {
+        "ordinal": 12,
+        "name": "author_name",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 1024
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "b3360af6228504dcc7557df93b3d5f474551417364a78492e75029a456623711"
+}

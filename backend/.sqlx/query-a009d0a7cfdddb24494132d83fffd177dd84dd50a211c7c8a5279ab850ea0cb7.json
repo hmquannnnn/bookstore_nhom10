@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "update book set front_page_url = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "a009d0a7cfdddb24494132d83fffd177dd84dd50a211c7c8a5279ab850ea0cb7"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "insert into orders(id, user_email, order_date, require_date, status) values (?, ?, now(), adddate(now(), 3), ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "0c2bac8d0b46ba86ce6e19663f74463ef4af63ad45852ea1075a74f7c021eb6b"
+}

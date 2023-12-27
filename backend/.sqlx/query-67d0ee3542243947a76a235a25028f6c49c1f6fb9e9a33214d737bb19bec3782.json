@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "update cart set quantity_ordered = ? where user_email = ? and book_id = ? ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "67d0ee3542243947a76a235a25028f6c49c1f6fb9e9a33214d737bb19bec3782"
+}

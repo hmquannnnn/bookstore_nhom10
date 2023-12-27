@@ -1,0 +1,36 @@
+{
+  "db_name": "MySQL",
+  "query": "select order_id, sum(price_each * quantity_ordered) price from orderDetail \n        where order_id = ?\n        group by order_id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "order_id",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL | MULTIPLE_KEY | UNSIGNED | NO_DEFAULT_VALUE",
+          "char_set": 63,
+          "max_size": 20
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "price",
+        "type_info": {
+          "type": "Double",
+          "flags": "BINARY",
+          "char_set": 63,
+          "max_size": 23
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      true
+    ]
+  },
+  "hash": "77fd067f0b3bd66978b56504cef2953e685dcb6a19d77e8ef65befd8e2fcd4e2"
+}
