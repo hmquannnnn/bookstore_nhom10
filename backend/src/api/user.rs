@@ -21,7 +21,7 @@ use futures_util::future::join;
 use crate::update_user_field;
 use crate::update_field;
 
-#[post("/api/user/login")]
+#[post("/user/login")]
 pub async fn user_login(
     data: Json<UserLogin>,
     app_state: web::Data<AppState>,
@@ -41,7 +41,7 @@ pub async fn user_login(
     Ok(Json(UserResponse { user, token }))
 }
 
-#[get("/api/user")]
+#[get("/user")]
 pub async fn get_user(
     auth_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
@@ -54,7 +54,7 @@ pub async fn get_user(
     Ok(Json(user))
 }
 
-#[post("/api/user/register")]
+#[post("/user/register")]
 pub async fn register_user(
     data: Json<UserInsert>,
     app_state: web::Data<AppState>,
@@ -66,7 +66,7 @@ pub async fn register_user(
     Ok(HttpResponse::Ok().json(new_user))
 }
 
-#[put("/api/user/image")]
+#[put("/user/image")]
 pub async fn insert_image_user(
     auth_header: JwtTokenHeader,
     data: Bytes,
@@ -94,7 +94,7 @@ pub async fn insert_image_user(
     }))
 }
 
-#[patch("/api/user/image")]
+#[patch("/user/image")]
 pub async fn patch_user_image(
     jwt: JwtTokenHeader,
     data: Bytes,
@@ -132,7 +132,7 @@ pub struct Password {
     new: String,
 }
 
-#[patch("/api/user/password")]
+#[patch("/user/password")]
 pub async fn update_user_password(
         jwt: JwtTokenHeader,
         password: Json<Password>,
@@ -158,9 +158,9 @@ pub async fn update_user_password(
     }))
 }
 
-update_user_field!(update_user_name, "/api/user/name/{value}", name); 
-update_user_field!(update_user_address,"/api/user/address/{value}", address); 
-update_user_field!(update_user_phone, "/api/user/phone/{value}", phone); 
+update_user_field!(update_user_name, "/user/name/{value}", name); 
+update_user_field!(update_user_address,"/user/address/{value}", address); 
+update_user_field!(update_user_phone, "/user/phone/{value}", phone); 
 
 #[macro_export]
 macro_rules! update_user_field {

@@ -40,7 +40,7 @@ pub struct GetOrder {
 
 type MyResult<T> = actix_web::Result<Json<Message<T>>>;
 
-#[get("/api/order")]
+#[get("/order")]
 pub async fn get_order(
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
@@ -60,7 +60,7 @@ pub async fn get_order(
     }))
 }
 
-#[post["/api/order"]]
+#[post["/order"]]
 pub async fn post_order(
     jwt_header: JwtTokenHeader,
     details: Json<Vec<OrderDetail>>,
@@ -107,7 +107,7 @@ pub async fn post_order(
     }))
 }
 
-#[post("/api/order/cancel")]
+#[post("/order/cancel")]
 pub async fn cancel_order(
     jwt_header: JwtTokenHeader,
     order_id: Json<String>,

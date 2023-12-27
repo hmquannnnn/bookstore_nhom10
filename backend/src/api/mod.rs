@@ -64,7 +64,7 @@ pub struct UpdateType {
     value_field: ColumnField,
 }
 
-#[patch("/api/update/{table}")]
+#[patch("/update/{table}")]
 pub async fn update(
     path: web::Path<String>,
     jwt_header: JwtTokenHeader,

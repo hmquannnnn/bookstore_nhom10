@@ -7,13 +7,12 @@ mod repository;
 mod util;
 use actix_cors::Cors;
 use actix_web::{web, App, HttpServer};
+use api::assets;
 use api::book::{get_books, patch_book_image, search_book, search_book_by_author};
 use api::cart::delete_cart;
 use api::{
-    assets,
     book::{
-        fetch_book_by_genre, fetch_filter_price, fetch_filter_price_genre, fetch_sorted_books,
-        fetch_sorted_books_asc, fetch_sorted_books_price_asc, fetch_sorted_books_price_desc,
+        fetch_book_by_genre, fetch_filter_price, fetch_filter_price_genre, fetch_sorted_books, fetch_sorted_books_asc, fetch_sorted_books_price_asc, fetch_sorted_books_price_desc,
         fetch_sorted_books_purchse_asc, fetch_sorted_books_purchse_desc, get_book, list_book,
         update_book_descption, update_book_price, update_book_title,
     },
@@ -29,6 +28,7 @@ use api::{
     },
 };
 
+use actix_files as fs;
 use sqlx::mysql::MySqlPoolOptions;
 use util::types::AppState;
 
@@ -85,62 +85,61 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .wrap(cors)
-            // .wrap(SayHi)
-            // .wrap(Logger::new("%a %{User-Agent}i"))
+            .service(fs::Files::new("/dang-nhap", "./dist").use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/dang-ky", "./dist").use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/gioi-thieu", "./dist").use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/gio-hang", "./dist").use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/admin/books", "./dist").use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/admin/users", "./dist").use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/admin/orders", "./dist").use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/doi-so-dien-thoai", "./dist").use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/doi-mat-khau", "./dist").use_last_modified(true).index_file("index.html"))
+            .service(fs::Files::new("/thong-tin-sach", "./dist").use_last_modified(true).index_file("index.html"))
             .app_data(web::Data::new(app_state.clone()))
-            // .service(fs::Files::new("/static", "./dist").use_last_modified(true))
-            .service(assets)
-            .service(web::resource("/").to(index))
-            .service(web::resource("/dang-nhap").to(index))
-            .service(web::resource("/dang-ky").to(index))
-            .service(web::resource("/gioi-thieu").to(index))
-            .service(web::resource("/gio-hang").to(index))
-            .service(web::resource("/admin/books").to(index))
-            .service(web::resource("/admin/users").to(index))
-            .service(web::resource("/admin/orders").to(index))
-            .service(web::resource("/doi-so-dien-thoai").to(index))
-            .service(web::resource("/doi-mat-khau").to(index))
-            .service(web::resource("/thong-tin-sach").to(index))
-            .service(get_image)
-            .service(put_image)
-            .service(delete_image)
-            .service(get_book)
-            .service(get_books)
-            .service(search_book)
-            .service(search_book_by_author)
-            .service(list_book)
-            .service(user_login)
-            .service(register_user)
-            .service(get_user)
-            .service(update)
-            .service(get_cart)
-            .service(put_cart)
-            .service(patch_cart)
-            .service(delete_cart)
-            .service(insert_image_user)
-            .service(update_user_name)
-            .service(update_user_phone)
-            .service(update_user_address)
-            .service(patch_user_image)
-            .service(update_user_password)
-            .service(patch_book_image)
-            .service(update_book_title)
-            .service(update_book_price)
-            .service(update_book_descption)
-            .service(get_genres)
-            .service(fetch_sorted_books)
-            .service(fetch_sorted_books_asc)
-            .service(fetch_sorted_books_purchse_asc)
-            .service(fetch_sorted_books_purchse_desc)
-            .service(fetch_sorted_books_price_asc)
-            .service(fetch_sorted_books_price_desc)
-            .service(fetch_filter_price)
-            .service(fetch_book_by_genre)
-            .service(fetch_filter_price_genre)
-            .service(order_cart)
-            .service(post_order)
-            .service(get_order)
-            .service(cancel_order)
+            .service(
+                web::scope("/api")
+                    .service(get_image)
+                    .service(put_image)
+                    .service(delete_image)
+                    .service(get_book)
+                    .service(get_books)
+                    .service(search_book)
+                    .service(search_book_by_author)
+                    .service(list_book)
+                    .service(user_login)
+                    .service(register_user)
+                    .service(get_user)
+                    .service(update)
+                    .service(get_cart)
+                    .service(put_cart)
+                    .service(patch_cart)
+                    .service(delete_cart)
+                    .service(insert_image_user)
+                    .service(update_user_name)
+                    .service(update_user_phone)
+                    .service(update_user_address)
+                    .service(patch_user_image)
+                    .service(update_user_password)
+                    .service(patch_book_image)
+                    .service(update_book_title)
+                    .service(update_book_price)
+                    .service(update_book_descption)
+                    .service(get_genres)
+                    .service(fetch_sorted_books)
+                    .service(fetch_sorted_books_asc)
+                    .service(fetch_sorted_books_purchse_asc)
+                    .service(fetch_sorted_books_purchse_desc)
+                    .service(fetch_sorted_books_price_asc)
+                    .service(fetch_sorted_books_price_desc)
+                    .service(fetch_filter_price)
+                    .service(fetch_book_by_genre)
+                    .service(fetch_filter_price_genre)
+                    .service(order_cart)
+                    .service(post_order)
+                    .service(get_order)
+                    .service(cancel_order)
+            )
+            .service(fs::Files::new("/", "./dist").use_last_modified(true).index_file("index.html"))
     })
     .bind((domain_name.as_str(), port))?
     .run()

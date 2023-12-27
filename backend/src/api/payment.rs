@@ -17,7 +17,7 @@ pub struct PaymentDetail {
     payment: f64,
 }
 
-#[post("/api/payment")]
+#[post("/payment")]
 pub async fn post_pay(
     jwt_header: JwtTokenHeader,
     payment_detail: Json<PaymentDetail>,
