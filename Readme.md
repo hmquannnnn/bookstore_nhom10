@@ -7,12 +7,15 @@ npm install vite
 2. Build frontend
 
 cd frontend
+
 npm run build
+
 npm start
 
 3. Move build to backend
 
 rm -rf ../backend/dist
+
 mv dist ../backend/dist
 
 4. Build and run backend
