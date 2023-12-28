@@ -38,8 +38,9 @@ const Footer = () => {
                     <h5>Thông tin liên hệ</h5>
                     <Row>
                         <FaLocationDot className="icon" />
-                        <a href="https://bit.ly/place-UET" target="_blank" rel="noopener noreferrer" style={{ color: "black" }}></a>
+                        <a href="https://bit.ly/place-UET" target="_blank" rel="noopener noreferrer" style={{ color: "black" }}>
                         <p>E3, 144 Xuân Thủy, Cầu Giấy, Hà Nội</p>
+                        </a>
                     </Row>
                     <Row>
                         <IoMdMail className="icon" />
