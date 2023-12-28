@@ -1,5 +1,5 @@
 use actix_web::{
-    error::ErrorNotFound,
+    error::{ErrorNotFound, self},
     post,
     web::Json,
     Result as AcitxResult,
@@ -13,7 +13,7 @@ use crate::{
 
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct PaymentDetail {
-    order_id: u64,
+    order_id: String,
     payment: f64,
 }
 
@@ -25,8 +25,11 @@ pub async fn post_pay(
 ) -> AcitxResult<Json<Message<String>>> {
     let user_email = jwt_header.email;
     let pool = &app_state.pool;
+    let order_id = payment_detail.order_id
+        .parse()
+        .map_err(error::ErrorBadRequest)?;
 
-    let order_price = get_order_price(pool, payment_detail.order_id, &user_email)
+    let order_price = get_order_price(pool, order_id, &user_email)
         .await
         .map_err(ErrorNotFound)?;
 
