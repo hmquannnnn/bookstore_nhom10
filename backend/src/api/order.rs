@@ -1,6 +1,6 @@
 use actix_web::{post, get, web::{self, Json}, error};
 
-use crate::{header::JwtTokenHeader, util::types::{AppState, Message}, repository::{order::{Order, insert_order}, book::take_price}};
+use crate::{header::JwtTokenHeader, util::types::{AppState, Message}, repository::{order::{Order, insert_order, OrderSend}, book::take_price}};
 
 
 // #[post("/api/order")]
@@ -68,14 +68,6 @@ pub async fn get_order(
     }))
 }
 
-#[derive(serde::Serialize)]
-pub struct OrderSend {
-    pub id: String,
-    pub user_email: String,
-    pub order_date: String,
-    pub require_date: Option<String>,
-    pub status: Option<String>,
-}
 
 #[post["/order"]]
 pub async fn post_order(
@@ -120,13 +112,7 @@ pub async fn post_order(
 
     Ok(Json(Message{
         message: "update success",
-        payload: Some(OrderSend { 
-            id: order.id.to_string(), 
-            order_date: order.order_date,
-            require_date: order.require_date, 
-            status: order.status,
-            user_email: order.user_email,
-        })
+        payload: Some(order.into())
     }))
 }
 

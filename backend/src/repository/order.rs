@@ -38,6 +38,27 @@ pub struct Order {
     pub status: Option<String>,
 }
 
+#[derive(serde::Serialize)]
+pub struct OrderSend {
+    pub id: String,
+    pub user_email: String,
+    pub order_date: String,
+    pub require_date: Option<String>,
+    pub status: Option<String>,
+}
+
+impl Into<OrderSend> for Order {
+    fn into(self) -> OrderSend {
+        OrderSend { 
+            id: self.id.to_string(),
+            user_email: self.user_email, 
+            order_date: self.order_date,
+            require_date: self.require_date, 
+            status: self.status
+        }
+    }
+}
+
 pub async fn insert_order(pool: &MySqlPool, user_email: &String) -> sqlx::Result<Order> {
     let order_id = uuid::Uuid::new_v4().to_u128_le() as u64;
 
