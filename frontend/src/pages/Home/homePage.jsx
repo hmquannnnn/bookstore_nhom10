@@ -211,8 +211,8 @@ const Home = () => {
                         label="Khoảng giá"
                         labelCol={{ span: 24 }}
                     >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 0 }}>
-                            <Form.Item name={["range", "start"]}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: "10px" }}>
+                            <Form.Item name={["range", "start"]} style={{ marginLeft: 0 }}>
                                 <InputNumber
                                     name="start"
                                     min={0}
@@ -221,8 +221,8 @@ const Home = () => {
 
 
                             </Form.Item>
-                            <span>-</span>
-                            <Form.Item name={["range", "end"]}>
+                            <span style={{ position: "relative", top: "8px" }}>-</span>
+                            <Form.Item name={["range", "end"]} style={{ marginRight: 0 }}>
                                 <InputNumber
                                     name="end"
                                     min={0}

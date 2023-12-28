@@ -129,9 +129,9 @@ const Header = () => {
                     <div className="page-header__top">
                         <div className="page-header__logo">
                             <span className="logo">
-                                <a href="/" >
+                                <Link to={path.home} >
                                     <p className="brand-name">UETHUVIENSACH</p>
-                                </a>
+                                </Link>
                             </span>
                             <IoSearch style={{ position: "relative", left: "38px" }} />
                             <input

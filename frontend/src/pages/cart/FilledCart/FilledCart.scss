@@ -4,6 +4,7 @@ $grey-text: #64646d;
 .filled-cart-container {
   background-color: #f5f3f3;
   height: fit-content;
+  min-height: 62vh;
   .left {
     .high-row {
       border-radius: 4px;
@@ -86,7 +87,7 @@ $grey-text: #64646d;
       color: black;
       margin: 10px 0;
       font-size: 18px;
-      font-weight: 400;
+      font-weight: 500;
     }
     .user-info {
       //   border: 1px solid black;

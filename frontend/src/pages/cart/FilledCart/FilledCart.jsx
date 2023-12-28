@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { callChangeQuantity, callDeleteBook, callGetCart } from "../../../services/api/cartAPI";
-import { decreaseQuantityOrderedAction, deleteBookAction, getCartAction, increaseQuantityOrderedAction, selectBookAction } from "../../../redux/slice/cartSlice";
+import { decreaseQuantityOrderedAction, deleteBookAction, deleteSelectedAction, getCartAction, increaseQuantityOrderedAction, selectBookAction } from "../../../redux/slice/cartSlice";
 import { Checkbox, Col, Divider, Modal, Row } from "antd";
 import { useNavigate } from "react-router-dom";
 import path from "../../../routes/path";
@@ -10,6 +10,7 @@ import { callGetBook } from "../../../services/api/bookAPI";
 import { getCurrentBookAction } from "../../../redux/slice/bookSlice";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { callCreateOrder } from "../../../services/api/orderAPI";
+import { getOrderAction } from "../../../redux/slice/orderSlice";
 
 
 
@@ -82,18 +83,30 @@ const FilledCart = () => {
         }
         dispatch(selectBookAction(selectInfo));
     }
+    const selectedBook = useSelector(state => state.cart.selected);
+    console.log(selectedBook);
     const handleOrder = async () => {
-        const orderList = booksInCart.map(book => ({
+        const orderList = selectedBook.map(book => ({
             book_id: book.book_id,
             quantity_ordered: book.quantity_ordered
         }));
         orderList.map(async (book) => {
             const res = await callDeleteBook(book.book_id);
         })
-        // console.log(orderList);
         const res = await callCreateOrder(orderList);
         console.log(res);
         if (res) {
+            const orderId = res.payload.id;
+            const orderInfo = {
+                orderId: orderId,
+                orderList: selectedBook
+            }
+            let amount = 0;
+            selectedBook.forEach(book => amount += book.quantity_ordered * book.price_each);
+            localStorage.setItem("amount", amount);
+            localStorage.setItem("orderId", orderId);
+            dispatch(getOrderAction(orderInfo));
+            dispatch(deleteSelectedAction());
             navigate(path.purchase);
         }
     }
