@@ -11,6 +11,7 @@ use actix_cors::Cors;
 use actix_web::{web, App, HttpServer};
 use api::book::{get_books, patch_book_image, search_book, search_book_by_author};
 use api::cart::delete_cart;
+use api::payment::post_pay;
 use api::{
     book::{
         fetch_book_by_genre, fetch_filter_price, fetch_filter_price_genre, fetch_sorted_books, fetch_sorted_books_asc, fetch_sorted_books_price_asc, fetch_sorted_books_price_desc,
@@ -134,6 +135,7 @@ async fn main() -> std::io::Result<()> {
                     .service(post_order)
                     .service(get_order)
                     .service(cancel_order)
+                    .service(post_pay)
             )
             .service(fs::Files::new("/", "./dist").use_last_modified(true).index_file("index.html"))
     })
