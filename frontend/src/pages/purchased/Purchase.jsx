@@ -2,11 +2,14 @@ import { useDispatch, useSelector } from "react-redux";
 import "./Purchase.scss"
 import { callGetOrder } from "../../services/api/orderAPI";
 import { useEffect, useState } from "react";
-import { Col, Divider, Radio, Row, Space } from "antd";
+import { Button, Col, Divider, Modal, Radio, Result, Row, Space } from "antd";
 import { calcDeliveryCost, getOrderAction } from "../../redux/slice/orderSlice";
 import { callPayment } from "../../services/api/paymentAPI";
+import { useNavigate } from "react-router-dom";
+import path from "../../routes/path";
 const Purchase = () => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
     const user = useSelector(state => state.account.user);
     const orderId = localStorage.getItem("orderId");
     // const amount = localStorage.getItem("amount");
@@ -39,11 +42,34 @@ const Purchase = () => {
         setValue(value);
         dispatch(calcDeliveryCost(value));
     };
+    const [resultVisible, setResultVisible] = useState(false);
+    const [resultStatus, setResultStatus] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
     const handlePurchase = async () => {
         const res = await callPayment(orderId, Number(amount + deliveryCost));
         if (res) {
             console.log("check call api: ", res);
+            showModal();
+            // setResultStatus('success');
+            // setResultVisible(true);
         }
+    }
+    const donePayment = () => {
+        navigate(path.home);
+        localStorage.removeItem("orderId");
+        localStorage.removeItem("amount");
     }
     return (
         <>
@@ -135,6 +161,27 @@ const Purchase = () => {
                         </Row>
 
                         <button className="order-btn" type="submit" onClick={handlePurchase} >Thanh toán</button>
+                        {/* <Result
+                            status={resultStatus}
+                            title={resultStatus === 'success' ? 'Thanh toán thành công' : 'Có lỗi xảy ra'}
+                            subTitle={resultStatus === 'success' ? 'Cảm ơn bạn đã mua hàng!' : 'Vui lòng thử lại sau'}
+                            // extra={[
+                            //     <Button type="primary" key="back" onClick={() => setResultVisible(false)}>
+                            //         Quay lại cửa hàng
+                            //     </Button>,
+                            //     // Các nút hoặc thành phần extra khác
+                            // ]}
+                            visible={resultVisible}
+                        /> */}
+                        <Modal title="Thanh toán thành công" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={[
+                            <Button key="ok" type="primary" onClick={() => donePayment()}>
+                                Quay về trang chủ
+                            </Button>,
+                        ]}>
+                            <div>Mã đơn hàng: {orderId}</div>
+                            <div>Hình thức giao hàng: {value === 1 ? "Giao hàng tiêu chuẩn" : "Giao hàng hỏa tốc (Nhận hàng trong 2h)"}</div>
+                            <div>Tổng tiền: {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount + deliveryCost)}</div>
+                        </Modal>
                     </Col>
                 </Col>
             </Row>

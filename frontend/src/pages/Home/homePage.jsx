@@ -170,41 +170,16 @@ const Home = () => {
     return (
         // <div className="homepage-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
         <Row className="homepage-container" gutter={[20, 20]} style={{ maxWidth: 1440, margin: '0 auto', minHeight: "70vh" }}>
-            <Col className="sidebar" md={4} sm={0} xs={0} style={{ backgroundColor: "white", height: "515px" }}>
+            <Col className="sidebar" md={4} sm={0} xs={0} style={{ backgroundColor: "white", height: "fit-content", paddingBottom: "10px" }}>
                 <div>
-                    <p>Bộ lọc tìm kiếm</p>
+                    <p style={{ position: " relative", left: " 5px", fontWeight: "500" }}>Bộ lọc tìm kiếm</p>
                 </div>
                 <Form
                     onFinish={onFinish}
                     form={form}
                     onValuesChange={(changeValues, values) => handleChangeFilter(changeValues, values)}
                 >
-                    <Form.Item name="category" label="Thể loại" labelCol={{ span: 24 }}>
-                        <Checkbox.Group>
-                            <Row>
-                                <Col span={24}>
-                                    <Checkbox value="Kinh dị">
-                                        Kinh dị
-                                    </Checkbox>
-                                </Col>
-                                <Col span={24}>
-                                    <Checkbox value="Khoa học">
-                                        Khoa học
-                                    </Checkbox>
-                                </Col>
-                                <Col span={24}>
-                                    <Checkbox value="Lãng mạn">
-                                        Lãng mạn
-                                    </Checkbox>
-                                </Col>
-                                <Col span={24}>
-                                    <Checkbox value="Sức khỏe">
-                                        Sức khỏe
-                                    </Checkbox>
-                                </Col>
-                            </Row>
-                        </Checkbox.Group>
-                    </Form.Item>
+
                     <Divider />
                     <Form.Item
                         name="price-range"
@@ -236,25 +211,6 @@ const Home = () => {
                             <button onClick={handlePriceFilter} style={{ width: "100%", backgroundColor: "white", border: "1px solid #0B74E5", color: "#0B74E5", borderRadius: "4px", padding: "7px 0" }} type="primary">
                                 Áp dụng
                             </button>
-                        </div>
-                    </Form.Item>
-                    <Divider />
-                    <Form.Item
-                        name="rating"
-                        label="Đánh giá"
-                        labelCol={{ span: 24 }}
-                    >
-                        <div style={{ cursor: "pointer" }}>
-                            <Rate value={5} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
-                            <span className="ant-rate-text">từ 5 sao</span>
-                        </div>
-                        <div style={{ cursor: "pointer" }}>
-                            <Rate value={4} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
-                            <span className="ant-rate-text">từ 4 sao</span>
-                        </div>
-                        <div style={{ cursor: "pointer" }}>
-                            <Rate value={3} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
-                            <span className="ant-rate-text">từ 3 sao</span>
                         </div>
                     </Form.Item>
                 </Form>
