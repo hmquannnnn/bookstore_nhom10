@@ -9,7 +9,7 @@ use std::path;
 
 use actix_cors::Cors;
 use actix_web::{web, App, HttpServer};
-use api::book::{get_books, patch_book_image, search_book, search_book_by_author};
+use api::book::{get_books, patch_book_image, search_book, search_book_by_author, filter_ratting_higher};
 use api::cart::delete_cart;
 use api::payment::post_pay;
 use api::{
@@ -131,6 +131,7 @@ async fn main() -> std::io::Result<()> {
                     .service(fetch_filter_price)
                     .service(fetch_book_by_genre)
                     .service(fetch_filter_price_genre)
+                    .service(filter_ratting_higher)
                     .service(order_cart)
                     .service(post_order)
                     .service(get_order)
