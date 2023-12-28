@@ -23,18 +23,24 @@ const Footer = () => {
                     <h5>Mạng xã hội</h5>
                     <Row>
                         <FaFacebook className="icon" />
-                        <p>Facebook</p>
+                        <a href="https://www.facebook.com/profile.php?id=61552075941822" target="_blank" rel="noopener noreferrer">
+                            <p>Facebook</p>
+                        </a>
                     </Row>
                     <Row>
                         <FaInstagram className="icon" />
-                        <p>Instagram</p>
+                        <a href="https://www.instagram.com/uethuviensach/?igshid=NzZlODBkYWE4Ng%3D%3D&fbclid=IwAR2PgwiCyo3fwBW0lBXKFqIhISfRTyC1dSOvaA4nMMZRpU5ecwjmAAfiqfY" target="_blank" rel="noopener noreferrer">
+                            <p>Instagram</p>
+                        </a>
                     </Row>
                 </Col>
                 <Col className="info" md={7}>
                     <h5>Thông tin liên hệ</h5>
                     <Row>
                         <FaLocationDot className="icon" />
-                        <p>E3, 144 Xuân Thủy, Cầu Giấy, Hà Nội</p>
+                        <a href="https://www.google.com/maps/place/2QQM%2B83,+C%E1%BA%A7u+Gi%E1%BA%A5y,+H%C3%A0+N%E1%BB%99i,+Vi%E1%BB%87t+Nam/@21.038315,105.7814,18z/data=!3m1!4b1!4m5!3m4!1s0x3135ab5756f91033:0x25a23c2769744ae!8m2!3d21.0383125!4d105.7826875?hl=vi-VN&entry=ttu">
+                            <p>E3, 144 Xuân Thủy, Cầu Giấy, Hà Nội</p>
+                        </a>
                     </Row>
                     <Row>
                         <IoMdMail className="icon" />
