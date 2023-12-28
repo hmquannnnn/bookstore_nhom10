@@ -68,12 +68,21 @@ pub async fn get_order(
     }))
 }
 
+#[derive(serde::Serialize)]
+pub struct OrderSend {
+    pub id: String,
+    pub user_email: String,
+    pub order_date: String,
+    pub require_date: Option<String>,
+    pub status: Option<String>,
+}
+
 #[post["/order"]]
 pub async fn post_order(
     jwt_header: JwtTokenHeader,
     details: Json<Vec<OrderDetail>>,
     app_state: web::Data<AppState>,
-) -> MyResult<Order> {
+) -> MyResult<OrderSend> {
     let pool = &app_state.pool;
     let user_email = &jwt_header.email;
     let details = details.0;
@@ -111,7 +120,13 @@ pub async fn post_order(
 
     Ok(Json(Message{
         message: "update success",
-        payload: Some(order)
+        payload: Some(OrderSend { 
+            id: order.id.to_string(), 
+            order_date: order.order_date,
+            require_date: order.require_date, 
+            status: order.status,
+            user_email: order.user_email,
+        })
     }))
 }
 
