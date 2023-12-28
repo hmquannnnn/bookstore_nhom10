@@ -10,8 +10,6 @@ cd frontend
 
 npm run build
 
-npm start
-
 3. Move build to backend
 
 rm -rf ../backend/dist
