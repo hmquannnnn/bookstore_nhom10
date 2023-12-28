@@ -40,7 +40,7 @@ const Purchase = () => {
         dispatch(calcDeliveryCost(value));
     };
     const handlePurchase = async () => {
-        const res = await callPayment(Number(orderId), Number(amount + deliveryCost - 10000));
+        const res = await callPayment(orderId, Number(amount + deliveryCost));
         if (res) {
             console.log("check call api: ", res);
         }

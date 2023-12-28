@@ -97,7 +97,7 @@ const FilledCart = () => {
         console.log("check create order: ", orderList, " ", res);
         // console.log(res);
         if (res && res.payload && res.payload.id) {
-            const orderId = BigInt(res.payload.id).toString();
+            const orderId = res.payload.id;
             const orderInfo = {
                 orderId: orderId,
                 orderList: selectedBook
@@ -105,7 +105,7 @@ const FilledCart = () => {
             let amount = 0;
             selectedBook.forEach(book => amount += book.quantity_ordered * book.price_each);
             localStorage.setItem("amount", amount);
-            localStorage.setItem("orderId", orderId.toString());
+            localStorage.setItem("orderId", orderId);
             dispatch(getOrderAction(orderInfo));
             dispatch(deleteSelectedAction());
             navigate(path.purchase);
