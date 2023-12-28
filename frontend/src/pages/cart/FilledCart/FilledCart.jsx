@@ -91,12 +91,13 @@ const FilledCart = () => {
             quantity_ordered: book.quantity_ordered
         }));
         orderList.map(async (book) => {
-            const res = await callDeleteBook(book.book_id);
+            await callDeleteBook(book.book_id);
         })
         const res = await callCreateOrder(orderList);
-        console.log(res);
-        if (res) {
-            const orderId = res.payload.id;
+        console.log("check create order: ", orderList, " ", res);
+        // console.log(res);
+        if (res && res.payload && res.payload.id) {
+            const orderId = BigInt(res.payload.id).toString();
             const orderInfo = {
                 orderId: orderId,
                 orderList: selectedBook
@@ -104,7 +105,7 @@ const FilledCart = () => {
             let amount = 0;
             selectedBook.forEach(book => amount += book.quantity_ordered * book.price_each);
             localStorage.setItem("amount", amount);
-            localStorage.setItem("orderId", orderId);
+            localStorage.setItem("orderId", orderId.toString());
             dispatch(getOrderAction(orderInfo));
             dispatch(deleteSelectedAction());
             navigate(path.purchase);

@@ -4,6 +4,7 @@ import { callGetOrder } from "../../services/api/orderAPI";
 import { useEffect, useState } from "react";
 import { Col, Divider, Radio, Row, Space } from "antd";
 import { calcDeliveryCost, getOrderAction } from "../../redux/slice/orderSlice";
+import { callPayment } from "../../services/api/paymentAPI";
 const Purchase = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.account.user);
@@ -38,8 +39,11 @@ const Purchase = () => {
         setValue(value);
         dispatch(calcDeliveryCost(value));
     };
-    const handlePurchase = () => {
-
+    const handlePurchase = async () => {
+        const res = await callPayment(Number(orderId), Number(amount + deliveryCost - 10000));
+        if (res) {
+            console.log("check call api: ", res);
+        }
     }
     return (
         <>
@@ -130,7 +134,7 @@ const Purchase = () => {
                             <p style={{ fontWeight: "500", color: " rgb(255, 66, 78)", fontSize: "20px" }}>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount + deliveryCost)}</p>
                         </Row>
 
-                        <button className="order-btn" type="submit" onClick={() => handlePurchase()} >Thanh toán</button>
+                        <button className="order-btn" type="submit" onClick={handlePurchase} >Thanh toán</button>
                     </Col>
                 </Col>
             </Row>
