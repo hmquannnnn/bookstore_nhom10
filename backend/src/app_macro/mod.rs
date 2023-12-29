@@ -1,8 +1,7 @@
-
 #[macro_export]
 macro_rules! fetch_match {
     ( $action:expr ) => {
-       $action.map_err(|_| $crate::util::types::AppError::FailToFetch) 
+        $action.map_err(|_| $crate::util::types::AppError::FailToFetch)
     };
 }
 
@@ -18,7 +17,12 @@ macro_rules! update_field {
             let user_email = jwt.email;
             let value = path.as_str();
 
-            let query = format!("update {} set {} = ? where {} = ?", stringify!($table), stringify!($field), $id);
+            let query = format!(
+                "update {} set {} = ? where {} = ?",
+                stringify!($table),
+                stringify!($field),
+                $id
+            );
             sqlx::query(query.as_str())
                 .bind(value)
                 .bind(user_email)
@@ -32,4 +36,3 @@ macro_rules! update_field {
         }
     };
 }
-

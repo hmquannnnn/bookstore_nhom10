@@ -1,16 +1,16 @@
-use sqlx::{QueryBuilder, MySql};
+use sqlx::{MySql, QueryBuilder};
 
 pub fn book_genres<'a>() -> QueryBuilder<'a, MySql> {
     QueryBuilder::new(
-    "select book_id id, concat('[',group_concat(genre_id),']') genres 
+        "select book_id id, concat('[',group_concat(genre_id),']') genres 
     from book_genre
-    group by id")
+    group by id",
+    )
 }
 
-
 pub fn book_genres_filter<'a>(genre_ids: &Vec<i32>) -> QueryBuilder<'a, MySql> {
-    let mut sql_builder: QueryBuilder<MySql> = 
-        QueryBuilder::new("select book_id id, count(*) num from book_genre where genre_id in ("); 
+    let mut sql_builder: QueryBuilder<MySql> =
+        QueryBuilder::new("select book_id id, count(*) num from book_genre where genre_id in (");
     let mut separated = sql_builder.separated(',');
     for genre_id in genre_ids {
         separated.push(genre_id);
@@ -24,10 +24,8 @@ pub fn book_genres_filter<'a>(genre_ids: &Vec<i32>) -> QueryBuilder<'a, MySql> {
     sql_builder
 }
 
-
 pub fn book_genres_filter_full<'a>(genre_ids: &Vec<i32>) -> QueryBuilder<'a, MySql> {
-    let mut main_builder: QueryBuilder<'a, MySql> = 
-        QueryBuilder::new("select id, genres from (");
+    let mut main_builder: QueryBuilder<'a, MySql> = QueryBuilder::new("select id, genres from (");
 
     let filter_query = book_genres_filter(genre_ids);
     let genre_query = book_genres();
@@ -67,5 +65,5 @@ pub fn book_genres_filter_full<'a>(genre_ids: &Vec<i32>) -> QueryBuilder<'a, MyS
 //        },
 //        QueryJoinType::Natural => {
 //        }
-//     }  
+//     }
 // }

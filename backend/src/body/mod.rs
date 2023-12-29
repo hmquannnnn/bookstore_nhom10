@@ -1,6 +1,4 @@
-
-
-// impl<T> Responder for Vec<T> 
+// impl<T> Responder for Vec<T>
 // {
-//    
+//
 // }

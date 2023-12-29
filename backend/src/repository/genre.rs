@@ -1,7 +1,6 @@
 use sqlx::MySqlPool;
 
-use crate::{util::types::AppResult, fetch_match};
-
+use crate::{fetch_match, util::types::AppResult};
 
 #[derive(serde::Deserialize, serde::Serialize)]
 pub struct Genre {
@@ -9,10 +8,12 @@ pub struct Genre {
     name: Option<String>,
 }
 
-pub async fn fetch_genre_all(pool: &MySqlPool) -> AppResult<Vec<Genre>>  {
-    fetch_match!(sqlx::query_as!(Genre, "select * from genre")
-        .fetch_all(pool)
-        .await)
+pub async fn fetch_genre_all(pool: &MySqlPool) -> AppResult<Vec<Genre>> {
+    fetch_match!(
+        sqlx::query_as!(Genre, "select * from genre")
+            .fetch_all(pool)
+            .await
+    )
 }
 
 // pub async fn get_book_genre(book_id: &String, pool: &MySqlPool) -> AppResult<Vec<Genre>> {
@@ -26,7 +27,7 @@ pub async fn fetch_genre_all(pool: &MySqlPool) -> AppResult<Vec<Genre>>  {
 //         .fetch_all(pool)
 //         .await)
 // }
-// pub async fn fetch_book_genre(pool: &MySqlPool) -> AppResult<<Ve> 
+// pub async fn fetch_book_genre(pool: &MySqlPool) -> AppResult<<Ve>
 
 // pub async fn get
 // o

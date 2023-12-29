@@ -49,12 +49,12 @@ pub struct OrderSend {
 
 impl Into<OrderSend> for Order {
     fn into(self) -> OrderSend {
-        OrderSend { 
+        OrderSend {
             id: self.id.to_string(),
-            user_email: self.user_email, 
+            user_email: self.user_email,
             order_date: self.order_date,
-            require_date: self.require_date, 
-            status: self.status
+            require_date: self.require_date,
+            status: self.status,
         }
     }
 }
@@ -99,13 +99,14 @@ pub async fn get_order_price(
         .fetch_one(pool),
         sqlx::query_as!(
             OrderPrice,
-            "select order_id, sum(price_each * quantity_ordered) price from orderDetail 
+            "select order_id, sum(price_each * quantity_ordered) price from orderdetail 
         where order_id = ?
         group by order_id",
             order_id
         )
-        .fetch_one(pool)
-    ).await;
+        .fetch_one(pool),
+    )
+    .await;
 
     let _user_order = fut_all.0?;
     let order_price = fut_all.1?;

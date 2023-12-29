@@ -1,6 +1,5 @@
 use actix_web::{
-    error as actix_error,
-    patch,
+    error as actix_error, patch,
     web::{self, Json},
     HttpResponse, Responder,
 };
@@ -15,10 +14,9 @@ pub mod book;
 pub mod cart;
 pub mod genre;
 pub mod image;
-pub mod user;
-pub mod payment;
 pub mod order;
-
+pub mod payment;
+pub mod user;
 
 // #[get("/")]
 // pub async fn index() -> Result<fs::NamedFile, Error>{

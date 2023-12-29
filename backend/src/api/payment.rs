@@ -1,5 +1,5 @@
 use actix_web::{
-    error::{ErrorNotFound, self},
+    error::{self, ErrorNotFound},
     post,
     web::Json,
     Result as AcitxResult,
@@ -25,7 +25,8 @@ pub async fn post_pay(
 ) -> AcitxResult<Json<Message<String>>> {
     let user_email = jwt_header.email;
     let pool = &app_state.pool;
-    let order_id = payment_detail.order_id
+    let order_id = payment_detail
+        .order_id
         .parse()
         .map_err(error::ErrorBadRequest)?;
 
@@ -35,23 +36,25 @@ pub async fn post_pay(
 
     if let Some(price) = order_price.price {
         if price > payment_detail.payment {
-            return Ok(Json(Message{
+            return Ok(Json(Message {
                 message: "not enough money",
                 payload: Some(format!("need to pay {price}")),
             }));
         } else if price < payment_detail.payment {
             let payment_over = payment_detail.payment - price;
-            return Ok(Json(Message { 
-                message: "transaction success, overpay", 
-                payload: Some(format!(r#"repay: {payment_over}"#)), 
+            return Ok(Json(Message {
+                message: "transaction success, overpay",
+                payload: Some(format!(r#"repay: {payment_over}"#)),
             }));
         } else {
-            return Ok(Json(Message{
+            return Ok(Json(Message {
                 message: "transaction success",
-                payload: None, 
+                payload: None,
             }));
         }
     } else {
-        return Err(actix_web::error::ErrorBadRequest(sqlx::error::UnexpectedNullError))
+        return Err(actix_web::error::ErrorBadRequest(
+            sqlx::error::UnexpectedNullError,
+        ));
     }
 }

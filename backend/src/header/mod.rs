@@ -1,6 +1,9 @@
 use actix_web::{dev::Payload, FromRequest, HttpRequest};
 use serde::Serialize;
-use std::{future::{ready, Ready}, error::Error};
+use std::{
+    error::Error,
+    future::{ready, Ready},
+};
 
 use crate::{repository::token::decode_token, util::types::Role};
 
@@ -26,12 +29,13 @@ impl FromRequest for JwtTokenHeader {
             |result_value: Result<&actix_web::http::header::HeaderValue, actix_web::Error>| {
                 let result_value = result_value?.to_str()?;
                 let token_decode = decode_token(result_value)?;
-                let jwt = JwtTokenHeader::try_from(token_decode)?; 
+                let jwt = JwtTokenHeader::try_from(token_decode)?;
                 Ok(jwt)
             };
-        
-        let jwt = error_handler(header_value)
-        .map_err(|error: Box<dyn Error>| actix_web::error::ErrorUnauthorized(error.to_string()));
+
+        let jwt = error_handler(header_value).map_err(|error: Box<dyn Error>| {
+            actix_web::error::ErrorUnauthorized(error.to_string())
+        });
         ready(jwt)
     }
 }

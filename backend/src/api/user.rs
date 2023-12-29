@@ -1,25 +1,24 @@
 use crate::{
     header::JwtTokenHeader,
     repository::{
-        image::{insert_image, delete_image},
+        image::{delete_image, insert_image},
         token::make_token,
-        user::{self, User, UserInsert, UserResponse, select_user},
+        user::{self, select_user, User, UserInsert, UserResponse},
     },
     util::{
         to_image_url,
-        types::{AppError, AppResult, AppState, Message, UserLogin}
+        types::{AppError, AppResult, AppState, Message, UserLogin},
     },
 };
 
+use crate::update_field;
+use crate::update_user_field;
 use actix_web::{
-    get,
-    patch, post, put,
+    get, patch, post, put,
     web::{self, Bytes, Json},
     HttpResponse, Responder, Result as ActixResult,
 };
 use futures_util::future::join;
-use crate::update_user_field;
-use crate::update_field;
 
 #[post("/user/login")]
 pub async fn user_login(
@@ -98,8 +97,8 @@ pub async fn insert_image_user(
 pub async fn patch_user_image(
     jwt: JwtTokenHeader,
     data: Bytes,
-    app_state: web::Data<AppState>
-    ) -> AppResult<Json<Message<String>>> {
+    app_state: web::Data<AppState>,
+) -> AppResult<Json<Message<String>>> {
     let pool = &app_state.pool;
     let user_email = &jwt.email;
     let user = select_user(user_email, pool)
@@ -112,19 +111,24 @@ pub async fn patch_user_image(
             let id = id.split('=').last().take().ok_or(AppError::ParseError)?;
             let fut_all = join(
                 insert_image(data.to_vec(), &id_new, pool),
-                delete_image(&id, pool)
-                ).await;
-            fut_all.0.map_err(|_| AppError::FailToUpdate)?; 
+                delete_image(&id, pool),
+            )
+            .await;
+            fut_all.0.map_err(|_| AppError::FailToUpdate)?;
             Some(to_image_url(&app_state, &id_new))
-        },
+        }
         None => {
-            insert_image(data.to_vec(), &id_new, pool).await.map_err(|_| AppError::FailToFetch)?;
+            insert_image(data.to_vec(), &id_new, pool)
+                .await
+                .map_err(|_| AppError::FailToFetch)?;
             Some(to_image_url(&app_state, &id_new))
-        } 
+        }
     };
-    Ok(Json(Message { message: "update success", payload: url }))
+    Ok(Json(Message {
+        message: "update success",
+        payload: url,
+    }))
 }
-
 
 #[derive(serde::Deserialize)]
 pub struct Password {
@@ -134,10 +138,10 @@ pub struct Password {
 
 #[patch("/user/password")]
 pub async fn update_user_password(
-        jwt: JwtTokenHeader,
-        password: Json<Password>,
-        app_state: web::Data<AppState>,    
-    ) -> AppResult<Json<Message<()>>> {
+    jwt: JwtTokenHeader,
+    password: Json<Password>,
+    app_state: web::Data<AppState>,
+) -> AppResult<Json<Message<()>>> {
     let user_email = jwt.email;
     let old_pass = sqlx::query!("select password from user where email = ?", user_email)
         .fetch_one(&app_state.pool)
@@ -145,22 +149,29 @@ pub async fn update_user_password(
         .map_err(|_| AppError::UnknownUser)?
         .password;
     if password.old.eq(&old_pass) {
-        sqlx::query!("update user set password = ? where email = ?", password.new, user_email)
-            .execute(&app_state.pool)
-            .await
-            .map_err(|_| AppError::UnknownUser)?;
+        sqlx::query!(
+            "update user set password = ? where email = ?",
+            password.new,
+            user_email
+        )
+        .execute(&app_state.pool)
+        .await
+        .map_err(|_| AppError::UnknownUser)?;
     } else {
-        return Ok(Json(Message { message: "wrong password", payload: None }))
+        return Ok(Json(Message {
+            message: "wrong password",
+            payload: None,
+        }));
     }
-    Ok(Json(Message{
+    Ok(Json(Message {
         message: "update success",
         payload: None,
     }))
 }
 
-update_user_field!(update_user_name, "/user/name/{value}", name); 
-update_user_field!(update_user_address,"/user/address/{value}", address); 
-update_user_field!(update_user_phone, "/user/phone/{value}", phone); 
+update_user_field!(update_user_name, "/user/name/{value}", name);
+update_user_field!(update_user_address, "/user/address/{value}", address);
+update_user_field!(update_user_phone, "/user/phone/{value}", phone);
 
 #[macro_export]
 macro_rules! update_user_field {
@@ -168,5 +179,3 @@ macro_rules! update_user_field {
         update_field!(user, $name, $path, $field, "email");
     };
 }
-
-

@@ -1,5 +1,6 @@
 mod api;
-mod app_macro; mod body;
+mod app_macro;
+mod body;
 mod header;
 mod middleware;
 mod repository;
@@ -7,12 +8,15 @@ mod util;
 
 use actix_cors::Cors;
 use actix_web::{web, App, HttpServer};
-use api::book::{get_books, patch_book_image, search_book, search_book_by_author, filter_ratting_higher};
+use api::book::{
+    filter_ratting_higher, get_books, patch_book_image, search_book, search_book_by_author,
+};
 use api::cart::delete_cart;
 use api::payment::post_pay;
 use api::{
     book::{
-        fetch_book_by_genre, fetch_filter_price, fetch_filter_price_genre, fetch_sorted_books, fetch_sorted_books_asc, fetch_sorted_books_price_asc, fetch_sorted_books_price_desc,
+        fetch_book_by_genre, fetch_filter_price, fetch_filter_price_genre, fetch_sorted_books,
+        fetch_sorted_books_asc, fetch_sorted_books_price_asc, fetch_sorted_books_price_desc,
         fetch_sorted_books_purchse_asc, fetch_sorted_books_purchse_desc, get_book, list_book,
         update_book_descption, update_book_price, update_book_title,
     },
@@ -39,14 +43,15 @@ async fn main() -> std::io::Result<()> {
     let domain_name = match dotenv::var("DOMAIN_NAME") {
         Ok(value) => value,
         Err(_) => "localhost".to_owned(),
-    }; let port = match dotenv::var("PORT") {
+    };
+    let port = match dotenv::var("PORT") {
         Ok(value) => value.parse::<u16>().unwrap(),
         Err(_) => 8000,
     };
 
     let static_dist: String = match dotenv::var("STATIC_LOCATION") {
         Ok(value) => value,
-        Err(_) => "./dist".to_owned()
+        Err(_) => "./dist".to_owned(),
     };
 
     // connect to database
@@ -80,16 +85,56 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .wrap(cors)
-            .service(fs::Files::new("/dang-nhap", &static_dist).use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/dang-ky", &static_dist).use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/gioi-thieu", &static_dist).use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/gio-hang", &static_dist).use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/admin/books", &static_dist).use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/admin/users", &static_dist).use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/admin/orders", &static_dist).use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/doi-so-dien-thoai", &static_dist).use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/doi-mat-khau", &static_dist).use_last_modified(true).index_file("index.html"))
-            .service(fs::Files::new("/thong-tin-sach", &static_dist).use_last_modified(true).index_file("index.html"))
+            .service(
+                fs::Files::new("/dang-nhap", &static_dist)
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
+            .service(
+                fs::Files::new("/dang-ky", &static_dist)
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
+            .service(
+                fs::Files::new("/gioi-thieu", &static_dist)
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
+            .service(
+                fs::Files::new("/gio-hang", &static_dist)
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
+            .service(
+                fs::Files::new("/admin/books", &static_dist)
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
+            .service(
+                fs::Files::new("/admin/users", &static_dist)
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
+            .service(
+                fs::Files::new("/admin/orders", &static_dist)
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
+            .service(
+                fs::Files::new("/doi-so-dien-thoai", &static_dist)
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
+            .service(
+                fs::Files::new("/doi-mat-khau", &static_dist)
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
+            .service(
+                fs::Files::new("/thong-tin-sach", &static_dist)
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
             .app_data(web::Data::new(app_state.clone()))
             .service(
                 web::scope("/api")
@@ -134,9 +179,13 @@ async fn main() -> std::io::Result<()> {
                     .service(post_order)
                     .service(get_order)
                     .service(cancel_order)
-                    .service(post_pay)
+                    .service(post_pay),
             )
-            .service(fs::Files::new("/", "./dist").use_last_modified(true).index_file("index.html"))
+            .service(
+                fs::Files::new("/", "./dist")
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
     })
     .bind(("127.0.0.1", port))?
     .run()
