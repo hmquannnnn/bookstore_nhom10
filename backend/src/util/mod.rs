@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 pub mod constant;
 pub mod helper;
 pub mod types {
@@ -160,7 +162,8 @@ pub mod types {
 //     }
 // }
 
-pub fn to_image_url(id: &String) -> String {
+pub fn to_image_url<T>(id: T) -> String
+where T : Display {
     format!("/api/image?id={}", id)
 }
 // type AppConverter<T> = Converter<actix_web::Result<T>>;
