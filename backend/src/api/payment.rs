@@ -36,10 +36,10 @@ pub async fn post_pay(
 
     if let Some(price) = order_price.price {
         if price > payment_detail.payment {
-            return Ok(Json(Message {
+            Ok(Json(Message {
                 message: "not enough money",
                 payload: Some(format!("need to pay {price}")),
-            }));
+            }))
         } else if price < payment_detail.payment {
             let payment_over = payment_detail.payment - price;
             return Ok(Json(Message {
@@ -53,8 +53,8 @@ pub async fn post_pay(
             }));
         }
     } else {
-        return Err(actix_web::error::ErrorBadRequest(
+        Err(actix_web::error::ErrorBadRequest(
             sqlx::error::UnexpectedNullError,
-        ));
+        ))
     }
 }

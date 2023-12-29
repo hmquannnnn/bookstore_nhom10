@@ -73,7 +73,7 @@ async fn main() -> std::io::Result<()> {
         Err(_) => println!("migrate fail"),
     };
 
-    let base_url = format!("{}", domain_name);
+    let base_url = domain_name.to_string();
     let app_state = AppState { pool, base_url };
 
     // init server

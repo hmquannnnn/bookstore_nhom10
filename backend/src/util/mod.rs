@@ -1,7 +1,3 @@
-use actix_web::web;
-
-use self::types::AppState;
-
 pub mod constant;
 pub mod helper;
 pub mod types {
@@ -164,8 +160,8 @@ pub mod types {
 //     }
 // }
 
-pub fn to_image_url(app_state: &web::Data<AppState>, id: &String) -> String {
-    format!("{}/api/image?id={}", app_state.base_url, id)
+pub fn to_image_url(id: &String) -> String {
+    format!("/api/image?id={}", id)
 }
 // type AppConverter<T> = Converter<actix_web::Result<T>>;
 //

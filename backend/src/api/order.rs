@@ -34,7 +34,7 @@ struct OrderInsert {
     pub(crate) price_earch: f32,
 }
 
-#[derive(serde::Deserialize, serde::Serialize)]
+#[derive(serde::Deserialize)]
 pub struct GetOrder {
     pub id: u64,
     pub title: String,
@@ -49,13 +49,48 @@ pub struct GetOrder {
     pub status: Option<String>,
 }
 
+#[derive(serde::Serialize)]
+pub struct GetOrderSend {
+    pub id: String,
+    pub title: String,
+    pub back_page_url: Option<String>,
+    pub front_page_url: Option<String>,
+    pub user_email: String,
+    pub book_id: String,
+    pub quantity_ordered: i32,
+    pub price_each: f32,
+    pub order_date: String,
+    pub require_date: Option<String>,
+    pub status: Option<String>,
+}
+
+
+impl From<GetOrder> for GetOrderSend {
+    fn from(value: GetOrder) -> Self {
+        GetOrderSend {
+            id: value.id.to_string(),
+            title: value.title,
+            back_page_url: value.back_page_url,
+            front_page_url: value.front_page_url,
+            user_email: value.user_email,
+            book_id: value.book_id,
+            quantity_ordered: value.quantity_ordered,
+            price_each: value.price_each,
+            order_date: value.order_date,
+            require_date: value.require_date,
+            status: value.status,
+        }
+    }
+}
+
+
 type MyResult<T> = actix_web::Result<Json<Message<T>>>;
 
 #[get("/order")]
 pub async fn get_order(
     jwt_header: JwtTokenHeader,
     app_state: web::Data<AppState>,
-) -> MyResult<Vec<GetOrder>> {
+) -> MyResult<Vec<GetOrderSend>> {
     let user_email = jwt_header.email;
     let pool = &app_state.pool;
     let orders = sqlx::query_as!(
@@ -76,7 +111,7 @@ pub async fn get_order(
     .map_err(error::ErrorNotFound)?;
     Ok(Json(Message {
         message: "user order",
-        payload: Some(orders),
+        payload: Some(orders.into_iter().map(GetOrderSend::from).collect()),
     }))
 }
 

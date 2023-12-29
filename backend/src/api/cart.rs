@@ -180,7 +180,7 @@ pub async fn order_cart(
         .fetch_all(pool)
         .await
         .map_err(actix_web::error::ErrorGone)?;
-    if carts.len() == 0 {
+    if carts.is_empty() {
         return Ok(Json(Message {
             message: "cart is empty",
             payload: None,

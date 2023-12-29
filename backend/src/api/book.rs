@@ -1,5 +1,5 @@
 use actix_web::{
-    get, patch, post,
+    error, get, patch, post,
     web::{self, Bytes, Json, Query},
     Responder, Result as ActixResult,
 };
@@ -118,18 +118,20 @@ pub async fn patch_book_image(
     query: Query<BookId>,
     payload: Bytes,
     app_state: actix_web::web::Data<AppState>,
-) -> AppResult<Json<Message<String>>> {
+) -> actix_web::Result<Json<Message<String>>> {
     let book_id = &query.id;
     let _ = select_book(book_id, &app_state.pool)
         .await
         .map_err(|_| AppError::NonExistBook)?;
     let id = uuid::Uuid::new_v4().to_string();
-    let url = to_image_url(&app_state, &id);
-    let _ = join(
+    let url = to_image_url(&id);
+    let fut_all = join(
         insert_image(payload.to_vec(), &id, &app_state.pool),
         sqlx::query!("update book set front_page_url = ?", url).execute(&app_state.pool),
     )
     .await;
+    fut_all.0.map_err(error::ErrorPayloadTooLarge)?;
+    fut_all.1.map_err(error::ErrorNotAcceptable)?;
     Ok(Json(Message {
         message: "insert success",
         payload: Some(url),
@@ -374,7 +376,7 @@ pub async fn fetch_filter_price_genre(
                           left join author on author.id = author_id right join (",
     );
 
-    main_builder.push(book_genres_filter_full(&genre_ids).sql());
+    main_builder.push(book_genres_filter_full(genre_ids).sql());
     main_builder.push(") book_genre on book.id = book_genre.id");
 
     let books = sqlx::query_as::<MySql, Book>(main_builder.sql())
@@ -383,9 +385,8 @@ pub async fn fetch_filter_price_genre(
         .map_err(actix_web::error::ErrorNotFound)?;
 
     let books: Vec<Book> = books
-        .iter()
+        .into_iter()
         .filter(|book| book.price > bound.start && book.price < bound.end)
-        .map(|book| book.clone())
         .collect();
     Ok(Json(books))
 }
