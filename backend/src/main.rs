@@ -42,7 +42,7 @@ async fn main() -> std::io::Result<()> {
     let url = dotenv::var("DATABASE_URL").unwrap();
     let domain_name = match dotenv::var("DOMAIN_NAME") {
         Ok(value) => value,
-        Err(_) => "localhost".to_owned(),
+        Err(_) => "127.0.0.1".to_owned(),
     };
     let port = match dotenv::var("PORT") {
         Ok(value) => value.parse::<u16>().unwrap(),
@@ -74,6 +74,12 @@ async fn main() -> std::io::Result<()> {
     };
 
     let base_url = domain_name.to_string();
+    println!("base_url: {base_url}");
+    println!("mysql: {url}");
+    println!("port: {port }");
+    println!("domain_name: {domain_name}");
+    println!("static_dist: {static_dist}");
+
     let app_state = AppState { pool, base_url };
 
     // init server
@@ -192,7 +198,7 @@ async fn main() -> std::io::Result<()> {
                     .index_file("index.html"),
             )
     })
-    .bind(("127.0.0.1", port))?
+    .bind((domain_name, port))?
     .run()
     .await
 }

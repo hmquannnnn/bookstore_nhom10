@@ -1,4 +1,4 @@
-create table orderDetail(
+create table orderdetail(
     order_id bigint unsigned not null,
     book_id varchar(64) not null,
     price_each float not null,
