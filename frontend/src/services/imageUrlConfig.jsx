@@ -1,10 +1,11 @@
 const baseURL = import.meta.env.VITE_BACKEND_URL;
 
 const imageUrlConfig = (originalURL) => {
-    if (originalURL == null) {
+    try {
         return baseURL + "/image?id=" + originalURL.split('=').pop();
+    } catch (error) {
+        return "";
     }
-    return "";
 }
 
 export default imageUrlConfig;
