@@ -92,9 +92,9 @@ const Purchase = () => {
                         <p style={{ margin: "0 0 0 20px", fontSize: "20px", fontWeight: "600" }}>Đơn hàng của bạn</p>
                         <Col style={{ border: "1px solid #cfcece", margin: "15px 20px", borderRadius: "10px" }}>
                             {
-                                orderList.map(book => (
+                                orderList.map((book, index) => (
 
-                                    <Row key={book.book_id} className="book-in-cart">
+                                    <Row key={book.book_id} className="book-in-order">
                                         {/* <div className={"book-image"}>{book.front_page_url}</div> */}
 
                                         <Col md={10}>
@@ -116,6 +116,7 @@ const Purchase = () => {
                                         <Col md={4}>
                                             <div className="amount center">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(book.price_each * book.quantity_ordered)}</div>
                                         </Col>
+                                        {index < orderList.length - 1 && <Divider />}
                                     </Row>
 
 

@@ -6,7 +6,7 @@ $grey-text: #64646d;
   height: fit-content;
   min-height: 62vh;
   .left {
-    .book-in-cart {
+    .book-in-order {
       //   border: 1px solid $grey-text;
       background-color: white;
       border-radius: 10px;
@@ -39,13 +39,10 @@ $grey-text: #64646d;
         color: $red-btn-color;
         font-weight: 500;
       }
-      .delete {
-        color: red;
-        position: relative;
-        // display: block;
-        // margin: auto 0;
-        top: 53px;
-        cursor: pointer;
+      .ant-divider-horizontal {
+        margin: 0 auto;
+        width: 80%;
+        min-width: 80%;
       }
     }
     // .book-in-cart:hover {
