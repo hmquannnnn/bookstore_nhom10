@@ -1,11 +1,9 @@
 mod api;
-mod app_macro;
-mod body;
+mod app_macro; mod body;
 mod header;
 mod middleware;
 mod repository;
 mod util;
-use std::path;
 
 use actix_cors::Cors;
 use actix_web::{web, App, HttpServer};

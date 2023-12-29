@@ -1,6 +1,6 @@
 use actix_web::{post, get, web::{self, Json}, error};
 
-use crate::{header::JwtTokenHeader, util::types::{AppState, Message}, repository::{order::{Order, insert_order, OrderSend}, book::take_price}};
+use crate::{header::JwtTokenHeader, util::types::{AppState, Message}, repository::{order::{insert_order, OrderSend}, book::take_price}};
 
 
 // #[post("/api/order")]

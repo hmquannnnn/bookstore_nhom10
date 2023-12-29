@@ -1,8 +1,15 @@
+const baseURL = import.meta.env.VITE_BACKEND_URL;
+
 const imageUrlConfig = (originalURL) => {
-    if (originalURL.includes('localhost:8080')) {
-        return originalURL.replace('localhost:8080', 'fall2324w20g10.int3306.freeddns.org');
+    try {
+        if (originalURL.includes('http://localhost:8080/api')) {
+            console.log(originalURL);
+            return originalURL.replace('http://localhost:8080/api', baseURL);
+        }
+        return originalURL;
+    } catch (error) {
+        return "";
     }
-    return originalURL;
 }
 
 export default imageUrlConfig;
