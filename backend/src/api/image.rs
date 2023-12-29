@@ -37,29 +37,29 @@ pub struct ImageUrl {
     url: String,
 }
 
-#[put("/image")]
-pub async fn put_image(
-    jwt_header: JwtTokenHeader,
-    payload: Bytes,
-    app_state: web::Data<AppState>,
-) -> AppResult<impl Responder> {
-    let image = payload.to_vec();
-    let pool = &app_state.pool;
-    let auth_success = auth_user(&jwt_header, pool).await?;
-
-    let id = uuid::Uuid::new_v4().to_string();
-    match auth_success {
-        true => {
-            repository::image::insert_image(image, &id, &app_state.pool)
-                .await
-                .map_err(|_| AppError::FailToUpdate)?;
-            Ok(Json(ImageUrl {
-                url: to_image_url(id),
-            }))
-        }
-        false => Err(AppError::FailAuthenticate),
-    }
-}
+// #[put("/image")]
+// pub async fn put_image(
+//     jwt_header: JwtTokenHeader,
+//     payload: Bytes,
+//     app_state: web::Data<AppState>,
+// ) -> AppResult<impl Responder> {
+//     let image = payload.to_vec();
+//     let pool = &app_state.pool;
+//     let auth_success = auth_user(&jwt_header, pool).await?;
+//
+//     let id = uuid::Uuid::new_v4().to_string();
+//     match auth_success {
+//         true => {
+//             repository::image::insert_image(image, &id, &app_state.pool)
+//                 .await
+//                 .map_err(|_| AppError::FailToUpdate)?;
+//             Ok(Json(ImageUrl {
+//                 url: to_image_url(id),
+//             }))
+//         }
+//         false => Err(AppError::FailAuthenticate),
+//     }
+// }
 
 #[delete("/image")]
 pub async fn delete_image(

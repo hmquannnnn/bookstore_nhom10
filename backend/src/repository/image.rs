@@ -27,7 +27,7 @@ pub async fn update_image<'a, T>(image: Vec<u8>, id: &'a T, pool: &MySqlPool) ->
 where
     T: Display + Send + Sync + sqlx::Encode<'a, MySql> + Sized + sqlx::Type<MySql>,
 {
-    sqlx::query("update images(data) value (?) where id = ?")
+    sqlx::query("update images set data = ? where id = ?")
         .bind(image)
         .bind(id)
         .execute(pool)

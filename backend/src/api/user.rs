@@ -14,9 +14,9 @@ use crate::{
 use crate::update_field;
 use crate::update_user_field;
 use actix_web::{
-    get, patch, post, put,
+    error, get, patch, post, put,
     web::{self, Bytes, Json},
-    HttpResponse, Responder, Result as ActixResult, error,
+    HttpResponse, Responder, Result as ActixResult,
 };
 
 #[post("/user/login")]
@@ -69,13 +69,13 @@ pub async fn insert_image_user(
     auth_header: JwtTokenHeader,
     data: Bytes,
     app_state: web::Data<AppState>,
-) -> AppResult<Json<Message<String>>> {
+) -> actix_web::Result<Json<Message<String>>> {
     let pool = &app_state.pool;
     let user_auth = auth_header;
     let id = uuid::Uuid::new_v4().to_string();
     insert_image(data.to_vec(), &id, pool)
         .await
-        .map_err(|_| AppError::FailToUpdate)?;
+        .map_err(error::ErrorPayloadTooLarge)?;
     let url = to_image_url(&id);
     sqlx::query!(
         "update user set image_url = ? where email = ?",
@@ -84,7 +84,7 @@ pub async fn insert_image_user(
     )
     .execute(pool)
     .await
-    .map_err(|_| AppError::FailToUpdate)?;
+    .map_err(error::ErrorUnauthorized)?;
 
     Ok(Json(Message {
         message: "success",
@@ -117,9 +117,19 @@ pub async fn patch_user_image(
             insert_image(data.to_vec(), &id_new, pool)
                 .await
                 .map_err(error::ErrorPayloadTooLarge)?;
-            Some(to_image_url(&id_new))
+            let url = to_image_url(&id_new);
+            sqlx::query!(
+                "update user set image_url = ? where email = ?",
+                url,
+                jwt.email
+            )
+            .execute(pool)
+            .await
+            .map_err(error::ErrorUnauthorized)?;
+            Some(url)
         }
     };
+    println!("{}", url.clone().unwrap());
     Ok(Json(Message {
         message: "update success",
         payload: url,
