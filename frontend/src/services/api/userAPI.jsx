@@ -1,4 +1,5 @@
 import instance from "../../utils/axiosCustomize";
+import imageUrlConfig from "../imageUrlConfig";
 
 export const callLogin = (email, password) => {
   const req = {
@@ -19,8 +20,13 @@ export const callRegister = (email, name, phone, password, address) => {
   return instance.post("/user/register", req);
 };
 
-export const callFetchAccount = () => {
-  return instance.get("/user");
+export const callFetchAccount = async () => {
+  // return instance.get("/user");
+
+  //config image url
+  const res = await instance.get("/user");
+  res.image_url = imageUrlConfig(res.image_url);
+  return res;
 };
 
 export const callChangeAvatar = (formData) => {

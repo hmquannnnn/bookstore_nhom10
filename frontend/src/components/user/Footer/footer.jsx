@@ -13,7 +13,7 @@ const Footer = () => {
                         <img src="public\vite.svg" alt="" />
                         <p>Bởi vì sách là thế giới</p>
                     </Row>
-                    <p className="description" style="margin: 0 auto;">
+                    <p className="description">
                         UEThuviensach là điểm đến lý tưởng dành cho những ai đam mê sách, nơi mang đến cho độc giả
                         trải nghiệm mua sắm sách trực tuyến và độc đáo. Với kho tàng sách đa dạng về số lượng và thể loại,
                         chúng tôi cam kết tạo nên một môi trường đọc sách uy tín, chất lượng hàng đầu cho mọi người.
@@ -38,9 +38,7 @@ const Footer = () => {
                     <h5>Thông tin liên hệ</h5>
                     <Row>
                         <FaLocationDot className="icon" />
-                        <a href="https://bit.ly/place-UET" target="_blank" rel="noopener noreferrer" style={{ color: "black" }}>
                         <p>E3, 144 Xuân Thủy, Cầu Giấy, Hà Nội</p>
-                        </a>
                     </Row>
                     <Row>
                         <IoMdMail className="icon" />
@@ -51,8 +49,8 @@ const Footer = () => {
                         <p>0987654321</p>
                     </Row>
                 </Col>
-            </Row>
-        </Row>
+            </Row >
+        </Row >
     );
 };
 

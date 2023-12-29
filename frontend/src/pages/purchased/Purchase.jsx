@@ -36,14 +36,13 @@ const Purchase = () => {
     useEffect(() => {
         getOrderList();
     }, [value]);
+    console.log("order list: ", orderList);
 
     const onChange = (value) => {
         // console.log('radio checked', e.target.value);
         setValue(value);
         dispatch(calcDeliveryCost(value));
     };
-    const [resultVisible, setResultVisible] = useState(false);
-    const [resultStatus, setResultStatus] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {

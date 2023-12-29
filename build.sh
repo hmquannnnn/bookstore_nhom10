@@ -4,8 +4,6 @@
 curl https://sh.rustup.rs -sSf | sh
 
 # Chuyển đổi thư mục làm việc hiện tại sang thư mục frontend
-npm install vite
-
 # Chạy tác vụ build được định nghĩa trong tệp package.json của ứng dụng frontend
 cd frontend
 
