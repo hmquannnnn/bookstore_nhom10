@@ -1,7 +1,7 @@
 use crate::{
     header::JwtTokenHeader,
     repository::{
-        image::{delete_image, insert_image},
+        image::{insert_image, update_image},
         token::make_token,
         user::{self, select_user, User, UserInsert, UserResponse},
     },
@@ -16,9 +16,8 @@ use crate::update_user_field;
 use actix_web::{
     get, patch, post, put,
     web::{self, Bytes, Json},
-    HttpResponse, Responder, Result as ActixResult,
+    HttpResponse, Responder, Result as ActixResult, error,
 };
-use futures_util::future::join;
 
 #[post("/user/login")]
 pub async fn user_login(
@@ -98,29 +97,26 @@ pub async fn patch_user_image(
     jwt: JwtTokenHeader,
     data: Bytes,
     app_state: web::Data<AppState>,
-) -> AppResult<Json<Message<String>>> {
+) -> actix_web::Result<Json<Message<String>>> {
     let pool = &app_state.pool;
     let user_email = &jwt.email;
     let user = select_user(user_email, pool)
         .await
         .map_err(|_| AppError::UnknownUser)?;
     let id = user.image_url;
-    let id_new = uuid::Uuid::new_v4().to_string();
     let url = match id {
         Some(id) => {
             let id = id.split('=').last().take().ok_or(AppError::ParseError)?;
-            let fut_all = join(
-                insert_image(data.to_vec(), &id_new, pool),
-                delete_image(&id, pool),
-            )
-            .await;
-            fut_all.0.map_err(|_| AppError::FailToUpdate)?;
-            Some(to_image_url(&id_new))
+            update_image(data.to_vec(), &id, pool)
+                .await
+                .map_err(error::ErrorPayloadTooLarge)?;
+            Some(to_image_url(id))
         }
         None => {
+            let id_new = uuid::Uuid::new_v4().to_string();
             insert_image(data.to_vec(), &id_new, pool)
                 .await
-                .map_err(|_| AppError::FailToFetch)?;
+                .map_err(error::ErrorPayloadTooLarge)?;
             Some(to_image_url(&id_new))
         }
     };
