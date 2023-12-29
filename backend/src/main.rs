@@ -132,6 +132,11 @@ async fn main() -> std::io::Result<()> {
                     .index_file("index.html"),
             )
             .service(
+                fs::Files::new("/thong-tin-tai-khoan", &static_dist)
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
+            .service(
                 fs::Files::new("/doi-mat-khau", &static_dist)
                     .use_last_modified(true)
                     .index_file("index.html"),

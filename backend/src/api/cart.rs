@@ -204,7 +204,7 @@ pub async fn order_cart(
     let order_id = &new_order.id;
 
     let mut query_builder: sqlx::QueryBuilder<'_, MySql> = sqlx::QueryBuilder::new(
-        "insert into orderDetail(order_id, book_id, price_each, quantity_ordered) ",
+        "insert into orderdetail(order_id, book_id, price_each, quantity_ordered)",
     );
 
     // insert card
