@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { callRegister } from "../../services/api/userAPI";
 import "./register.scss"
 // import { CountryDropdown, RegionDropdown, CityDropdown } from "country-state-city";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 const Register = () => {
     // const [selectedCountry, setSelectedCountry] = useState("Vietnam");
@@ -45,10 +45,10 @@ const Register = () => {
             <div className="register-page">
                 <main className="main">
                     <div className="container">
-                        
-                            <h2 className="text text-large">Đăng ký</h2>
 
-                        
+                        <h2 className="text text-large">Đăng ký</h2>
+
+
                         <Form
                             name="basic"
                             onFinish={onFinish}
@@ -159,7 +159,7 @@ const Register = () => {
                                 ]}
                             >
                                 <Input.Password />
-                            </Form.Item> 
+                            </Form.Item>
                             <Form.Item
                                 className="input-box"
                                 labelCol={{ span: 24 }}
@@ -187,9 +187,7 @@ const Register = () => {
                                 ]}
                             >
                                 <Checkbox>
-                                    Tôi đã đọc và đồng ý với{" "}
-                                    <a href="/chinh-sach-su-dung">chính sách sử dụng</a> và{" "}
-                                    <a href="/chinh-sach-bao-mat">chính sách bảo mật</a>
+                                    Tôi đã đọc và đồng ý với chính sách
                                 </Checkbox>
                             </Form.Item>
                             <Button className="input-box" type="primary" htmlType="submit" style={{ width: "100%" }}>Đăng ký</Button>

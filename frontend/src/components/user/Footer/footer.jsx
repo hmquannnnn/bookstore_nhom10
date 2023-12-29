@@ -10,7 +10,7 @@ const Footer = () => {
             <Row className="content">
                 <Col md={10} className="brand-description">
                     <Row className="logo">
-                        <img src="public\vite.svg" alt="" />
+                        <img src="\vite.svg" alt="" />
                         <p>Bởi vì sách là thế giới</p>
                     </Row>
                     <p className="description">
