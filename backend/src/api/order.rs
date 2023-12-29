@@ -1,7 +1,16 @@
-use actix_web::{post, get, web::{self, Json}, error};
+use actix_web::{
+    error, get, post,
+    web::{self, Json},
+};
 
-use crate::{header::JwtTokenHeader, util::types::{AppState, Message}, repository::{order::{Order, insert_order, OrderSend}, book::take_price}};
-
+use crate::{
+    header::JwtTokenHeader,
+    repository::{
+        book::take_price,
+        order::{insert_order, OrderSend},
+    },
+    util::types::{AppState, Message},
+};
 
 // #[post("/api/order")]
 // pub async fn order(
@@ -49,25 +58,27 @@ pub async fn get_order(
 ) -> MyResult<Vec<GetOrder>> {
     let user_email = jwt_header.email;
     let pool = &app_state.pool;
-    let orders = sqlx::query_as!(GetOrder,
-    "select book.title, book.back_page_url, book.front_page_url, orders.* from book
+    let orders = sqlx::query_as!(
+        GetOrder,
+        "select book.title, book.back_page_url, book.front_page_url, orders.* from book
     join (
-        select orders.*, orderDetail.book_id, orderDetail.price_each, orderDetail.quantity_ordered 
+        select orders.*, orderdetail.book_id, orderdetail.price_each, orderdetail.quantity_ordered 
         from orders 
-        join orderDetail
-        on orders.id = orderDetail.order_id
+        join orderdetail 
+        on orders.id = orderdetail.order_id
         where user_email = ? and orders.status != \"cancel\"
     ) orders
-    on book.id = orders.book_id", user_email 
-    ).fetch_all(pool)
+    on book.id = orders.book_id",
+        user_email
+    )
+    .fetch_all(pool)
     .await
     .map_err(error::ErrorNotFound)?;
-    Ok(Json(Message{
+    Ok(Json(Message {
         message: "user order",
-        payload: Some(orders)
+        payload: Some(orders),
     }))
 }
-
 
 #[post["/order"]]
 pub async fn post_order(
@@ -78,7 +89,10 @@ pub async fn post_order(
     let pool = &app_state.pool;
     let user_email = &jwt_header.email;
     let details = details.0;
-    let books_id: Vec<_> = details.iter().map(|detail| detail.book_id.clone()).collect();
+    let books_id: Vec<_> = details
+        .iter()
+        .map(|detail| detail.book_id.clone())
+        .collect();
 
     let book_prices = take_price(&books_id, pool)
         .await
@@ -90,8 +104,9 @@ pub async fn post_order(
 
     let order_id = &order.id;
 
-    let mut query_builder = 
-        sqlx::QueryBuilder::new("insert into orderDetail(order_id, book_id, quantity_ordered, price_each) ");
+    let mut query_builder = sqlx::QueryBuilder::new(
+        "insert into orderDetail(order_id, book_id, quantity_ordered, price_each) ",
+    );
 
     query_builder.push_values(details, |mut q, book| {
         let price_each = book_prices
@@ -100,19 +115,20 @@ pub async fn post_order(
             .unwrap()
             .price_each;
         q.push(order_id)
-        .push(book.book_id)
-        .push(book.quantity_ordered)
-        .push(price_each);
+            .push(book.book_id)
+            .push(book.quantity_ordered)
+            .push(price_each);
     });
 
-    query_builder.build()
+    query_builder
+        .build()
         .execute(pool)
         .await
         .map_err(actix_web::error::ErrorInternalServerError)?;
 
-    Ok(Json(Message{
+    Ok(Json(Message {
         message: "update success",
-        payload: Some(order.into())
+        payload: Some(order.into()),
     }))
 }
 
@@ -125,10 +141,16 @@ pub async fn cancel_order(
     let order_id = order_id.0;
     let user_email = jwt_header.email;
     let pool = &app_state.pool;
-    sqlx::query!("update orders set status = \"cancel\" where id = ? and user_email = ?", order_id, user_email)
+    sqlx::query!(
+        "update orders set status = \"cancel\" where id = ? and user_email = ?",
+        order_id,
+        user_email
+    )
     .execute(pool)
     .await
     .map_err(error::ErrorBadRequest)?;
-    Ok(Json(Message { message: "update success", payload: None }))
+    Ok(Json(Message {
+        message: "update success",
+        payload: None,
+    }))
 }
-

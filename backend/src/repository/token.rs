@@ -1,9 +1,18 @@
-use jsonwebtoken::{encode, Header as JwtHeader, EncodingKey, errors::Error as JwtError, decode, Validation, DecodingKey};
+use jsonwebtoken::{
+    decode, encode, errors::Error as JwtError, DecodingKey, EncodingKey, Header as JwtHeader,
+    Validation,
+};
 use serde::{Deserialize, Serialize};
 
 use chrono::Duration;
 
-use crate::{util::{constant::{EXPIRE_INTERVAL, APP_SECRET}, types::AppError}, header::JwtTokenHeader};
+use crate::{
+    header::JwtTokenHeader,
+    util::{
+        constant::{APP_SECRET, EXPIRE_INTERVAL},
+        types::AppError,
+    },
+};
 
 use super::user::User;
 
@@ -39,14 +48,17 @@ pub struct Claims {
     pub sub: String,
     pub pass: String,
     pub rol: String,
-    pub exp: u64
+    pub exp: u64,
 }
-
 
 impl TryFrom<Claims> for JwtTokenHeader {
     type Error = AppError;
     fn try_from(value: Claims) -> Result<Self, Self::Error> {
-        Ok(JwtTokenHeader { email: value.sub, password: value.pass, role: value.rol.try_into()?}) 
+        Ok(JwtTokenHeader {
+            email: value.sub,
+            password: value.pass,
+            role: value.rol.try_into()?,
+        })
     }
 }
 
@@ -56,15 +68,25 @@ pub fn make_token(user: &User) -> Result<String, JwtError> {
         sub: user.email.clone(),
         pass: user.password.clone(),
         rol: user.role.clone(),
-        exp: chrono::Utc::now().checked_add_signed(expire).unwrap().timestamp() as u64
+        exp: chrono::Utc::now()
+            .checked_add_signed(expire)
+            .unwrap()
+            .timestamp() as u64,
     };
-    let token = encode(&JwtHeader::default(), &claims, &EncodingKey::from_secret(APP_SECRET.as_ref()))?;
+    let token = encode(
+        &JwtHeader::default(),
+        &claims,
+        &EncodingKey::from_secret(APP_SECRET.as_ref()),
+    )?;
     Ok(token)
 }
 
-
 pub fn decode_token(token: &str) -> Result<Claims, JwtError> {
-    let token = decode::<Claims>(token, &DecodingKey::from_secret(APP_SECRET.as_ref()), &Validation::default())?;
+    let token = decode::<Claims>(
+        token,
+        &DecodingKey::from_secret(APP_SECRET.as_ref()),
+        &Validation::default(),
+    )?;
     Ok(token.claims)
 }
 

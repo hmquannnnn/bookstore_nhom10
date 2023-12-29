@@ -1,7 +1,7 @@
 use std::error::Error;
 
-use sqlx::MySqlPool;
 use serde::{Deserialize, Serialize};
+use sqlx::MySqlPool;
 
 #[derive(sqlx::FromRow, Serialize, Deserialize, Debug)]
 pub struct User {
@@ -29,7 +29,6 @@ pub async fn select_user(user_email: &String, pool: &MySqlPool) -> Result<User, 
     // let token = make_token(&user)?;
     Ok(user)
 }
-
 
 #[derive(sqlx::FromRow, serde::Serialize, serde::Deserialize, Debug)]
 pub struct UserInsert {

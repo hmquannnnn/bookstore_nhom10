@@ -177,4 +177,3 @@ pub fn to_image_url(app_state: &web::Data<AppState>, id: &String) -> String {
 //     }
 // }
 //
-

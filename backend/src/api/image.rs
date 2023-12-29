@@ -6,8 +6,11 @@ use actix_web::{
 
 use crate::{
     header::JwtTokenHeader,
-    repository::{self, auth_user, auth_admin},
-    util::{types::{AppError, AppResult, AppState, Message}, to_image_url},
+    repository::{self, auth_admin, auth_user},
+    util::{
+        to_image_url,
+        types::{AppError, AppResult, AppState, Message},
+    },
 };
 
 #[derive(serde::Deserialize)]
@@ -74,7 +77,10 @@ pub async fn delete_image(
             repository::image::delete_image(&id, pool)
                 .await
                 .map_err(|_| AppError::FailToFetch)?;
-            Ok(Json(Message { message: "delete success", payload: None }))
+            Ok(Json(Message {
+                message: "delete success",
+                payload: None,
+            }))
         }
         false => Err(AppError::FailAuthenticate),
     }
