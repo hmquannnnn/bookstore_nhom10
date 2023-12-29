@@ -6,6 +6,7 @@ import { Button, Col, Divider, Modal, Radio, Result, Row, Space } from "antd";
 import { calcDeliveryCost, getOrderAction } from "../../redux/slice/orderSlice";
 import { callPayment } from "../../services/api/paymentAPI";
 import { useNavigate } from "react-router-dom";
+import { FaCheckCircle } from "react-icons/fa";
 import path from "../../routes/path";
 const Purchase = () => {
     const dispatch = useDispatch();
@@ -44,26 +45,38 @@ const Purchase = () => {
         dispatch(calcDeliveryCost(value));
     };
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAlertOpen, setIsAlertOpen] = useState(false);
 
     const showModal = () => {
         setIsModalOpen(true);
     };
 
+    const showALert = () => {
+        setIsAlertOpen(true);
+    }
+
     const handleOk = () => {
         setIsModalOpen(false);
+        setIsAlertOpen(false);
     };
 
     const handleCancel = () => {
         setIsModalOpen(false);
+        setIsAlertOpen(false);
     };
     const handlePurchase = async () => {
-        const res = await callPayment(orderId, Number(amount + deliveryCost));
-        if (res) {
-            console.log("check call api: ", res);
-            showModal();
-            // setResultStatus('success');
-            // setResultVisible(true);
+        if (value) {
+            const res = await callPayment(orderId, Number(amount + deliveryCost));
+            if (res) {
+                console.log("check call api: ", res);
+                showModal();
+                // setResultStatus('success');
+                // setResultVisible(true);
+            }
+        } else {
+            showALert();
         }
+
     }
     const donePayment = () => {
         navigate(path.home);
@@ -79,9 +92,9 @@ const Purchase = () => {
                         <p style={{ margin: "0 0 0 20px", fontSize: "20px", fontWeight: "600" }}>Đơn hàng của bạn</p>
                         <Col style={{ border: "1px solid #cfcece", margin: "15px 20px", borderRadius: "10px" }}>
                             {
-                                orderList.map(book => (
+                                orderList.map((book, index) => (
 
-                                    <Row key={book.book_id} className="book-in-cart">
+                                    <Row key={book.book_id} className="book-in-order">
                                         {/* <div className={"book-image"}>{book.front_page_url}</div> */}
 
                                         <Col md={10}>
@@ -103,6 +116,7 @@ const Purchase = () => {
                                         <Col md={4}>
                                             <div className="amount center">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(book.price_each * book.quantity_ordered)}</div>
                                         </Col>
+                                        {index < orderList.length - 1 && <Divider />}
                                     </Row>
 
 
@@ -174,12 +188,21 @@ const Purchase = () => {
                         /> */}
                         <Modal title="Thanh toán thành công" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={[
                             <Button key="ok" type="primary" onClick={() => donePayment()}>
-                                Quay về trang chủ
+                                Tiếp tục mua sắm
                             </Button>,
                         ]}>
+                            <FaCheckCircle style={{ display: "block", color: "rgb(15, 226, 15)", margin: "10px auto", fontSize: "70px" }} />
                             <div>Mã đơn hàng: {orderId}</div>
                             <div>Hình thức giao hàng: {value === 1 ? "Giao hàng tiêu chuẩn" : "Giao hàng hỏa tốc (Nhận hàng trong 2h)"}</div>
                             <div>Tổng tiền: {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount + deliveryCost)}</div>
+                        </Modal>
+
+                        <Modal title="Chưa chọn phương thức giao hàng" open={isAlertOpen} onOk={handleOk} onCancel={handleCancel} footer={[
+                            <Button key="ok" type="primary" onClick={handleOk}>
+                                Quay lại
+                            </Button>,
+                        ]}>
+                            <p>Vui lòng chọn phương thức thanh toán để thanh toán</p>
                         </Modal>
                     </Col>
                 </Col>

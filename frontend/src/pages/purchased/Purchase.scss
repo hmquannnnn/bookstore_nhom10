@@ -6,7 +6,7 @@ $grey-text: #64646d;
   height: fit-content;
   min-height: 62vh;
   .left {
-    .book-in-cart {
+    .book-in-order {
       //   border: 1px solid $grey-text;
       background-color: white;
       border-radius: 10px;
@@ -33,18 +33,16 @@ $grey-text: #64646d;
         // border: 1px solid #cfcece;
         border-radius: 4px;
         width: fit-content;
+        // color: rgb(15, 226, 15);
       }
       .amount {
         color: $red-btn-color;
         font-weight: 500;
       }
-      .delete {
-        color: red;
-        position: relative;
-        // display: block;
-        // margin: auto 0;
-        top: 53px;
-        cursor: pointer;
+      .ant-divider-horizontal {
+        margin: 0 auto;
+        width: 80%;
+        min-width: 80%;
       }
     }
     // .book-in-cart:hover {

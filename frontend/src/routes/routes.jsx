@@ -23,6 +23,7 @@ import BookDetails from "../pages/BookDetails/BookDetails";
 import Cart from "../pages/cart/DefaultCart/Cart.jsx";
 import Purchase from "../pages/purchased/Purchase.jsx";
 import SearchBook from "../pages/searchBook/searchBook.jsx";
+import OrderHistory from "../pages/OrderHistory/OrderHistory.jsx";
 
 const Layout = () => {
     return (
@@ -87,6 +88,10 @@ const Routes = () => {
                 {
                     path: path.search,
                     element: <SearchBook />
+                },
+                {
+                    path: path.orderHistory,
+                    element: <OrderHistory />
                 }
             ],
         },
