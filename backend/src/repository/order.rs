@@ -47,14 +47,14 @@ pub struct OrderSend {
     pub status: Option<String>,
 }
 
-impl Into<OrderSend> for Order {
-    fn into(self) -> OrderSend {
+impl From<Order> for OrderSend {
+    fn from(value: Order) -> Self {
         OrderSend {
-            id: self.id.to_string(),
-            user_email: self.user_email,
-            order_date: self.order_date,
-            require_date: self.require_date,
-            status: self.status,
+            id: value.id.to_string(),
+            user_email: value.user_email,
+            order_date: value.order_date,
+            require_date: value.require_date,
+            status: value.status,
         }
     }
 }
@@ -79,7 +79,7 @@ pub struct OrderPrice {
 }
 
 #[derive(serde::Serialize)]
-pub(self) struct UserOrder {
+ struct UserOrder {
     order_id: u64,
     user_email: String,
 }
@@ -94,8 +94,7 @@ pub async fn get_order_price(
             UserOrder,
             "select id order_id, user_email from orders where id = ? and user_email = ?",
             order_id,
-            user_email
-        )
+            user_email)
         .fetch_one(pool),
         sqlx::query_as!(
             OrderPrice,

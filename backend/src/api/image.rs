@@ -54,7 +54,7 @@ pub async fn put_image(
                 .await
                 .map_err(|_| AppError::FailToUpdate)?;
             Ok(Json(ImageUrl {
-                url: to_image_url(&app_state, &id),
+                url: to_image_url(&id),
             }))
         }
         false => Err(AppError::FailAuthenticate),

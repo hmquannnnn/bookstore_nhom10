@@ -77,7 +77,7 @@ pub async fn insert_image_user(
     insert_image(data.to_vec(), &id, pool)
         .await
         .map_err(|_| AppError::FailToUpdate)?;
-    let url = to_image_url(&app_state, &id);
+    let url = to_image_url(&id);
     sqlx::query!(
         "update user set image_url = ? where email = ?",
         url,
@@ -115,13 +115,13 @@ pub async fn patch_user_image(
             )
             .await;
             fut_all.0.map_err(|_| AppError::FailToUpdate)?;
-            Some(to_image_url(&app_state, &id_new))
+            Some(to_image_url(&id_new))
         }
         None => {
             insert_image(data.to_vec(), &id_new, pool)
                 .await
                 .map_err(|_| AppError::FailToFetch)?;
-            Some(to_image_url(&app_state, &id_new))
+            Some(to_image_url(&id_new))
         }
     };
     Ok(Json(Message {
