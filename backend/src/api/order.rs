@@ -140,7 +140,7 @@ pub async fn post_order(
     let order_id = &order.id;
 
     let mut query_builder = sqlx::QueryBuilder::new(
-        "insert into orderDetail(order_id, book_id, quantity_ordered, price_each) ",
+        "insert into orderdetail(order_id, book_id, quantity_ordered, price_each) ",
     );
 
     query_builder.push_values(details, |mut q, book| {

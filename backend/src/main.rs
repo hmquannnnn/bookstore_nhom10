@@ -132,6 +132,11 @@ async fn main() -> std::io::Result<()> {
                     .index_file("index.html"),
             )
             .service(
+                fs::Files::new("/thong-tin-tai-khoan", &static_dist)
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
+            .service(
                 fs::Files::new("/doi-mat-khau", &static_dist)
                     .use_last_modified(true)
                     .index_file("index.html"),
@@ -142,7 +147,17 @@ async fn main() -> std::io::Result<()> {
                     .index_file("index.html"),
             )
             .service(
-                fs::Files::new("/tim-kiem", "./dist")
+                fs::Files::new("/tim-kiem", &static_dist)
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
+            .service(
+                fs::Files::new("/lich-su-dat-hang", &static_dist)
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
+            .service(
+                fs::Files::new("/thanh-toan", &static_dist)
                     .use_last_modified(true)
                     .index_file("index.html"),
             )
@@ -193,7 +208,7 @@ async fn main() -> std::io::Result<()> {
                     .service(post_pay),
             )
             .service(
-                fs::Files::new("/", "./dist")
+                fs::Files::new("/", &static_dist)
                     .use_last_modified(true)
                     .index_file("index.html"),
             )
