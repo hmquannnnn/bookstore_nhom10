@@ -15,7 +15,8 @@ const path = {
     changePassword: "/doi-mat-khau",
     bookDetails: "/thong-tin-sach",
     purchase: "/thanh-toan",
-    search: "/tim-kiem"
+    search: "/tim-kiem",
+    orderHistory: "/lich-su-dat-hang"
 }
 
 export default path;

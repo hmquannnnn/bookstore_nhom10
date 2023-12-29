@@ -14,6 +14,6 @@ export const callGetOrder = async () => {
     // config image url để deploy
     const res = await instance.get(`${orderURL}`);
     res.payload.map(book => book.front_page_url = imageUrlConfig(book.front_page_url));
-    console.log("check api:", res.payload);
+    // console.log("check api:", res.payload);
     return res;
 }

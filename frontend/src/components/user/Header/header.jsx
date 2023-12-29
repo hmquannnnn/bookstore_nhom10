@@ -57,6 +57,14 @@ const Header = () => {
             )
         },
         {
+            key: "5",
+            label: (
+                <Link to={path.orderHistory}>
+                    Lịch sử đặt hàng
+                </Link>
+            )
+        },
+        {
             key: "4",
             label: (
                 <Link to={path.home} onClick={handleLogOut}>
