@@ -135,6 +135,11 @@ async fn main() -> std::io::Result<()> {
                     .use_last_modified(true)
                     .index_file("index.html"),
             )
+            .service(
+                fs::Files::new("/tim-kiem", "./dist")
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
             .app_data(web::Data::new(app_state.clone()))
             .service(
                 web::scope("/api")
