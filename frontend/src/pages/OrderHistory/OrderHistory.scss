@@ -5,11 +5,40 @@ $red-btn-color: rgb(255, 66, 78);
   width: 1000px;
   display: block;
   margin: auto;
-  min-height: 62vh;
+  min-height: 66vh;
   .page-title {
     font-weight: bold;
     font-size: 18px;
     font-family: sans-serif;
+  }
+  .empty {
+    padding-bottom: 10px;
+    background-color: white;
+    border-radius: 4px;
+    img {
+      display: block;
+      margin: auto;
+      width: 200px;
+    }
+    p {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+    .btn-back {
+      display: block;
+      margin: auto;
+      margin-top: 10px;
+      padding: 10px 55px;
+      background-color: rgb(253, 216, 53);
+      color: rgb(75, 75, 75);
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+      font-weight: 500;
+      text-decoration: none;
+    }
   }
   .orders {
     background-color: white;

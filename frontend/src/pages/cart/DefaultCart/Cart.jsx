@@ -12,7 +12,7 @@ const Cart = () => {
         <>
             <div className="cart-page">
                 <div className="page-title">
-                    <h4 style={{ margin: "0 0 20px 15px" }}>GIỎ HÀNG</h4>
+                    <h4>Giỏ hàng</h4>
                 </div>
                 <main className="cart-main">
                     <div className="cart-container">
