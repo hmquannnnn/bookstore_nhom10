@@ -77,7 +77,7 @@ const UserProfile = () => {
                     console.log(">>>new user: ", imageURL, "vs ", response.payload)
                     setKey(1);
                     dispatch(updateAvatar(response.payload));
-                    window.location.reload();
+                    // window.location.reload();
                 }
             }
             onSuccess(response, file);
