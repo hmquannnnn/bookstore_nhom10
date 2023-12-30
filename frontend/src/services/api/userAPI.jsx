@@ -29,12 +29,8 @@ export const callFetchAccount = async () => {
   return res;
 };
 
-export const callChangeAvatar = (formData) => {
-  return instance.patch("/user/image", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+export const callChangeAvatar = (imageFile) => {
+  return instance.post("/user/image", imageFile);
 };
 
 export const callChangeName = (name) => {
