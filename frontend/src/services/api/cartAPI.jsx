@@ -1,3 +1,4 @@
+
 import instance from "../../utils/axiosCustomize.js";
 import imageUrlConfig from "../imageUrlConfig.jsx";
 
@@ -29,6 +30,6 @@ export const callChangeQuantity = (bookId, quantityOrdered) => {
 }
 
 export const callDeleteBook = (bookId) => {
-    console.log("check api: ", bookId);
+    // console.log("check api: ", bookId);
     return instance.delete(`${cartURL}?book_id=${bookId}`);
 }

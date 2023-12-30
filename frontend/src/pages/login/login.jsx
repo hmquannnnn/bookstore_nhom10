@@ -13,6 +13,8 @@ import { useState } from "react";
 import { unstable_renderSubtreeIntoContainer } from "react-dom";
 import { callGetCart } from "../../services/api/cartAPI";
 import { getCartAction } from "../../redux/slice/cartSlice";
+import Cookies from "js-cookie";
+import instance from "../../utils/axiosCustomize";
 
 
 
@@ -23,16 +25,16 @@ const Login = () => {
     const onFinish = async (values) => {
         const { email, password } = values;
         const res = await callLogin(email, password);
-        // console.log(">>>res: ",res);
-        //  console.log(res.access_token);
         if (res?.user?.email) {
-            console.log(">>>res: ", res);
-
+            localStorage.setItem(`token`, res.token);
+            instance.defaults.headers.common = {
+                Auth: `${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            };
+            const getCart = await callGetCart();
+            dispatch(getCartAction(getCart));
             dispatch(doLoginAction(res));
-            localStorage.setItem("token", res.token);
-            // const cartRes = await callGetCart();
-            // if (cartRes) {
-            //     dispatch(getCartAction(cartRes));
+
             const role = res.user.role;
             if (role === "admin") {
                 navigate("/admin");
@@ -40,14 +42,12 @@ const Login = () => {
                 navigate('/')
             }
             message.success('Đăng nhập thành công!');
-
-
-
         } else {
             notification.error({
                 message: "Sai email hoặc mật khẩu",
             })
         }
+
     }
 
 

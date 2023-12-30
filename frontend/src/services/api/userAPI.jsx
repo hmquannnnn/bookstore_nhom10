@@ -24,6 +24,7 @@ export const callFetchAccount = async () => {
   // return instance.get("/user");
 
   //config image url
+  // console.log("check token: ", localStorage.getItem("token"));
   const res = await instance.get("/user");
   res.image_url = imageUrlConfig(res.image_url);
   return res;
@@ -34,9 +35,9 @@ export const callChangeAvatar = (imageFile) => {
 };
 
 export const callChangeName = (name) => {
-  console.log("call this name: ", name, " " + typeof name);
+  // console.log("call this name: ", name, " " + typeof name);
   const formattedName = String(name);
-  console.log(">>>url :", `/user/name/${formattedName}`, "and ", formattedName);
+  // console.log(">>>url :", `/user/name/${formattedName}`, "and ", formattedName);
   return instance.patch(`/user/name/${name}`);
 };
 
@@ -54,7 +55,7 @@ export const callChangePassword = (oldPassword, newPassword) => {
     new: newPassword,
   };
   const jsonData = JSON.stringify(data);
-  console.log(jsonData);
+  // console.log(jsonData);
   return instance.patch("user/password", jsonData, {
     headers: {
       "Content-Type": "application/json",

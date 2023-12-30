@@ -70,7 +70,7 @@ const OrderHistory = () => {
     const handleMouseEnter = (bookId) => {
         // setIsHovered(true);
         setHoveredBookId(bookId);
-        console.log(">>>check hover: ", bookId, hoveredBookId);
+        // console.log(">>>check hover: ", bookId, hoveredBookId);
     }
     const handleMouseLeave = () => {
         setHoveredBookId(null);

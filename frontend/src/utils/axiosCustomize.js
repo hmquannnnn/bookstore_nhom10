@@ -1,4 +1,6 @@
 import axios from "axios";
+import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
 
 const baseURL = import.meta.env.VITE_BACKEND_URL;
 
@@ -6,10 +8,18 @@ const instance = axios.create({
   baseURL: baseURL,
 });
 
+// const getTokenKey = () => {
+
+// };
+
 // Add a request interceptor
 instance.interceptors.request.use(
   function (config) {
     // Do something before request is sent
+    // const tokenKey = getTokenKey();
+    // console.log(tokenKey);
+    // const authToken = Cookies.get(tokenKey);
+    // config.headers.Auth = authToken;
     return config;
   },
   function (error) {

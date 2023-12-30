@@ -41,10 +41,10 @@ export const bookSlice = createSlice({
     },
     getCurrentBookAction: (state, action) => {
       state.currentBook = action.payload;
-      console.log(">>>current book redux: ", action.payload);
+      // console.log(">>>current book redux: ", action.payload);
     },
     changeTabAction: (state, action) => {
-      console.log(">>>check redux: ", action.payload);
+      // console.log(">>>check redux: ", action.payload);
       state.tab = action.payload;
     },
     changePageAction: (state, action) => {

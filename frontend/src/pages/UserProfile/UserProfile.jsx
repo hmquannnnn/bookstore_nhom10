@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./UserProfile.scss"
 import { callChangeAddress, callChangeAvatar, callChangeName, callFetchAccount } from "../../services/api/userAPI";
 import { useEffect, useState } from "react";
-import { doChangeNameAction, doGetAccountAction, updateAvatar } from "../../redux/slice/accountSlice";
+import { doChangeAddressAction, doChangeNameAction, doGetAccountAction, updateAvatar } from "../../redux/slice/accountSlice";
 import { Link } from "react-router-dom";
 import path from "../../routes/path";
 
@@ -22,50 +22,69 @@ import path from "../../routes/path";
 //         console.log(info.fileList);
 //     },
 // };
+const removeCircularReferences = (object) => {
+    const seen = new WeakSet();
+    return JSON.parse(JSON.stringify(object, (key, value) => {
+        if (typeof value === 'object' && value !== null) {
+            if (seen.has(value)) {
+                return;
+            }
+            seen.add(value);
+        }
+        return value;
+    }));
+};
 
 const UserProfile = () => {
     const dispatch = useDispatch();
-
-    // const [imageURL, setImageURL] = useState(user.image_url);
-    // console.log(">>>user: ", user);
     const [key, setKey] = useState(0);
-    // const [userName, setUserName] = useState(user.name);
+    const [user, setUser] = useState(useSelector(state => state.account.user))
     const fetchAccount = async () => {
         const res = await callFetchAccount();
-        console.log("check info: ", res);
+        // console.log("check info: ", res);
         dispatch(doGetAccountAction(res));
+        setUser(res);
     }
+
     useEffect(() => {
         fetchAccount();
     }, [])
-    const user = useSelector(state => state.account.user);
-    console.log("check user: ", user);
-    // const handleImageURL = (newURL) => {
-    //     setImageURL(newURL);
-    // }
     const onFinish = async ({ name, address }) => {
         if (name !== undefined) {
             const nameRes = await callChangeName(name);
             if (nameRes.message === "update success") {
-                console.log(">>> call name")
+                dispatch(doChangeNameAction(name));
+                // console.log(">>> call name")
             }
         }
 
         if (address !== undefined) {
             const addressRes = await callChangeAddress(address);
             if (addressRes.message === "update success") {
-                console.log(">>> call address")
+                doChangeAddressAction(address);
+                // console.log(">>> call address")
             }
         }
 
 
-        // window.location.reload();
+        window.location.reload();
     };
     // const handleChangeName = (e) => {
     //     setUserName(e.target.value);
     // }
+    // const customRequest = async (imageFile) => {
+    //     const res = await callChangeAvatar(imageFile);
+    //     console.log("check avatar: ", res);
+    //     if (res.payload) {
+    //         console.log("image: ", res);
+    //     }
+    // };
     const customRequest = async (imageFile) => {
-        const res = callChangeAvatar(imageFile);
+        // Kiểm tra và làm sạch đối tượng trước khi gửi
+        const cleanedObject = removeCircularReferences(imageFile);
+        console.log(cleanedObject);
+        const res = await callChangeAvatar(cleanedObject);
+        console.log("check avatar: ", res);
         if (res.payload) {
             console.log("image: ", res);
         }
@@ -73,7 +92,7 @@ const UserProfile = () => {
 
     return (
         <>
-            <div className="profile-page" style={{ margin: "auto", width: "1440px", height: "630px" }}>
+            <div className="profile-page" style={{ margin: "auto", width: "1440px", height: "66vh" }}>
                 <h3 style={{ fontFamily: "Arial, Helvetica, sans-serif", fontSize: "22px" }}>Thông tin tài khoản</h3>
                 <div className="main" style={{ backgroundColor: "white", borderRadius: "5px", height: "400px", border: "none" }}>
                     <Row>
@@ -81,7 +100,7 @@ const UserProfile = () => {
                             <h4 style={{ fontSize: "20px", color: "#64646D", fontWeight: "400", margin: "5px 0 0 10px" }}>Thông tin cá nhân</h4>
                             {/* <Divider/> */}
                             <Row>
-                                <Col className="avatar" span={5} >
+                                {/* <Col className="avatar" span={5} >
                                     <Avatar
                                         key={key}
                                         size={128}
@@ -89,16 +108,11 @@ const UserProfile = () => {
                                         style={{ margin: "25px" }}
                                         src={user.image_url}
                                     />
-                                    <Upload
-                                        customRequest={customRequest}
-                                        showUploadList={false}
-                                    >
-                                        {/* <Button type="primary">Chọn ảnh đại diện</Button> */}
-                                        <BiPencil className="upload-file" />
-                                    </Upload>
+                                    <input type="file" name="image" onChange={customRequest} />
 
-                                </Col>
-                                <Col className="user-info" span={19} >
+                                </Col> */}
+                                <Col md={1} />
+                                <Col className="user-info" span={23} >
                                     <Form
                                         name="form"
                                         onFinish={onFinish}
