@@ -92,8 +92,8 @@ pub async fn insert_image_user(
     }))
 }
 
-#[patch("/user/image")]
-pub async fn patch_user_image(
+#[post("/user/image")]
+pub async fn post_user_image(
     jwt: JwtTokenHeader,
     data: Bytes,
     app_state: web::Data<AppState>,

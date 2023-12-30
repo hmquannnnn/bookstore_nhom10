@@ -26,7 +26,7 @@ use api::{
     order::{cancel_order, get_order, post_order},
     update,
     user::{
-        get_user, insert_image_user, patch_user_image, register_user, update_user_address,
+        get_user, insert_image_user, post_user_image, register_user, update_user_address,
         update_user_name, update_user_password, update_user_phone, user_login,
     },
 };
@@ -184,7 +184,7 @@ async fn main() -> std::io::Result<()> {
                     .service(update_user_name)
                     .service(update_user_phone)
                     .service(update_user_address)
-                    .service(patch_user_image)
+                    .service(post_user_image)
                     .service(update_user_password)
                     .service(patch_book_image)
                     .service(update_book_title)
