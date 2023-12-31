@@ -78,7 +78,7 @@ export const callSearchBookByAuthor = (value) => {
 
 export const callFilterBookByPrice = async (start, end) => {
     // console.log(">>>range: ", priceRange);
-    console.log("check range: ", start, " ", end);
+    // console.log("check range: ", start, " ", end);
     // return instance.get(`${booksURL}/filter/price?start=${start}&end=${end}`);
 
     // config image url để deploy

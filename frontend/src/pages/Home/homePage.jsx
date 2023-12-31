@@ -8,6 +8,7 @@ import path from "../../routes/path.jsx";
 const Home = () => {
     // const user = useSelector(state => state.account.user);
     const tab = useSelector(state => state.books.tab);
+    // const [page, setPage] = useState()
     const page = useSelector(state => state.books.page);
     const dispatch = useDispatch();
     const [isActive, setIsActive] = useState(tab);
@@ -18,7 +19,7 @@ const Home = () => {
     const [endPrice, setEndPrice] = useState(0);
 
     const handleChangeFilter = async (changeValues, values) => {
-        console.log(">>> check handleChangeFilter", changeValues, values);
+        // console.log(">>> check handleChangeFilter", changeValues, values);
         const queryParams = [];
         if (values.category) {
             queryParams.push(`genres=${values.category.join(',')}`);
@@ -47,10 +48,11 @@ const Home = () => {
     }
     const handlePriceFilter = async () => {
         const res = await callFilterBookByPrice(startPrice, endPrice);
-        console.log(">>>check filter: ", res, " ", startPrice, " ", endPrice);
+        // console.log(">>>check filter: ", res, " ", startPrice, " ", endPrice);
         if (res) {
             navigate(`?start=${startPrice}&end=${endPrice}`);
             dispatch(getBooksAction(res));
+            dispatch(changePageAction(1));
         }
     }
     const onFinish = () => {
@@ -79,7 +81,7 @@ const Home = () => {
         }
     ]
     const initBooksSortByPurchased = async () => {
-        console.log(">>>check page: ", page);
+        // console.log(">>>check page: ", page);
         const res = await callBooksSortByPurchased(page);
         // console.log("api 1", page, res);
         if (res) {
@@ -144,20 +146,22 @@ const Home = () => {
     const onBookClick = async (bookId) => {
         const res = await callGetBook(bookId);
         if (res) {
-            dispatch(getCurrentBookAction(res))
-            navigate(`${path.bookDetails}?id=${bookId}`)
+            dispatch(getCurrentBookAction(res));
+
+            navigate(`${path.bookDetails}?id=${bookId}`);
+            dispatch(changePageAction(1));
         }
     }
     const handleTabClick = () => {
-        console.log(items);
+        // console.log(items);
     }
     const onChange = (key) => {
         // console.log(key);
         setIsActive(key);
-        console.log(isActive);
+        // console.log(isActive);
     };
     const handleChangePage = (newPage) => {
-        console.log(newPage);
+        // console.log(newPage);
         dispatch(changePageAction(newPage));
         if (newPage === 1) {
             navigate(path.home);

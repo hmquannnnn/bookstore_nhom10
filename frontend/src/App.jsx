@@ -17,23 +17,28 @@ export default function App() {
   const dispatch = useDispatch();
   const getAccount = async () => {
     const res = await callFetchAccount();
-    console.log(">>> check fetchAccount: ", res)
+    // console.log(">>> check fetchAccount: ", res)
     if (res) {
       dispatch(doGetAccountAction(res));
     }
   }
+  const user = useSelector(state => state.account.user);
   const getCartInfo = async () => {
     const res = await callGetCart();
-    console.log(">>>check cart:", res, res.length);
+    // console.log(">>>check cart:", res, res.length);
     if (res) {
       dispatch(getCartAction(res));
-      console.log("success");
+      // console.log("success");
     }
   }
   useEffect(() => {
     getAccount();
     getCartInfo();
   }, [])
+  // useEffect(() => {
+  //   getAccount();
+  //   getCartInfo();
+  // }, [user])
   return (
     <Routes />
   )

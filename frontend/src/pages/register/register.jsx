@@ -9,26 +9,14 @@ import "./register.scss"
 import { useEffect, useState } from "react";
 
 const Register = () => {
-    // const [selectedCountry, setSelectedCountry] = useState("Vietnam");
-    // const [selectedRegion, setSelectedRegion] = useState("");
-    // const [selectedCity, setSelectedCity] = useState("");
-    // const [vietnamStates, setVietnamStates] = useState([]);
-    //
-    // useEffect(() => {
-    //
-    // }, []);(() => {
-    //     // Lấy thông tin về các states của Việt Nam khi component mount
-    //     const statesOfVietnam = CountryDropdown.getStatesOfCountry("Vietnam");
-    //     setVietnamStates(statesOfVietnam);
-    // }, []);
     const navigate = useNavigate();
     const onFinish = async (values) => {
         const { email, name, phone, password, address } = values;
 
         const res = await callRegister(email, name, phone, password, address);
         if (res?.email) {
-            console.log(res);
-            console.log(res.email);
+            // console.log(res);
+            // console.log(res.email);
             message.success('Đăng ký thành công!');
             navigate('/dang-nhap');
         } else {

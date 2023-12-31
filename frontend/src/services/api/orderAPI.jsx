@@ -4,7 +4,7 @@ import imageUrlConfig from "../imageUrlConfig";
 const orderURL = "/order"
 
 export const callCreateOrder = (orderList) => {
-    console.log(">>>check order list: ", orderList)
+    // console.log(">>>check order list: ", orderList)
     return instance.post(`${orderURL}`, orderList);
 }
 

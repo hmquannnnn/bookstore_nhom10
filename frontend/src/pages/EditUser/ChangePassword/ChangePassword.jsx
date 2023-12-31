@@ -8,11 +8,11 @@ const ChangePassword = () => {
     const navigate = useNavigate();
     const onFinish = async (values) => {
         const { oldPassword, newPassword } = values;
-        console.log(">>>input: ", values.old, "  ", values.new);
+        // console.log(">>>input: ", values.old, "  ", values.new);
         const res = await callChangePassword(values.old, values.new);
         console.log(res);
         if (res.message === "update success") {
-            console.log(">>>call success: ");
+            // console.log(">>>call success: ");
             navigate(path.logIn);
         }
     }

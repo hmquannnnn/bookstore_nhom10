@@ -18,7 +18,7 @@ const Purchase = () => {
     const [orderList, setOrderList] = useState([]);
     const [value, setValue] = useState(0);
     const deliveryCost = useSelector(state => state.order.deliveryCost);
-    console.log("check amount: ", deliveryCost);
+    // console.log("check amount: ", deliveryCost);
     // let orderList = [];
     const getOrderList = async () => {
         const res = await callGetOrder();
@@ -37,7 +37,7 @@ const Purchase = () => {
     useEffect(() => {
         getOrderList();
     }, [value]);
-    console.log("order list: ", orderList);
+    // console.log("order list: ", orderList);
 
     const onChange = (value) => {
         // console.log('radio checked', e.target.value);
@@ -68,7 +68,7 @@ const Purchase = () => {
         if (value) {
             const res = await callPayment(orderId, Number(amount + deliveryCost));
             if (res) {
-                console.log("check call api: ", res);
+                // console.log("check call api: ", res);
                 showModal();
                 // setResultStatus('success');
                 // setResultVisible(true);
