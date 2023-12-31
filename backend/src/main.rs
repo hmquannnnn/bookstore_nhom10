@@ -22,7 +22,7 @@ use api::{
     },
     cart::{get_cart, order_cart, patch_cart, put_cart},
     genre::get_genres,
-    image::{delete_image, get_image},
+    image::{delete_image, get_image, put_image},
     order::{cancel_order, get_order, post_order},
     update,
     user::{
@@ -165,7 +165,7 @@ async fn main() -> std::io::Result<()> {
             .service(
                 web::scope("/api")
                     .service(get_image)
-                    // .service(put_image)
+                    .service(put_image)
                     .service(delete_image)
                     .service(get_book)
                     .service(get_books)
