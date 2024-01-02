@@ -1,0 +1,15 @@
+.ant-table
+ .ant-table-container
+ .ant-table-content
+ table
+ thead.ant-table-thead
+ .ant-table-cell {
+    background-color: #ddd;
+}
+
+.ant-spin-container
+    .ant-pagination
+    .ant-table-pagination
+    .ant-table-pagination-right {
+        width: 120px;
+}
