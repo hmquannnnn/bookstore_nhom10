@@ -81,14 +81,21 @@ const UserProfile = () => {
     // };
     const customRequest = async (imageFile) => {
         // Kiểm tra và làm sạch đối tượng trước khi gửi
-        const cleanedObject = removeCircularReferences(imageFile);
-        console.log(cleanedObject);
-        const res = await callChangeAvatar(cleanedObject);
+        // const cleanedObject = removeCircularReferences(imageFile);
+        // console.log(cleanedObject);
+        const formData = new FormData();
+        formData.append('image', imageFile);
+        const res = await callChangeAvatar(formData);
         console.log("check avatar: ", res);
         if (res.payload) {
             console.log("image: ", res);
         }
     };
+
+    const handleImage = (e) => {
+        const file = e.target;
+        console.log(file);
+    }
 
     return (
         <>
@@ -100,17 +107,9 @@ const UserProfile = () => {
                             <h4 style={{ fontSize: "20px", color: "#64646D", fontWeight: "400", margin: "5px 0 0 10px" }}>Thông tin cá nhân</h4>
                             {/* <Divider/> */}
                             <Row>
-                                {/* <Col className="avatar" span={5} >
-                                    <Avatar
-                                        key={key}
-                                        size={128}
-                                        icon={<AiOutlineUser />}
-                                        style={{ margin: "25px" }}
-                                        src={user.image_url}
-                                    />
-                                    <input type="file" name="image" onChange={customRequest} />
+                                <Col className="avatar" span={5} >
 
-                                </Col> */}
+                                </Col>
                                 <Col md={1} />
                                 <Col className="user-info" span={23} >
                                     <Form

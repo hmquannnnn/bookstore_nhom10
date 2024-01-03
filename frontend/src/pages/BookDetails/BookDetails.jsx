@@ -4,10 +4,20 @@ import { callGetBook } from "../../services/api/bookAPI.jsx";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "./BookDetails.scss"
 import { Button, Col, Divider, Input, Modal, Rate, Row } from "antd";
-import { callAddBookIntoCart } from "../../services/api/cartAPI.jsx";
+import { callAddBookIntoCart, callChangeQuantity, callGetCart } from "../../services/api/cartAPI.jsx";
 import path from "../../routes/path.jsx";
 import { addBookIntoCartAction } from "../../redux/slice/cartSlice.jsx";
 import { getCurrentBookAction } from "../../redux/slice/bookSlice.jsx";
+
+const checkExistedBook = async (bookId) => {
+    const res = await callGetCart();
+    // console.log(res.find(item => item.book_id === bookId));
+    const existedBook = res.find(item => item.book_id === bookId);
+    return {
+        checked: existedBook != undefined,
+        book: existedBook
+    }
+}
 
 const BookDetails = () => {
     const navigate = useNavigate();
@@ -31,12 +41,17 @@ const BookDetails = () => {
         if (!isAuthenticated) {
             showModal();
         } else {
-            const res = await callAddBookIntoCart(bookId, count);
-            console.log(">>>add to cart: ", res);
-            if (res) {
-                // console.log("success");
-                dispatch(addBookIntoCartAction({ count, bookId }));
+            const isExisted = await checkExistedBook(bookId);
+            console.log(isExisted)
+            if (isExisted.checked) {
+                const quantityOrdered = isExisted.book.quantity_ordered + count;
+                await callChangeQuantity(bookId, quantityOrdered);
+
+            } else {
+                await callAddBookIntoCart(bookId, count);
             }
+            dispatch(addBookIntoCartAction({ count, bookId }));
+
         }
     }
     const handleIncrement = () => {

@@ -6,7 +6,6 @@ import { getCartAction } from "../../../redux/slice/cartSlice.jsx";
 
 const Cart = () => {
     const dispatch = useDispatch();
-    // dispatch(getCartAction());
     const total = useSelector(state => state.cart.total);
     return (
         <>
@@ -20,6 +19,7 @@ const Cart = () => {
 
                     </div>
                 </main>
+
             </div>
         </>
     )

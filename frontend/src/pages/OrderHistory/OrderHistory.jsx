@@ -59,7 +59,7 @@ const OrderHistory = () => {
     const getBookList = async () => {
         const res = await callBooksSortByPurchased(1);
         if (res) {
-            setBookList(res.slice(0, 5));
+            setBookList(res.slice(0, 6));
         }
     }
 
@@ -98,12 +98,12 @@ const OrderHistory = () => {
                                 <button className="btn-back" type="submit">Tiếp tục mua sắm</button>
                             </Link>
                         </div>
-                        <div style={{ backgroundColor: "white", borderRadius: "4px", padding: "10px 5px", marginTop: "15px" }}>
+                        <div style={{ backgroundColor: "white", borderRadius: "4px", padding: "10px 20px", marginTop: "15px" }}>
                             <p style={{ marginTop: "5px", fontWeight: "600", fontSize: "16px", fontFamily: "sans-serif" }}>Sản phẩm bán chạy</p>
                             <Row className="books" style={{ marginTop: "8px", display: "flex", flexWrap: "wrap", gap: "10px", backgroundColor: "white", borderRadius: "4px" }}>
                                 {
                                     bookList.map(book => (
-                                        <div className="book-cell" key={book.id} style={hoveredBookId === book.id ? { boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)", width: "calc(20% - 10px)", backgroundColor: "white", cursor: "pointer", borderRadius: "4px", border: "1px solid lightgrey" } : { width: "calc(20% - 10px)", backgroundColor: "white", cursor: "pointer", borderRadius: "4px", border: "1px solid lightgrey" }}
+                                        <div className="book-cell" key={book.id} style={hoveredBookId === book.id ? { boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)", width: "calc(17% - 15px)", backgroundColor: "white", cursor: "pointer", borderRadius: "4px", border: "1px solid lightgrey" } : { width: "calc(17% - 15px)", backgroundColor: "white", cursor: "pointer", borderRadius: "4px", border: "1px solid lightgrey" }}
                                             onMouseEnter={() => handleMouseEnter(book.id)} onMouseLeave={handleMouseLeave}
                                             onClick={() => onBookClick(book.id)}>
 

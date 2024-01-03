@@ -117,15 +117,24 @@ const Routes = () => {
                 },
                 {
                     path: path.booksManagement,
-                    element: <BooksManagement />
+                    element:
+                        <ProtectedRoute>
+                            <BooksManagement />
+                        </ProtectedRoute>
                 },
                 {
                     path: path.usersManagement,
-                    element: <UsersManagement />
+                    element:
+                        <ProtectedRoute>
+                            <UsersManagement />
+                        </ProtectedRoute>
                 },
                 {
                     path: path.ordersManagemennt,
-                    element: <OrdersManagemennt />
+                    element:
+                        <ProtectedRoute>
+                            <OrdersManagemennt />
+                        </ProtectedRoute>
                 }
             ]
         },

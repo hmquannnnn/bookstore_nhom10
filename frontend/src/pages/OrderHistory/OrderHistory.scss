@@ -2,7 +2,7 @@ $grey-text: #64646d;
 $red-btn-color: rgb(255, 66, 78);
 
 .history-page {
-  width: 1000px;
+  width: 1400px;
   display: block;
   margin: auto;
   min-height: 66vh;
@@ -22,14 +22,14 @@ $red-btn-color: rgb(255, 66, 78);
     }
     p {
       text-align: center;
-      margin-top: 10px;
+      margin-top: 0px;
       font-size: 16px;
       margin-bottom: 0;
     }
     .btn-back {
       display: block;
       margin: auto;
-      margin-top: 10px;
+      margin-top: 30px;
       padding: 10px 55px;
       background-color: rgb(253, 216, 53);
       color: rgb(75, 75, 75);

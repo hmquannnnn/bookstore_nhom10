@@ -30,8 +30,13 @@ export const callFetchAccount = async () => {
   return res;
 };
 
-export const callChangeAvatar = (imageFile) => {
-  return instance.post("/user/image", imageFile);
+export const callChangeAvatar = (formData) => {
+  return instance.post("/user/image", formData, {
+    header: {
+      // "Content-Type": "image/*",
+      'Content-Type': 'multipart/form-data'
+    }
+  });
 };
 
 export const callChangeName = (name) => {
