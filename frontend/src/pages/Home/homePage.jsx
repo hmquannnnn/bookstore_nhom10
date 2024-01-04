@@ -269,7 +269,7 @@ const Home = () => {
                 </Row>
 
             </Col>
-            <Pagination defaultCurrent={1} current={page} total={50} onChange={handleChangePage} style={{ margin: "auto" }} />
+            <Pagination defaultCurrent={1} current={page} total={30} onChange={handleChangePage} style={{ margin: "auto" }} />
         </Row>
         // </div>
     )
