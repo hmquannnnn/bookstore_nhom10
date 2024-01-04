@@ -173,7 +173,7 @@ const Purchase = () => {
                             <p style={{ fontWeight: "500", color: " rgb(255, 66, 78)", fontSize: "20px" }}>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount + deliveryCost)}</p>
                         </Row>
 
-                        <button className="order-btn" type="submit" onClick={handlePurchase} >Thanh toán</button>
+                        <button className="order-btn" type="submit" onClick={handlePurchase} >Đặt hàng</button>
                         {/* <Result
                             status={resultStatus}
                             title={resultStatus === 'success' ? 'Thanh toán thành công' : 'Có lỗi xảy ra'}
@@ -202,7 +202,7 @@ const Purchase = () => {
                                 Quay lại
                             </Button>,
                         ]}>
-                            <p>Vui lòng chọn phương thức thanh toán để thanh toán</p>
+                            <p>Vui lòng chọn phương thức giao hàng để đặt hàng</p>
                         </Modal>
                     </Col>
                 </Col>
