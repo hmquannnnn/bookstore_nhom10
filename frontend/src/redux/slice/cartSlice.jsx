@@ -71,7 +71,10 @@ export const cartSlice = createSlice({
 
             if (bookToDelete) {
                 state.total -= bookToDelete.quantity_ordered;
-                state.amount -= bookToDelete.price_each * bookToDelete.quantity_ordered;
+                if (findSelectedBook(state.selected, action.payload)) {
+                    state.amount -= bookToDelete.price_each * bookToDelete.quantity_ordered;
+                }
+
 
                 state.books = state.books.filter((book) => book.book_id !== bookIdToDelete);
             }
