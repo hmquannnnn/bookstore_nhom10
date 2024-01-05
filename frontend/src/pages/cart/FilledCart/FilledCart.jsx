@@ -37,7 +37,6 @@ const FilledCart = () => {
     const booksInCart = useSelector(state => state.cart.books);
     const cart = useSelector(state => state.cart);
     useEffect(() => {
-        // Khởi tạo trạng thái cho tất cả các sách
         const initialState = booksInCart.reduce((state, book) => {
             state[book.book_id] = false;
             return state;
@@ -45,19 +44,19 @@ const FilledCart = () => {
         setCheckedState(initialState);
     }, [booksInCart]);
 
-    useEffect(() => {
-        setSelectAllState(selectAll);
-    }, [selectAll]);
+    // useEffect(() => {
+    //     setSelectAllState(selectAll);
+    // }, [selectAll]);
 
-    useEffect(() => {
-        booksInCart.map(book => {
-            const selectInfo = {
-                bookId: book.book_id,
-                checked: selectAllState
-            }
-            dispatch(selectBookAction(selectInfo));
-        });
-    }, [selectAllState, booksInCart]);
+    // useEffect(() => {
+    //     booksInCart.map(book => {
+    //         const selectInfo = {
+    //             bookId: book.book_id,
+    //             checked: selectAllState
+    //         }
+    //         dispatch(selectBookAction(selectInfo));
+    //     });
+    // }, [selectAllState, booksInCart]);
 
     const onClickBook = async (bookId) => {
         const res = await callGetBook(bookId);

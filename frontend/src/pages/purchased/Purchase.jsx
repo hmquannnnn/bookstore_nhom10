@@ -186,7 +186,7 @@ const Purchase = () => {
                             // ]}
                             visible={resultVisible}
                         /> */}
-                        <Modal title="Thanh toán thành công" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={[
+                        <Modal title="Đặt hàng thành công" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={[
                             <Button key="ok" type="primary" onClick={() => donePayment()}>
                                 Tiếp tục mua sắm
                             </Button>,
